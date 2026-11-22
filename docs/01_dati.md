@@ -58,3 +58,30 @@ Confrontare con i comunicati ISTAT: TFR implicito atteso 1,18 (2024); popolazion
 | Dependency ratio regionale | Eurostat `demo_r_pjanaggr3` | 65+/15-64 | ✔ già integrata (PSTR) |
 
 Politica di provenienza: ogni dataset ha tag di fonte e data di estrazione nel nome file o in `summary.json`; i dati grezzi non sono versionati (dimensione) ma sono riscaricabili in modo deterministico dagli endpoint pubblici.
+
+## Coerenza temporale degli input (dichiarazione esplicita)
+
+La proiezione Leslie usa tre input di **annate diverse**. La scelta è intenzionale (sono le fonti più recenti disponibili per ciascun blocco alla data del setup) ma va dichiarata per evitare letture improprie:
+
+| Blocco | Anno | Fonte | Ruolo nel modello |
+|---|---|---|---|
+| **Base demographic state** n₀ | **2026** | POSAS 2026 (stima post-censuale 2021) | condizione iniziale della proiezione |
+| **Parametri strutturali** P_x | **2024** | TVM completi 2024 | sopravvivenza per età, ritenuta costante nel tempo |
+| **Fertility baseline** ASFR_x | **2024** | ASFR 2024 (TFR implicito 1,18) | profilo di fecondità per età, scalato via `tfr_scale` |
+
+Non è una proiezione "2025-based": la struttura per età della fecondità e la mortalità sono 2024, solo lo stato iniziale è 2026. Le tavole e le ASFR 2025 non sono ancora pubblicate nei formati completi usati dal parser; l'aggiornamento è meccanico (cambiare gli anni in `download_istat.py`).
+
+Per evitare l'ambiguità tra il TFR implicito del modello e il dato annunciato dall'ISTAT per il 2025, i due scenari base sono separati esplicitamente:
+
+| | Scenario A (base del modello) | Scenario B (TFR 2025 annunciato) |
+|---|---|---|
+| TFR | **1,18** (implicito, ASFR 2024) | **1,14** (comunicato ISTAT, 355.772 nati) |
+| Scala `tfr_scale` | 1,00 | 1,14/1,18 ≈ 0,966 |
+| λ₁ | 0,9834 | **0,9824** |
+| r | -0,0167 | **-0,0177** |
+| t½ asintotico | 41,5 anni | **39,1 anni** |
+| Primo dimezzamento | 55,1 anni | **53,8 anni** |
+| Pop. femmine 2056 | 22,4 M | **22,3 M** |
+| Pop. 2076 | 16,2 M | **16,0 M** |
+
+Lettura: il momento di fertilità al 2025 (effetto tempo, cfr. Bongaarts–Feeney) peggiora il t½ asintotico di ~2,4 anni ma lascia quasi invariata la traiettoria a medio periodo — la quantità rilevante per la catena LTC è la struttura per età delle madri potenziali, non il solo TFR corrente. Lo scenario B è riproducibile con `python3 src/leslie.py --scenari` (include 1,14 in griglia).

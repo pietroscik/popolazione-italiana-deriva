@@ -28,6 +28,20 @@ Ogni generazione di madri viene sostituita al ~55%: la popolazione femminile in 
 
 ⚠️ **Nota critica sul perimetro**: si tratta dello scenario "zero migrazione" (il break-even strutturale), non della previsione centrale ISTAT — che con i flussi migratori attuali non prevede un dimezzamento entro il 2080. Vedi il documento per il ruolo di momentum e migrazioni.
 
+## Status epistemico dei risultati
+
+I numeri di questo repo hanno quattro status diversi — mescolarli è l'errore di lettura più facile:
+
+| Risultato | Tipo | Fonte | Dove |
+|---|---|---|---|
+| TFR 2024 = 1,18 / 2025 = 1,14; 355.772 nati; pop. 2026 | **osservato** | ISTAT (demo.istat.it) | [01_dati.md](docs/01_dati.md) |
+| λ₁ = 0,9834, t½ asintotico 41,5 / primo 55,1 anni; θ̂ PSTR e soglie della mappa | **stimato dal modello** (su dati osservati) | Leslie due-sessi / PSTR con IV e LOCO | [02_dimezzamento.md](docs/02_dimezzamento.md), [13_pstr_soglia_theta.md](docs/13_pstr_soglia_theta.md) |
+| Prevalenze LTC per età (bande); costi unitari (15k/48k €); quota domiciliare 65%; parametri Rogers-Castro | **assunto** (parametrico, ancorato a benchmark tedeschi/ANIA) | dichiarati nei moduli | [09_ltc_capitolo2_costi.md](docs/09_ltc_capitolo2_costi.md), [07_leslie_rogers_migrazioni.md](docs/07_leslie_rogers_migrazioni.md) |
+| Costo LTC 2056 ≈ 31 mld (a prezzi costanti); premio puro 2081 = 251 €; equilibri della mappa f(F) | **simulato** (scenario derivato da osservato + assunto + stimato) | pipeline end-to-end | [09](docs/09_ltc_capitolo2_costi.md), [14](docs/14_ltc_capitolo4_attuariale.md) |
+| Break-even migrazione ~+617k/anno | **controfattuale** (che saldo servirebbe a TFR e profilo attuali) | bisezione sul modello | [07_leslie_rogers_migrazioni.md](docs/07_leslie_rogers_migrazioni.md) |
+
+Coerenza temporale degli input: n₀ = **2026** (POSAS), mortalità e ASFR = **2024**; scenario A (TFR 1,18 implicito) vs B (1,14 del 2025) separati esplicitamente — vedi [01_dati.md](docs/01_dati.md#coerenza-temporale-degli-input-dichiarazione-esplicita).
+
 ## Struttura del repository
 
 ```
@@ -76,7 +90,7 @@ Ogni generazione di madri viene sostituita al ~55%: la popolazione femminile in 
 
 ## Requisiti
 
-Python 3.10+; dipendenze: `numpy`, `pandas` (`pip install -r requirements.txt`).
+Python 3.10+; dipendenze: `numpy`, `pandas`, `xgboost` (solo per lo screening Fase 3; `pip install -r requirements.txt`).
 
 Per riprodurre l'analisi:
 
