@@ -6,12 +6,12 @@
 
 L'impostazione più performante non è una pipeline lineare ma un'**architettura ibrida causale-dinamica a due strati**: uno strato econometrico-causale **offline** (stima dei parametri strutturali puliti da bias sui dati panel) che alimenta uno strato dinamico non-lineare **online** (simulatore a stati accoppiati). L'ordine di esecuzione è vincolato: invertire le fasi introduce data leakage, overcontrol bias o stime distorte del tempo di dimezzamento.
 
-| Fase | Strato | Metodo core | Input principale | Bias/limite risolto | Stato nel repo |
+| Fase | Strato | Metodo core | Input principali | Bias/limite risolto | Stato nel repo |
 |---|---|---|---|---|---|
-| 1. Tempo/Quantum | Offline (Dati) | Decomposizione Bongaarts-Feeney | TFR, età al parto | Distorsione del TFR di periodo dovuta al rinvio | ⬜ da fare |
-| 2. Causale Spaziale | Offline (Stima) | Spatial-SLX DML + causal mediation | Panel ISTAT/OMI/INPS + W_spat | Confondimento, spillover (SUTVA), overcontrol bias | ⬜ da fare (outline in [02_dimezzamento §6](02_dimezzamento.md)) |
-| 3. Migrazione Selettiva | Online (Dinamica) | Leslie-Rogers (profilo per età) | n_t, tavole P_x, curva migratoria | Sottostima dell'erosione delle coorti fertili | ⬜ da fare (interfaccia già prevista in `simulate`) |
-| 4. Fertility Trap | Online (Feedback) | Sistema non-lineare con isteresi | Stato n_t, DR_t, shock policy | Linearità irrealistica e assenza di punti di non ritorno | ⬜ formalizzazione in [05_low_fertility_trap](05_low_fertility_trap.md) |
+| 1. Tempo/Quantum | Offline (Dati) | Decomposizione Bongaarts-Feeney | TFR, età al parto | Distorsione del TFR di periodo dovuta al rinvio | ⬜ da fare (l'età media al parto per regione è già scaricabile da `demo_r_find2`) |
+| 2. Causale Spaziale | Offline (Stima) | Spatial-SLX DML + causal mediation | Panel ISTAT/OMI/INPS + W_spat | Confondimento, spillover (SUTVA), overcontrol bias | ◐ screening implementato su panel europeo ([12](12_fase3_panel_europeo.md)); DML/EconML da implementare (design in [02 §6](02_dimezzamento.md)) |
+| 3. Migrazione Selettiva | Online (Dinamica) | Leslie-Rogers (profilo per età) | n_t, tavole P_x, curva migratoria | Sottostima dell'erosione delle coorti fertili | ✔ implementata e validata: due sessi + Rogers-Castro calibrato sul saldo osservato ([07](07_leslie_rogers_migrazioni.md)) |
+| 4. Fertility Trap | Online (Feedback) | Sistema non-lineare con isteresi | Stato n_t, DR_t, shock policy | Linearità irrealistica e assenza di punti di non ritorno | ◐ formalizzazione matematica completa ([05](05_low_fertility_trap.md)) + **stima empirica PSTR di (θ, k, γ) e delle radici della mappa** ([13](13_pstr_soglia_theta.md)); accoppiamento dinamico completo (F_t endogeno nella Leslie) da implementare |
 
 ## I quattro nodi concettuali
 

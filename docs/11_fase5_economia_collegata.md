@@ -24,7 +24,19 @@ Anno per anno dal vettore di stato a due sessi:
 
 ## Letture
 
-1. **La pressione previdenziale quasi raddoppia**: 0,40 → 0,72 (+81%) significa passare da ~2,5 attivi per anziano a ~1,4. Il picco fiscale non è al picco degli over-80 (2056) ma cresce monotono fino al 2081: gli attivi scendono del -38% mentre gli anziani calano solo dell'-11%.
+1. **La pressione previdenziale quasi raddoppia**: 0,40 → 0,72 (+81%) significa passare da ~2,5 attivi per anziano a ~1,4. Il picco fiscale non è al picco degli over-80 (2056) ma cresce monotono fino al 2081: gli attivi scendono del -38% mentre gli anziani calano solo dell'-11%. (Le previsioni ISTAT mediano, che ipotizzano recovery parziale della fecondità, collocano il rapporto in una banda analoga: il numero d'ordine è condiviso.)
 2. **La domanda abitativa ha un tetto strutturale**: i nuclei 20-44 scendono del -39% — quando le coorti della denatalità entrano nell'età di formazione famiglia, nessuna politica creditizia può ripristinare la demografia sottostante (... ma vedi [07_leslie_rogers_migrazioni.md](07_leslie_rogers_migrazioni.md): il profilo migratorio 20-39 è esattamente la contropartita).
 3. **Coorti scolastiche: -45% in 55 anni** (6,9 → 3,8 M). Fuori orizzonte per l'istruzione primaria entro fine decennio, ma la compressione diventa operativa sugli istituti superiori dal 2040 e sull'università dal 2045.
-4. **Il raccordo attuariale**: la Fase 4 LTC e questa Fase 5 condividono il medesimonumeratore strutturale (attivi/caregivers). Ogni leva che sostiene il rapporto — fecondità ora, migrazione domani — ha un doppio rendimento: sulla spesa LTC e sulla base contributiva.
+4. **Il raccordo attuariale**: la Fase 4 LTC e questa Fase 5 condividono il medesimo numeratore strutturale (attivi/caregivers). Ogni leva che sostiene il rapporto — fecondità ora, migrazione domani — ha un doppio rendimento: sulla spesa LTC e sulla base contributiva.
+
+## Sensitività al saldo migratorio (stessi indici a saldo attuale vs zero)
+
+Il denominatore comune di tutti gli indici di questa fase è la popolazione in età attiva: la migrazione è пер definizione concentrata nelle fasce 20-39 (profilo Rogers-Castro, [07](07_leslie_rogers_migrazioni.md)), quindi gli effetti qui sono amplificati rispetto alla popolazione totale:
+
+| Indice (2081, TFR 1,18) | saldo +280k/anno | saldo 0 | Delta |
+|---|---|---|---|
+| Attivi 15-64 | 23,0 M | 15,4 M | -33% |
+| Dependency ratio anziani | 0,72 | 0,76 | +6% rel. |
+| Nuclei 20-44 | 10,0 M | 6,9 M | -31% |
+
+Nota: a saldo zero gli attivi scendono sotto i 16 milioni — ma il dependency ratio sale solo di un 6% relativo, perché senza migrazione scendono sia gli attivi sia gli anziani (coorti più piccole in ingresso nelle fasce 65+ dopo il 2050). L'effetto dominante della migrazione è sul **livello** della base attiva e dei nuclei, non sul rapporto: è il riflesso del risultato del [07](07_leslie_rogers_migrazioni.md) (break-even a ~600k/anno per la stabilità numerica).
