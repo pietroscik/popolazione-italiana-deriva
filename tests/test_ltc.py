@@ -22,9 +22,9 @@ class TestLtc(unittest.TestCase):
         ages[0, 50] = 400.0
         ind = ltc_indicators(ages)
         self.assertAlmostEqual(ind["over80"][0], 100.0)
-        self.assertAlmostEqual(ind["claimants"][0], 100.0 * 0.16)
+        self.assertAlmostEqual(ind["claimants"][0], 100.0 * 0.16 + 400.0 * 0.005)
         self.assertAlmostEqual(ind["caregivers"][0], 400.0)
-        self.assertAlmostEqual(ind["ratio"][0], 400.0 / 16.0)
+        self.assertAlmostEqual(ind["ratio"][0], 400.0 / 18.0)
 
     def test_indicatori_vuoti(self):
         ages = np.zeros((1, 101))
