@@ -34,18 +34,24 @@ La teoria ([05_low_fertility_trap.md](05_low_fertility_trap.md), equazione di Φ
 | η (dlog PIL) | +0,217 | +0,219 | stabile: condizioni economiche di breve periodo |
 | **γ (DR)** | — | **+0,081** | segno OPPOSTO alla teoria - vedi §5 |
 
-**Bootstrap a cluster sulle regioni (B=40)**: θ̂ = 1,56 ± 0,17, intervallo [1,20; 1,75]; la soglia instabile emerge in 19/40 repliche (media 0,92) — meno stabile che nel modello senza DR: segno che parte dell'identificazione della soglia era sorretta dalla struttura demografica dei regimi.
+**Correzione dall'audit (P0)**: il differenziale del log-PIL era calcolato con `diff()` globale invece che per regione — la prima osservazione di ogni regione (~12% del panel) era differenziata contro l'ultimo anno della regione precedente. Fix: `groupby(geo).diff()`. Effetto marginale (θ e γ immutati a due decimali); tutti i numeri di questa pagina sono post-fix e ristimati.
 
-### Punti di equilibrio della mappa estesa (controlli a media campione)
+**Bootstrap a cluster sulle regioni (B=399)**: θ̂ = 1,56 ± 0,18, intervallo [1,20; 1,75]; **la soglia instabile emerge in 256/399 repliche (64%), media 0,95** (conteggio a regime anno base). Con B=40 la frequenza apparentemente più bassa (19/40) era in parte rumore da poche repliche: il supporto alla soglia è ora quantificato con stabilità adeguata.
 
-| F* | Tipo | Significato |
+### Punti di equilibrio: i due regimi della mappa (fix dell'audit)
+
+La mappa implicita ora include l'effetto medio delle dummies anno (prima era valutata solo all'anno base). I due regimi danno letture diverse e complementari:
+
+| Regime | Radici di f̂(F)=0 in [0,7; 3,5] | Lettura |
 |---|---|---|
-| **~0,81** | **instabile** | soglia di non ritorno ancora più bassa (ma fuori dal fit range denso: particolare) |
-| **~1,64** | stabile | attrattore alto |
+| **Anno base** (dummies = 0, ambiente costante) | **0,81 instabile / 1,64 stabile** | soglia di non ritorno e attrattore del sistema a regime pre-2020 |
+| **Anno medio 2013-2023** | **nessuna radice interna** (f̂ < 0 ovunque) | gli effetti 2022-23 (-0,09 ciascuno) dominano la media: nella dinamica recente la mappa punta verso il basso a qualunque F — il collasso post-pandemico trascina sotto ogni bacino interno |
 
-Con la DR nel modello, **la soglia di non ritorno scende sotto l'unità e l'attrattore sale a ~1,64**: la mappa diventa più "generosa" con il regime basso (più margini di risalita) ma anche più dipendente dal profilo DR della regione.
+A regime base, con la DR nel modello, **la soglia di non ritorno scende sotto l'unità e l'attrattore sale a ~1,64**: la mappa diventa più "generosa" con il regime basso (più margini di risalita) ma anche più dipendente dal profilo DR della regione. Il regime medio dice però che il *presente* (2022-23) non contiene alcun equilibrio interno: le due letture insieme sono il quadro corretto — la struttura della trappola esiste, la congiuntura attuale la sta attraversando verso il basso.
 
 ## 4. Letture base (soglia e attrattore)
+
+> **Convenzione post-audit**: il *modello headline* è quello **senza DR** (θ̂=1,66, soglia ~1,05, attrattore ~1,51); la specificazione **estesa con DR** (θ̂=1,70, 0,81/1,64) è esplorazione/robustezza — ora supportata da IV strumento-forte e LOCO, ma con γ di segno non ancora interpretato causalmente (§5). Le letture che seguono si riferiscono al modello headline se non indicato diversamente.
 
 1. **C'è una soglia di non ritorno stimata empiricamente, e l'Italia è vicina**: il TFR italiano (1,18 nel 2024, 1,14 nel 2025) sta' **sopra** la soglia di ~1,05 — la dinamica di lungo periodo implicita è di risalita lenta verso l'attrattore ~1,51 — ma la **Sardegna è già sotto** (0,85 nel 2025, settimo anno consecutivo sotto l'unità, datas ISTAT): per il modello il declino sardo è destinato a continuare, e il dato osservato (0,91 → 0,85) è coerente.
 2. **La soglia pratica (~1,05) è piu' bassa della soglia teorica sociologica (~1,35-1,50)** di [05_low_fertility_trap.md](05_low_fertility_trap.md): la transizione G(F;k,θ) stimata a 1,66 descrive dove *si spegne il feedback del regime alto*, mentre il punto di non ritorno emerge a F molto piu' basso. Le due soglie non coincidono -- e la differenza è informative: il sistema europeo mostra piu' resilienza di quanto la teoria della trappola teme, ma **sotto F≈1,0-1,1 nessuna regione del panel è mai risalita** con dati osservati.
@@ -60,8 +66,12 @@ Con la DR nel modello, **la soglia di non ritorno scende sotto l'unità e l'attr
 2. **Confondente da country-level welfare** — Nord Europa: DR alto E welfare family-friendly (pensioni sustentabili, asili): nel pooled il segno di γ e' contaminato da questa correlazione territoriale. Il test LOCO per paese (docs/06) e' la robustezza diretta.
 3. La teoria prevede il segno negativo sul ΔDR oltre la soglia fiscale DR0 — non sul livello: la forma `γ·max(0, DR-DR0)` con DR0 stimato resta da provare (prossimo passo naturale).
 
-## 6. Limiti dichiarati (da chiudere)
+## 6. Limiti dichiarati (aggiornati post-audit)
 
-- **Bias da panel dinamico (Nickell)**: il regressore F_lag è correlato con gli errori passati (feedback); lo stimatore OLS concentrato ne soffre su T corto (11 anni). Correttivo progettuale: IV/GMM con strumenti ritardati t-15 come da [06_backtest_protocol.md](06_backtest_protocol.md) appendice B. Il test unitario su processo sintetico noto mostra il bias esplicitamente (recupero di `a` entro ±0,04).
-- **Pooled senza FE paese** è la scelta identificativa corretta per la mappa globale, ma espone a omittedcountry-level confounders (welfare, cultura) — mitigabile con robustezza LOCO per paese (protocollo docs/06).
+- ~~Endogeneità della DR~~ **chiuso con l'IV t-15** (§5): strumento forte (F=340), segno confermato e rinforzato. La strumentazione della fertilità stessa (F_lag) resta invece aperta: punto seguente.
+- **Bias da panel dinamico (correlato, non FE-Nickell)**: nel pooled il canale rilevante è l'eterogeneità regionale permanente correlata con F_lag, non la versione FE del problema (precisazione dall'audit: il Nickell riguardava il caso FE). Lo stimatore OLS concentrato ne soffre su T corto (11 anni); il test unitario su processo sintetico mostra il recupero di `a` entro ±0,04. Correttivo naturale: Mundlak (medie regionali dei regressori come controlli, rispetta la scelta identificativa sui livelli) o GMM system con strumenti collassati — prossimo passo.
+- ~~LOCO per paese~~ **chiuso** (§5): γ sempre positivo su 33 esclusioni.
+- ~~Bootstrap B=40~~ **chiuso**: B=399, soglia in 256/399 repliche (64%).
+- **Identificazione del regime basso**: la finestra 2013-2023 non contiene transizioni complete sotto F≈1; il controesempio storico (Germania Est anni '90: TFR 0,77 → 1,4+) è fuori campione. L'estensione del panel a 1990+ è l'upgrade con maggior valore identificativo.
+- **IV sotto-campione**: la merge t-15 copre il 25,7% del panel (i codici NUTS-2 di molti paesi sono cambiati tra 1998-2008 e oggi); DE/FR/ES/IT sono ben coperti, ma la selezione geografica va pesata nella lettura di γ̂_IV.
 - Identificazione limitata dal raggio osservato (min TFR 0,84): il regime F<1 non è attraversato da nessuna coorte ampia di regioni.

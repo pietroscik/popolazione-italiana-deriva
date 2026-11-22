@@ -132,15 +132,21 @@ def simulate_two_sex(n0_f, n0_m, fertility, P_f, P_m, years=100,
     tr_f[0], tr_m[0] = nf.sum(), nm.sum()
     if store_ages:
         ages_f[0], ages_m[0] = nf, nm
-    if mig is None and net_migration_total != 0.0:
-        from migration import build_migration_profile
-        mig_f = build_migration_profile(nf, net_migration_total * 0.5)
-        mig_m = build_migration_profile(nm, net_migration_total * 0.5)
-    else:
-        mig_f = mig_m = mig
+    mig_static = mig
     for t in range(1, years + 1):
+        if mig_static is not None:
+            mig_f = mig_m = mig_static
+        elif net_migration_total != 0.0:
+            # profilo Rogers-Castro ri-calibrato ogni anno sulla struttura
+            # per eta' corrente: le quote s_{x,t} = r_x N_{x,t} / sum_j r_j N_{j,t}
+            # si aggiornano con la popolazione che cambia (profilo dinamico)
+            from migration import build_migration_profile
+            mig_f = build_migration_profile(nf, net_migration_total * 0.5)
+            mig_m = build_migration_profile(nm, net_migration_total * 0.5)
+        else:
+            mig_f = mig_m = None
         nf, nm = project_two_sex(nf, nm, fertility, P_f, P_m,
-                                  mig_f, mig_m, tfr_scale)
+                                 mig_f, mig_m, tfr_scale)
         tot[t] = nf.sum() + nm.sum()
         tr_f[t], tr_m[t] = nf.sum(), nm.sum()
         if store_ages:

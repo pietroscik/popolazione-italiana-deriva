@@ -25,11 +25,11 @@ Controllo di qualità: popolazione 2026 ricostruita = **58.942.828** (30,02 M fe
 | **+280.000 (media 2024-25)** | **43,4 M** | **-26,3%** | ordine di grandezza della previsione ISTAT mediana (che assume anche recovery parziale della fecondità) |
 | +400.000 (saldo alto) | 49,3 M | -16,4% | |
 
-**Saldo di break-even: ~+600.000 migranti netti/anno** per mantenere la popolazione costante a TFR 1,18 e struttura per sesso/età attuale — circa **2,1 volte il saldo osservato 2024-25**. Non è uno shock frontale: il saldo oggi compensa il deficit naturale corrente (~-296 mila), ma il deficit cresce nel tempo perché le nascite continuano a contrarre (le madri potenziali sono le generazioni della denatalità) e una quota crescente del saldo serve solo a "riempire" coorti più piccole.
+**Saldo di break-even: ~+617.000 migranti netti/anno** (profilo Rogers-Castro dinamico; ~+600.000 col profilo statico calibrato sulla struttura 2026) per mantenere la popolazione costante a TFR 1,18 e struttura per sesso/età attuale — circa **2,1 volte il saldo osservato 2024-25**. Non è uno shock frontale: il saldo oggi compensa il deficit naturale corrente (~-296 mila), ma il deficit cresce nel tempo perché le nascite continuano a contrarre (le madri potenziali sono le generazioni della denatalità) e una quota crescente del saldo serve solo a "riempire" coorti più piccole.
 
 ## 4. Lettura d'insieme
 
-Congiungendo col [05_low_fertility_trap.md](05_low_fertility_trap.md): la migrazione agisce esattamente sul nodo che rende l'analisi departe dal regime asintotico — e il costo del ritardo è visibile qui. Lo shock di policy `u_uscita` richiesto per risalire dal regime a TFR 1,15 verso il bacino alto compete direttamente col fattore migrazione: 600 mila netti l'anno per la sola stabilit numerica, oppure un recupero di fecondità che allevi il spettro futuro deficit naturale. La combinazione dei due è il vero oggetto di policy.
+Congiungendo col [05_low_fertility_trap.md](05_low_fertility_trap.md): la migrazione agisce esattamente sul nodo che rende l'analisi departe dal regime asintotico — e il costo del ritardo è visibile qui. Lo shock di policy `u_uscita` richiesto per risalire dal regime a TFR 1,15 verso il bacino alto compete direttamente col fattore migrazione: 617 mila netti l'anno per la sola stabilit numerica, oppure un recupero di fecondità che allevi il spettro futuro deficit naturale. La combinazione dei due è il vero oggetto di policy.
 
 ## Nota tecnica
 
