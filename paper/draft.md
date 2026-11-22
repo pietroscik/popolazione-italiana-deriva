@@ -1,4 +1,4 @@
-# Escaping the Low Fertility Trap: A Coupled Spatial-Causal and Non-Linear Leslie-Rogers Framework for European Demographic Dynamics
+# Escaping the Low Fertility Trap? A Non-Linear Leslie-Rogers Framework for European Demographic Dynamics
 
 > Working paper draft v0.3 — aggiornato con i risultati empirici del repository (Leslie due sessi, screening TreeSHAP, PSTR con IV/LOCO, panel esteso 1990-2024, backtest DM/CW eseguito, Monte Carlo LTC, Leslie regionale). Il layer causale (Spatial-SLX DML, mediazione, panel provinciale NUTS-3) resta specificato (Section 4) ma NON ancora eseguito: ogni affermazione al presente qui sotto corrisponde a un risultato implementato e riproducibile nel repository.
 
@@ -32,7 +32,7 @@ Territorial panels also inherently violate SUTVA: labor markets, commuting basin
 
 1. **A validated two-sex Leslie-Rogers dynamic layer** on real ISTAT data: automated ISTAT ingestion (POSAS 2026, TVM 2024, ASFR 2024), two-sex projection, Rogers-Castro age-specific migration calibrated on observed net balances (+263k in 2024), and a break-even estimate of ~617k net migrants/year needed for population stability at current fertility.
 2. **Screening of policy levers, decoupled from (future) causal estimation**: the executed layer is a predictive screening (XGBoost + native TreeSHAP, pooling and two-way demeaned) on the assembled and versioned European NUTS-2 panel (285 regions 2013-2023, TFR + GDP pc PPS + regional DR, plus a 1990-2024 long panel); the causal layer it feeds — Spatial-SLX DML with spatial block cross-fitting, Moran's I residual diagnostics, and NDE/NIE mediation — is specified in Section 4 and remains to be executed.
-3. **Empirical identification of hysteresis**: the trap is estimated — not assumed — as a Dynamic PSTR on the multi-year NUTS-2 panel, yielding θ̂ = 1.66, an unstable no-return threshold at F ≈ 0.91, a high attractor at F ≈ 1.61, and a positive — theory-contradicting — γ_DR = +0.077 that survives lagged-instrument estimation (t−15 cohort structure, first-stage F = 340, γ̂_IV = +0.129) and leave-one-country-out robustness (positive in all 33 exclusions): the sign is structural, not endogeneity or Nordic-welfare confounding.
+3. **Empirical identification of hysteresis**: the trap is estimated — not assumed — as a Dynamic PSTR on the multi-year NUTS-2 panel, yielding θ̂ = 1.66, an unstable no-return threshold at F ≈ 0.91, a high attractor at F ≈ 1.61, and a positive — theory-contradicting — γ_DR = +0.077 that survives lagged-instrument estimation (t−15 cohort structure, first-stage F = 340, γ̂_IV = +0.129) and leave-one-country-out robustness (positive in all 33 exclusions): the sign is robust to the two testable identification threats (IV and LOCO), with the causal interpretation left open and the kinked form executed as the discriminating test.
 4. **A fully reproducible open framework**: every result in this paper is regenerated from raw providers by a single command per layer (`src/download_istat.py`, `src/download_eurostat.py`, `src/pstr_trap.py`...), with 76 unit tests and end-to-end CI.
 
 ## 2. Theoretical Framework: the two-layer architecture
@@ -80,8 +80,9 @@ All ingestion is automated and versioned; provenance below.
 | Regional GDP per capita | Eurostat `nama_10r_2gdp` (PPS_EU27_2020_HAB) | NUTS-2, 2013–2023 | control (short-run conditions: dlog) |
 | Regional dependency ratio | Eurostat `demo_r_pjanaggr3` (Y_GE65 / Y15-64) | NUTS-2, 2013–2023 | aging drag γ |
 | Italian provincial panel (Fase 2, integration pending) | OMI (housing), INPS (labor), ISTAT BES (childcare) | 107 NUTS-3, 2013–2024 | causal levers T (Section 4) |
+| Extended European long panel (executed) | Eurostat `demo_r_find2` (TFR 1990-2024), `nama_10r_2gdp` (2000-2024), `demo_r_pjangroup` (DR 1990-2025) | NUTS-2, unbalanced, crosswalk by code stability | parameter-constancy test, t−15 IV instrument, long-window backtest (docs/15) |
 
-Pre-processing: within-region lags for F and controls (avoiding cross-sectional leakage); log GDP; first differences for the dynamic specification; NUTS-2 selection by code length (removing national and extra-regio codes); TFR range observed 0.84–4.95 (median 1.54). Descriptive statistics and provenance tags are regenerated in `data/processed/eurostat_panel.csv` (2,959 region-year cells; 2,392 after lags).
+Pre-processing: within-region lags for F and controls (avoiding cross-sectional leakage); log GDP; first differences for the dynamic specification; NUTS-2 selection by code length (removing national and extra-regio codes); TFR range observed 0.84–4.95 (median 1.54). Descriptive statistics and provenance tags are regenerated in `data/processed/eurostat_panel.csv` (2,959 region-year cells; 2,366 after lags and gap filtering).
 
 ## 4. Econometric Identification Strategy
 
@@ -102,15 +103,17 @@ Persistence (tfr_lag1) dominates the predictive ranking in both variants (import
 | Parameter | Without DR | With DR |
 |---|---|---|
 | θ̂ (transition threshold) | 1.66 | **1.70** |
-| k̂ (slope) | 3.69 | 6.73 |
-| b0 (low-regime persistence) | +0.085 | +0.035 |
-| b1 (high-regime feedback) | −0.087 | −0.043 |
-| η (dlog GDP) | +0.217 | +0.219 |
-| γ (DR lag) | — | **+0.081** |
+| k̂ (slope) | 3.69 | 10.0 |
+| b0 (low-regime persistence) | +0.083 | +0.016 |
+| b1 (high-regime feedback) | −0.085 | −0.031 |
+| η (dlog GDP) | +0.204 | +0.214 |
+| γ (DR lag) | — | **+0.077** |
+
+Executed discriminating test (kinked form γ·max(0, DR−DR₀), DR₀ profiled on [0.05; 0.45]): DR̂₀ = 0.06 — no activation threshold; γ̂_kinked ≈ γ̂_linear (+0.077) with no SSR improvement over the linear specification: the DR effect is a level effect, not the fiscal-drag kink (docs/13 §5.4).
 
 Implied equilibria (controls at sample means, year-base regime): without DR — unstable root F ≈ 0.91, stable attractor F ≈ 1.61; with DR — attractor F ≈ 1.65 (a lower root at 0.49 lies below the observed support, minimum TFR 0.84, and is extrapolation). Cluster bootstrap (B = 399): θ̂ = 1.57 ± 0.18, interval [1.20; 1.75]; the unstable threshold appears in 265/399 replicates (66%). Extending the panel to 1990–2024 rejects parameter constancy: the two-basin structure is a property of the post-2013 era (see docs/15_panel_1990.md), while IV and LOCO on the long window confirm the positive DR sign (γ̂_IV = +0.087, first-stage F = 630).
 
-Three readings. **(i)** The no-return threshold sits below the sociological theoretical threshold (1.35–1.50): the European transition appears more resilient than feared, but no region in the sample ever recovered from below F ≈ 1.0 — Sardinia (TFR 0.85, seventh consecutive year below unity) is below the estimated threshold and its observed trajectory (0.91 → 0.85) is consistent with self-reinforcing decline. Italy (1.18) remains marginally above. **(ii)** The high attractor is ~1.5–1.6, not replacement: even escaping the low regime, the European system converges below 2.1. **(iii)** γ̂ > 0 contradicts the theoretical fiscal-drag sign — and the sign is structural, not an artifact: lagged-instrument estimation (DR at t−15, first-stage F = 340) returns γ̂_IV = +0.129, and leave-one-country-out (33 exclusions) keeps γ positive throughout, so mechanical endogeneity and Nordic-welfare confounding are both excluded as explanations. The surviving readings are cohort-level postponement exhaustion and the high-development rebound (Myrskylä–Kohler–Billari 2009); the level-vs-excess form γ·max(0, DR−DR₀) with DR₀ estimated remains the discriminating test.
+Three readings. **(i)** The no-return threshold sits below the sociological theoretical threshold (1.35–1.50): the European transition appears more resilient than feared, but no region in the sample ever recovered from below F ≈ 1.0 — Sardinia (TFR 0.85, seventh consecutive year below unity) is below the estimated threshold and its observed trajectory (0.91 → 0.85) is consistent with self-reinforcing decline. Italy (1.18) remains marginally above. **(ii)** The high attractor is ~1.5–1.6, not replacement: even escaping the low regime, the European system converges below 2.1. **(iii)** γ̂ > 0 contradicts the theoretical fiscal-drag sign. The estimate is robust to lagged-instrument estimation (DR at t−15, first-stage F = 340, γ̂_IV = +0.129) and to leave-one-country-out (33 exclusions, positive throughout) — so the sign is robust to the two specific identification threats we can test, though the causal interpretation remains open: under persistently divergent fertility norms the t−15 DR itself proxies the historical fertility regime, so instrument validity is not guaranteed precisely where the trap hypothesis holds, and LOCO excludes country-level confounders, not persistent sub-national heterogeneity. We therefore **executed the discriminating test** the theory itself prescribes, the kinked form γ·max(0, DR−DR₀) with DR₀ profiled on a grid: the best fit drives DR₀ to the bottom of the grid (DR̂₀ = 0.06, i.e. no activation threshold) with γ̂_kinked ≈ γ̂_linear and no SSR improvement — **the positive effect is a level effect, not the fiscal-drag kink**. This is consistent with the high-development rebound reading (Myrskylä–Kohler–Billari 2009) and with postponement exhaustion, and inconsistent with the kinked fiscal-drag mechanism; it does not identify which level-effect reading is correct.
 
 ### 5.3 Dynamic layer results (Italy, two-sex Leslie-Rogers)
 
@@ -131,6 +134,6 @@ Results: **the promotion condition FAILS**. Fixed-origin RMSE: M0 0.204, M1 0.18
 ## Appendici
 
 - **A** — Derivazioni matematiche: stabilità locale Φ'(F*) < 1, forma chiusa del punto di biforcazione F_c, raccordo λ₁ (Perron-Frobenius) ↔ tasso intrinseco di Lotka, correzione Bongaarts-Feeney TFR*
-- **B** — Specifiche di ottimizzazione PSTR e GMM: griglia Profiled NLS su (k, θ), strumenti ritardati per DR_{i,t}, Kleibergen-Paap, Hansen J, Cluster Block Bootstrap / prior bayesiani (PyMC)
+- **B** — Specifiche di ottimizzazione PSTR e GMM: griglia Profiled NLS su (k, θ), strumenti ritardati per DR_{i,t}, Kleibergen-Paap; over-identification (Hansen J) richiede almeno due strumenti — con il solo strumento t−15 non e' calcolabile ed e' ritirata dalle promesse del design; uno secondo strumento (t−20) e' pianificato. Cluster Block Bootstrap / prior bayesiani (PyMC)
 - **C** — Costruzione della curva migratoria (Rogers-Castro) e gestione della classe aperta 100+
 - **D** — Data provenance & repository integrity: codici tabella esatti, date di estrazione, schema Parquet, replica end-to-end (`python3 src/download_istat.py && python3 src/download_eurostat.py && python3 src/pstr_trap.py`)

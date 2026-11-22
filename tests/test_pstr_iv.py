@@ -88,3 +88,31 @@ class TestPanelSbilanciato(unittest.TestCase):
         # i d_tfr corrispondono a orizzonte annuo
         self.assertAlmostEqual(
             float(df[df.anno == 2004]["d_tfr"].iloc[0]), -0.1, delta=1e-9)
+
+
+class TestKinked(unittest.TestCase):
+    def test_recupera_dr0_vero_e_gamma_della_forma_kinked(self):
+        """DGP con freno kinked VERO oltre DR0=0.30 (DR su entrambi i lati):
+        la griglia profilata deve recuperare DR0 e il gamma negativo
+        (segno del freno, come DGP -0.15*max(0, DR-DR0))."""
+        from pstr_trap import fit_pstr_kinked
+        rng = np.random.default_rng(21)
+        rows = []
+        for i in range(200):
+            dr_t15 = 0.20 + 0.25 * rng.random()
+            F = 1.5 + 0.1 * rng.standard_normal()
+            gdp = 25_000.0
+            pref = f"{chr(65 + (i // 20) % 26)}X"
+            for t in range(12):
+                rows.append({"geo": f"{pref}{i % 20:02d}",
+                             "anno": 2012 + t, "tfr": F, "gdp_pc": gdp,
+                             "dr": dr_t15, "dr_t15": dr_t15})
+                gdp *= np.exp(0.02 + 0.02 * rng.standard_normal())
+                kink = 0.15 * max(0.0, dr_t15 - 0.30)
+                F = F + (-0.06 + 0.04 * F - 0.05 * F * _G(F, 4.0, 1.66)) \
+                    - kink + 0.005 * rng.standard_normal()
+        df = prepare_panel(pd.DataFrame(rows))
+        res = fit_pstr_kinked(
+            df, dr0_grid=np.round(np.arange(0.15, 0.46, 0.03), 2))
+        self.assertAlmostEqual(res["dr0"], 0.30, delta=0.03)
+        self.assertAlmostEqual(res["gamma_kinked"], -0.15, delta=0.05)

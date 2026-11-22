@@ -30,15 +30,16 @@ Regenerate con `python3 src/plots.py` (matplotlib; i PNG sono committati).
 
 ## Risultato chiave del modello asintotico (Lotka)
 
-Con TFR = 1,14, T = 32,7 anni, quota femminile alla nascita 0,488, sopravvivenza alla generazione media ~0,99:
+Con quota femminile alla nascita 0,488 e profilo di sopravvivenza ISTAT, i due scenari base (coerenza temporale degli input: [01_dati.md](docs/01_dati.md)):
 
-```
-R₀ ≈ 1,14 × 0,488 × 0,99 ≈ 0,551
-r  ≈ ln(0,551)/32,7 ≈ -1,82% all'anno
-t½ ≈ 38 anni per generazione
-```
+| | **Scenario A** (TFR 2024 = 1,18, base del modello) | **Scenario B** (TFR 2025 = 1,14) |
+|---|---|---|
+| R₀ esatto (Lotka integrale) | **0,5733** | **0,5538** |
+| r (equazione caratteristica = ln λ₁) | **−1,6685%/anno** | **−1,7711%/anno** |
+| t½ asintotico | **41,5 anni** | **39,1 anni** |
+| Formula rapida README | 1,18×0,488×0,99 ≈ 0,570 → t½ ~42 | 1,14×0,488×0,99 ≈ 0,551 → t½ ~38 |
 
-Ogni generazione di madri viene sostituita al **57,3%** (R₀ esatto, lotka integrale): la popolazione femminile in regime stabile si dimezza ogni ~38 anni. Vedi [docs/02_dimezzamento.md](docs/02_dimezzamento.md) e [docs/18_lotka_sensitivity.md](docs/18_lotka_sensitivity.md) per la tripla verifica esatta (r Lotka = ln λ₁ = −1,6685%).
+Ogni generazione di madri viene sostituita al ~55-57%. Vedi [docs/02_dimezzamento.md](docs/02_dimezzamento.md) e [docs/18_lotka_sensitivity.md](docs/18_lotka_sensitivity.md) per la tripla verifica esatta (r Lotka = ln λ₁ = −1,6685%).
 
 ⚠️ **Nota critica sul perimetro**: si tratta dello scenario "zero migrazione" (il break-even strutturale), non della previsione centrale ISTAT — che con i flussi migratori attuali non prevede un dimezzamento entro il 2080. Vedi il documento per il ruolo di momentum e migrazioni.
 
@@ -88,7 +89,7 @@ Coerenza temporale degli input: n₀ = **2026** (POSAS), mortalità e ASFR = **2
 - [x] **Fase 2 — Deriva**: matrice di Leslie sulla piramide reale + sensibilità t½ per TFR 0,95–1,30 — `src/leslie.py` ([risultati](docs/02_dimezzamento.md#5-risultati-dellimplementazione-dati-reali-istat-fase-2-completata))
 - [x] **Blocco dinamico completo**: modello a due sessi + migrazione per età Rogers-Castro, scenari di saldo migratorio e **saldo di break-even (~+617k/anno)** — [07_leslie_rogers_migrazioni.md](docs/07_leslie_rogers_migrazioni.md)
 - [x] **Fase 3, capitolo 1 — panel europeo e screening**: panel Eurostat NUTS-2 reale (285 regioni × 2013-2023, TFR + PIL), screening XGBoost + TreeSHAP nativo, variante within-FE — [12_fase3_panel_europeo.md](docs/12_fase3_panel_europeo.md). Restano da implementare: panel provinciale OMI/INPS, DML/EconML, Moran's I — design in [04_architettura_due_strati.md](docs/04_architettura_due_strati.md)
-- [x] **Fase 3/4 — PSTR, soglia della Low Fertility Trap**: **θ̂ = 1,66 [1,20–1,75]** (modello headline, senza DR), **soglia di non ritorno F ≈ 0,91** (instabile) e attrattore alto **F ≈ 1,61** sul panel europeo reale; bootstrap a cluster **B=399** (soglia nel 66% delle repliche), equilibri della mappa implicita. Specificazione estesa con DR: **IV con strumento DR a t-15 (first-stage F=340, γ̂_IV=+0,129)** e **robustezza LOCO** (γ>0 in 33/33 esclusioni) — il segno positivo di γ è strutturale, non endogeneità né confondente nordico — [13_pstr_soglia_theta.md](docs/13_pstr_soglia_theta.md)
+- [x] **Fase 3/4 — PSTR, soglia della Low Fertility Trap**: **θ̂ = 1,66 [1,20–1,75]** (modello headline, senza DR), **soglia di non ritorno F ≈ 0,91** (instabile) e attrattore alto **F ≈ 1,61** sul panel europeo reale; bootstrap a cluster **B=399** (soglia nel 66% delle repliche), equilibri della mappa implicita. Specificazione estesa con DR: **IV con strumento DR a t-15 (first-stage F=340, γ̂_IV=+0,129)** e **robustezza LOCO** (γ>0 in 33/33 esclusioni) — il segno di γ è robusto a IV e LOCO ma di interpretazione causale aperta; il test kinked γ·max(0,DR−DR₀) eseguito trova DR₀→0: effetto di livello, non il freno fiscale della teoria — [13_pstr_soglia_theta.md](docs/13_pstr_soglia_theta.md)
 - [x] **Backtest out-of-sample M0/M1/M2 (DM + Clark-West)**: fixed-origin 2013-2024 ed expanding h=1 — **condizione di promozione NON superata**: la PSTR non batte i benchmark lineari/statici (CW t=−3,80 al fisso-12-passi; il random walk vince a h=1). Il valore della PSTR è strutturale (soglia, attrattori, non-linearità), non previsionale — [16_backtest.md](docs/16_backtest.md)
 - [x] **Panel esteso 1990-2024**: `build_panel_long` (TFR 1990-2024, PIL 2000-2024, DR 1990-2025); **la costanza dei parametri è rigettata** — la struttura a due bacini è una proprietà dell'era post-2013, l'era 2001-2012 (collasso post-comunista) ha tre attraversamenti; IV e LOCO confermano γ>0 anche sulla finestra lunga — [15_panel_1990.md](docs/15_panel_1990.md)
 - [x] **Fase 4 — LTC, capitolo 1**: proiezione claimants e caregiver potenziali (2026–2081), rapporto caregiver/claimant (-43%): [08_ltc_capitolo1.md](docs/08_ltc_capitolo1.md)
@@ -109,7 +110,7 @@ Coerenza temporale degli input: n₀ = **2026** (POSAS), mortalità e ASFR = **2
 
 ## Requisiti
 
-Python 3.10+; dipendenze: `numpy`, `pandas`, `xgboost` (solo per lo screening Fase 3; `pip install -r requirements.txt`).
+Python 3.10+; dipendenze: `numpy`, `pandas`, `xgboost` (solo per lo screening Fase 3), `matplotlib` (solo per rigenerare le figure; `pip install -r requirements.txt`).
 
 Per riprodurre l'analisi:
 
