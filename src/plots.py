@@ -110,7 +110,7 @@ def plot_traiettoria():
         ("A: TFR 1,18, saldo +280k", 1.0, 280_000.0, "#2166ac"),
         ("B: TFR 1,14, saldo +70k", 1.14 / 1.18, 70_000.0, "#b2182b"),
         ("D: TFR 1,18, saldo 0", 1.0, 0.0, "#8c510a"),
-        ("C: TFR 1,3, saldo +617k (break-even)", 1.3 / 1.18, 617_000.0, "#1b7837"),
+        ("C: TFR 1,18, saldo +617k (break-even)", 1.0, 617_000.0, "#1b7837"),
     ]
     fig, ax = plt.subplots(figsize=(8, 4.6))
     for nome, scala, saldo, colore in scenari:
