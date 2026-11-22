@@ -41,11 +41,12 @@ def load_population(csv_path: Path | str, max_age: int = MAX_AGE) -> pd.DataFram
             df[col] = pd.to_numeric(
                 df[col].astype(str).str.strip('"').str.replace(",", "."),
                 errors="coerce")
-    return df.dropna(subset=["femmine"])
+    return df.dropna(subset=["femmine", "maschi"])
 
 
-def n0_from_population(pop: pd.DataFrame, max_age: int = MAX_AGE) -> np.ndarray:
-    grouped = pop.groupby("eta")["femmine"].sum()
+def n0_from_population(pop: pd.DataFrame, max_age: int = MAX_AGE,
+                       sex: str = "femmine") -> np.ndarray:
+    grouped = pop.groupby("eta")[sex].sum()
     vec = np.zeros(max_age + 1)
     for age in range(max_age + 1):
         vec[age] = grouped.get(age, 0.0)
@@ -53,10 +54,10 @@ def n0_from_population(pop: pd.DataFrame, max_age: int = MAX_AGE) -> np.ndarray:
 
 
 def load_survival_probs(tvm_csv: Path | str, pop: pd.DataFrame,
-                        max_age: int = MAX_AGE) -> np.ndarray:
+                        max_age: int = MAX_AGE, sex: str = "femmine") -> np.ndarray:
     df = pd.read_csv(tvm_csv, encoding="utf-8-sig")
     df.columns = [c.strip() for c in df.columns]
-    df = df[df["Sesso"] == "Femmine"].copy()
+    df = df[df["Sesso"] == {"femmine": "Femmine", "maschi": "Maschi"}[sex]].copy()
     df["prov_code"] = df["Cod. provincia"].astype(int).astype(str).str.zfill(3)
     df["eta"] = pd.to_numeric(df["Età"], errors="coerce")
     p_col = next(c for c in df.columns if "prospett" in c.lower())
@@ -64,10 +65,10 @@ def load_survival_probs(tvm_csv: Path | str, pop: pd.DataFrame,
     df = df.dropna(subset=["eta", "P"])
     df = df[df["eta"] <= max_age]
 
-    weights = pop[["prov_code", "eta", "femmine"]].copy()
+    weights = pop[["prov_code", "eta", sex]].copy()
     merged = df.merge(weights, on=["prov_code", "eta"], how="inner")
-    num = (merged["P"] * merged["femmine"]).groupby(merged["eta"]).sum()
-    den = merged.groupby("eta")["femmine"].sum()
+    num = (merged["P"] * merged[sex]).groupby(merged["eta"]).sum()
+    den = merged.groupby("eta")[sex].sum()
     p_bar = num / den
 
     probs = np.zeros(max_age + 1)
@@ -98,16 +99,20 @@ def process_all(raw_dir: Path | None = None, out_dir: Path | None = None,
 
     pop_csv = next(raw.glob("POSAS_*_it_Province.csv"))
     pop = load_population(pop_csv)
-    n0 = n0_from_population(pop)
+    n0 = n0_from_population(pop, sex="femmine")
+    n0_m = n0_from_population(pop, sex="maschi")
 
     tvm_csv = next(raw.glob("datiprovincialicompleti*.csv"))
-    survival = load_survival_probs(tvm_csv, pop)
+    survival = load_survival_probs(tvm_csv, pop, sex="femmine")
+    survival_m = load_survival_probs(tvm_csv, pop, sex="maschi")
 
     asfr_json = sorted(raw.glob("asfr_*.json"))[-1]
     fertility = load_fertility(asfr_json)
 
     np.save(out / "n0_female.npy", n0)
+    np.save(out / "n0_male.npy", n0_m)
     np.save(out / "survival_probs.npy", survival)
+    np.save(out / "survival_probs_male.npy", survival_m)
     np.save(out / "fertility_rates.npy", fertility)
 
     tfr = fertility.sum()
@@ -115,6 +120,8 @@ def process_all(raw_dir: Path | None = None, out_dir: Path | None = None,
     summary = {
         "anno_popolazione": pop_csv.stem.split("_")[1],
         "popolazione_totale_femmine": float(n0.sum()),
+        "popolazione_totale_maschi": float(n0_m.sum()),
+        "popolazione_totale": float(n0.sum() + n0_m.sum()),
         "over_65_femmine_pct": float(n0[66:].sum() / n0.sum() * 100),
         "tfr_implicito": float(tfr),
         "eta_media_feconda": float(eta_media),

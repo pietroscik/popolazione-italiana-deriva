@@ -1,6 +1,8 @@
 {
   "anno_popolazione": "2026",
   "popolazione_totale_femmine": 30022193.0,
+  "popolazione_totale_maschi": 28920635.0,
+  "popolazione_totale": 58942828.0,
   "over_65_femmine_pct": 26.035379893800563,
   "tfr_implicito": 1.1802799999999998,
   "eta_media_feconda": 32.11448978208561,

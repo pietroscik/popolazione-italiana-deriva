@@ -77,11 +77,67 @@ def asymptotic_halving(lam: float) -> float:
 
 def load_processed(processed_dir: Path | None = None) -> dict:
     d = processed_dir or ROOT / "data" / "processed"
-    return {
+    data = {
         "n0": np.load(d / "n0_female.npy"),
         "survival": np.load(d / "survival_probs.npy"),
         "fertility": np.load(d / "fertility_rates.npy"),
     }
+    if (d / "n0_male.npy").exists():
+        data["n0_male"] = np.load(d / "n0_male.npy")
+        data["survival_male"] = np.load(d / "survival_probs_male.npy")
+    return data
+
+
+def project_two_sex(n_f: np.ndarray, n_m: np.ndarray, fertility: np.ndarray,
+                     P_f: np.ndarray, P_m: np.ndarray,
+                     mig_f: np.ndarray | None = None,
+                     mig_m: np.ndarray | None = None,
+                     tfr_scale: float = 1.0,
+                     sex_ratio_f: float = SEX_RATIO_F
+                     ) -> tuple[np.ndarray, np.ndarray]:
+    """Un anno di proiezione a due sessi: nascite totali dalle donne, ripartite
+    per sesso al parto (quota femminile sex_ratio_f), sopravvivenza sessuale e
+    migrazione netta per eta' per sesso."""
+    births_total = tfr_scale * (n_f * fertility).sum()
+    births_f = births_total * sex_ratio_f
+    births_m = births_total - births_f
+    new_f = survive(n_f, P_f)
+    new_m = survive(n_m, P_m)
+    new_f[0] = births_f
+    new_m[0] = births_m
+    if mig_f is not None:
+        new_f = new_f + mig_f
+        new_m = new_m + (mig_m if mig_m is not None else mig_f)
+    return np.maximum(new_f, 0.0), np.maximum(new_m, 0.0)
+
+
+def simulate_two_sex(n0_f, n0_m, fertility, P_f, P_m, years=100,
+                     tfr_scale=1.0, net_migration_total=0.0,
+                     mig=None) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Proiezione a due sessi con saldo migratorio annuo costante.
+
+    net_migration_total: migranti netti annui (livello, non tasso). Se mig non
+    e' fornito, il profilo per eta' e sesso e' Rogers-Castro pesato.
+    Restituisce (traiettoria totale, traiettoria femmine, traiettoria maschi)."""
+    nf = n0_f.astype(float).copy()
+    nm = n0_m.astype(float).copy()
+    tot = np.zeros(years + 1)
+    tr_f = np.zeros(years + 1)
+    tr_m = np.zeros(years + 1)
+    tot[0] = nf.sum() + nm.sum()
+    tr_f[0], tr_m[0] = nf.sum(), nm.sum()
+    if mig is None and net_migration_total != 0.0:
+        from migration import build_migration_profile
+        mig_f = build_migration_profile(nf, net_migration_total * 0.5)
+        mig_m = build_migration_profile(nm, net_migration_total * 0.5)
+    else:
+        mig_f = mig_m = mig
+    for t in range(1, years + 1):
+        nf, nm = project_two_sex(nf, nm, fertility, P_f, P_m,
+                                  mig_f, mig_m, tfr_scale)
+        tot[t] = nf.sum() + nm.sum()
+        tr_f[t], tr_m[t] = nf.sum(), nm.sum()
+    return tot, tr_f, tr_m
 
 
 def report(verbose: bool = True) -> dict:
@@ -133,8 +189,46 @@ def scenario_table(tfr_values=(0.95, 1.18, 1.20, 1.30)) -> list[dict]:
     return rows
 
 
+def migration_report(years: int = 55, verbose: bool = True) -> dict:
+    """Scenari di saldo migratorio a due sessi (TFR invariato) e saldo di break-even."""
+    from migration import saldo_for_constant_population
+
+    data = load_processed()
+    n0_f, n0_m = data["n0"], data["n0_male"]
+    P_f, P_m = data["survival"], data["survival_male"]
+    F = data["fertility"]
+    pop0 = n0_f.sum() + n0_m.sum()
+
+    rows = {}
+    for saldo, name in [(0.0, "zero"), (130_000.0, "-50%"),
+                        (280_000.0, "attuale-media-24-25"),
+                        (400_000.0, "alta")]:
+        tot, _, _ = simulate_two_sex(n0_f, n0_m, F, P_f, P_m, years=years,
+                                     net_migration_total=saldo)
+        rows[name] = {
+            "saldo": saldo,
+            "pop_finale": float(tot[-1]),
+            "var_pct": float((tot[-1] / tot[0] - 1.0) * 100),
+            "t_mezzo": halving_time(tot),
+        }
+
+    def growth(saldo):
+        tot, _, _ = simulate_two_sex(n0_f, n0_m, F, P_f, P_m, years=years,
+                                     net_migration_total=saldo)
+        return tot[-1] - tot[0]
+
+    break_even = saldo_for_constant_population(growth, lo=0.0, hi=1_000_000)
+    res = {"popolazione_iniziale": float(pop0), "orizzonte_anni": years,
+           "scenari": rows, "saldo_break_even": float(break_even)}
+    if verbose:
+        print(json.dumps(res, indent=2, ensure_ascii=False))
+    return res
+
+
 if __name__ == "__main__":
     report()
     if "--scenari" in sys.argv:
         for row in scenario_table():
             print(json.dumps(row, ensure_ascii=False))
+    if "--migrazioni" in sys.argv:
+        migration_report()
