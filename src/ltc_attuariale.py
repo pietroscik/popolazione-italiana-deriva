@@ -123,19 +123,25 @@ def attuariale_report(verbose: bool = True) -> dict:
             "premio_2081": at(rep, 2081),
         }
 
+    scenari_indicizzati = {}
+    for idx in (0.0, 0.02, 0.03):
+        rep = crescente if idx == 0.0 else simulate_fund(
+            adesioni_automatiche=True, indicizzazione=idx)
+        label = f"indicizzazione_{int(round(idx * 100))}pct"
+        scenari_indicizzati[label] = {
+            "premio_nominal": scen(rep),
+            "premio_reale_2026": {
+                "premio_2056": at(rep, 2056, "premio_reale_eur"),
+                "premio_2081": at(rep, 2081, "premio_reale_eur"),
+            },
+        }
+
     res = {
         "rendita_annua_eur": RENDA_ANNUA,
         "platea_iniziale_mln": PLATEA / 1e6,
-        "inflazione_scenario_indicizzato": INFLAZIONE,
         "platea_costante": scen(costante),
         "adesioni_automatiche": scen(crescente),
-        "adesioni_automatiche_indicizzata_2pct": {
-            "premio_nominal": scen(crescente_idx),
-            "premio_reale_2026": {
-                "premio_2056": at(crescente_idx, 2056, "premio_reale_eur"),
-                "premio_2081": at(crescente_idx, 2081, "premio_reale_eur"),
-            },
-        },
+        "scenari_indicizzazione_adesioni_automatiche": scenari_indicizzati,
         "benchmark_ordine_attuari_eur": {"costante": 113.0, "crescente": 74.0},
     }
     if verbose:

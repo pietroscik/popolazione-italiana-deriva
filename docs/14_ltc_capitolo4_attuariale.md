@@ -28,13 +28,14 @@ L'indicizzazione della rendita (raccomandata dal modello tedesco: adeguamento an
 | Scenario (adesioni automatiche) | 2026 | 2056 | 2081 |
 |---|---|---|---|
 | Rendita nominale fissa (500 €/mese) | 21 € | 219 € | 251 € |
-| **Rendita indicizzata al 2% annuo** | 21 € | **396 €** | **746 €** |
-| Indicizzata, deflata ai prezzi 2026 | 21 € | 219 € | 251 € |
+| Rendita indicizzata al **2%** annuo | 21 € | 396 € | 746 € |
+| Rendita indicizzata al **3%** annuo | 21 € | 531 € | **1.275 €** |
+| Qualsiasi, deflata ai prezzi 2026 | 21 € | 219 € | 251 € |
 
 **Letture**:
 
 1. **L'indicizzazione è puro effetto-prezzo**: il premio reale deflato al 2% coincide esattamente con lo scenario non indicizzato (verificato anche da un test di consistenza) — la demografia sottostante non cambia, cambia solo l'unità di conto
-2. **Il moltiplicatore nominale è però rilevante per la sostenibilità percepita**: a 2% annuo per 55 anni il fattore è ~3x (746 vs 251 €/anno al 2081). Se i salari indicizzano all'inflazione, il peso **reale** è invariato; ma ogni gap retribuzione-inflazione (stagnazione reale dei salari, come accaduto in Italia negli anni 2012-2019) si traduce integralmente in aumento del carico relativo
+2. **Il moltiplicatore nominale è però rilevante per la sostenibilità percepita**: a 2% annuo per 55 anni il fattore è ~3x (746 vs 251 €/anno al 2081); **al 3% sale a ~5x (1.275 €/anno)** — un'inflazione italiana anche solo un punto sopra il target di Francoforte, protratta per decenni, raddoppia il costo nominale dell'opzione indicizzazione. Se i salari indicizzano all'inflazione, il peso **reale** è invariato; ma ogni gap retribuzione-inflazione (stagnazione reale dei salari, come accaduto in Italia negli anni 2012-2019) si traduce integralmente in aumento del carico relativo
 3. **Va quantificato il costo dell'indicizzazione come opzione separata** — esattamente il criterio adottato dal Pnog tedesco: importi fissi fino al 2028, poi indicizzazione dal 2029 — il costo differito è la scelta politica esplicita, non un dettaglio tecnico
 
 ## 3. Letture
