@@ -45,6 +45,13 @@ La teoria ([05_low_fertility_trap.md](05_low_fertility_trap.md), equazione di Φ
 
 Con la DR nel modello, **la soglia di non ritorno scende sotto l'unità e l'attrattore sale a ~1,64**: la mappa diventa più "generosa" con il regime basso (più margini di risalita) ma anche più dipendente dal profilo DR della regione.
 
+## 4. Letture base (soglia e attrattore)
+
+1. **C'è una soglia di non ritorno stimata empiricamente, e l'Italia è vicina**: il TFR italiano (1,18 nel 2024, 1,14 nel 2025) sta' **sopra** la soglia di ~1,05 — la dinamica di lungo periodo implicita è di risalita lenta verso l'attrattore ~1,51 — ma la **Sardegna è già sotto** (0,85 nel 2025, settimo anno consecutivo sotto l'unità, datas ISTAT): per il modello il declino sardo è destinato a continuare, e il dato osservato (0,91 → 0,85) è coerente.
+2. **La soglia pratica (~1,05) è piu' bassa della soglia teorica sociologica (~1,35-1,50)** di [05_low_fertility_trap.md](05_low_fertility_trap.md): la transizione G(F;k,θ) stimata a 1,66 descrive dove *si spegne il feedback del regime alto*, mentre il punto di non ritorno emerge a F molto piu' basso. Le due soglie non coincidono -- e la differenza è informative: il sistema europeo mostra piu' resilienza di quanto la teoria della trappola teme, ma **sotto F≈1,0-1,1 nessuna regione del panel è mai risalita** con dati osservati.
+3. **L'attrattore europeo è ~1,51, non il rimpiazzo (2,1)**: anche uscendo dal regime basso, la dinamica stimata converge a un equilibrio sotto il rimpiazzo — coerente con la capacità attracting della gamma francese/nordica osservata (1,6-1,9) e non oltre.
+4. **Il quarto attrattore basso (~1,05-1,15 nella teoria) non è identificato dal panel**: le osservazioni persistentemente sotto 1,05 sono troppo rare (solo livelli tipo Sardegna). Il pavimento bio-sociale F_min della teoria non è visibile nei dati 2013-2023 — servirebbero serie piu' lunghe.
+
 ## 5. Letture aggiuntive: il segno di γ
 
 **γ̂ = +0,081: positivo, non negativo come previsto dalla teoria.** Letture non escludentisi:
@@ -52,13 +59,6 @@ Con la DR nel modello, **la soglia di non ritorno scende sotto l'unità e l'attr
 1. **Endogeneità meccanica del DR** — il DR di oggi è costruito dalle nascite di 15-65 anni or sono: una regione con TFR basso da decenni ha per costruzione un DR alto. Cio' che γ̂ cattura con segno positivo e' probabilmente il rimbalzo meccanico (le regioni molto vecchie hanno esaurito il hiatus di rinvio). E' ESATTAMENTE il caso d'uso degli strumenti ritardati t-15 previsto dal design ([06_backtest_protocol.md](06_backtest_protocol.md) appendice B): strumentare DR con la struttura per eta' indietro di 15 anni e stimare la forma strutturale.
 2. **Confondente da country-level welfare** — Nord Europa: DR alto E welfare family-friendly (pensioni sustentabili, asili): nel pooled il segno di γ e' contaminato da questa correlazione territoriale. Il test LOCO per paese (docs/06) e' la robustezza diretta.
 3. La teoria prevede il segno negativo sul ΔDR oltre la soglia fiscale DR0 — non sul livello: la forma `γ·max(0, DR-DR0)` con DR0 stimato resta da provare (prossimo passo naturale).
-
-## 4. Letture base (soglia e attrattore)
-
-1. **C'è una soglia di non ritorno stimata empiricamente, e l'Italia è vicina**: il TFR italiano (1,18 nel 2024, 1,14 nel 2025) sta' **sopra** la soglia di ~1,05 — la dinamica di lungo periodo implicita è di risalita lenta verso l'attrattore ~1,51 — ma la **Sardegna è già sotto** (0,85 nel 2025, settimo anno consecutivo sotto l'unità, datas ISTAT): per il modello il declino sardo è destinato a continuare, e il dato osservato (0,91 → 0,85) è coerente.
-2. **La soglia pratica (~1,05) è piu' bassa della soglia teorica sociologica (~1,35-1,50)** di [05_low_fertility_trap.md](05_low_fertility_trap.md): la transizione G(F;k,θ) stimata a 1,66 descrive dove *si spegne il feedback del regime alto*, mentre il punto di non ritorno emerge a F molto piu' basso. Le due soglie non coincidono -- e la differenza è informative: il sistema europeo mostra piu' resilienza di quanto la teoria della trappola teme, ma **sotto F≈1,0-1,1 nessuna regione del panel è mai risalita** con dati osservati.
-3. **L'attrattore europeo è ~1,51, non il rimpiazzo (2,1)**: anche uscendo dal regime basso, la dinamica stimata converge a un equilibrio sotto il rimpiazzo — coerente con la capacità attracting della gamma francese/nordica osservata (1,6-1,9) e non oltre.
-4. **Il quarto attrattore basso (~1,05-1,15 nella teoria) non è identificato dal panel**: le osservazioni persistentemente sotto 1,05 sono troppo rare (solo livelli tipo Sardegna). Il pavimento bio-sociale F_min della teoria non è visibile nei dati 2013-2023 — servirebbero serie piu' lunghe.
 
 ## 6. Limiti dichiarati (da chiudere)
 
