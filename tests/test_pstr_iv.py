@@ -67,3 +67,24 @@ class TestIV(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestPanelSbilanciato(unittest.TestCase):
+    def test_buco_temporale_non_produce_diff_misti(self):
+        rows = []
+        for geo in ("AX01", "BX01"):
+            for t, tfr in ((2001, 1.4), (2002, 1.3), (2003, 1.2),
+                           (2004, 1.1),
+                           # 2005 mancante: gap di un anno
+                           (2006, 1.0)):
+                rows.append({"geo": geo, "anno": t, "tfr": tfr,
+                             "gdp_pc": 20_000.0 * 1.01 ** t, "dr": 0.3})
+        df = prepare_panel(pd.DataFrame(rows))
+        # la riga 2006 (dopo il buco) non deve produrre un diff 2-ennale
+        self.assertNotIn(2006, df["anno"].unique())
+        # le righe con anni consecutivi restano utilizzabili
+        # (2002 e' scartata per il doppio lag del PIL: serve il PIL del 2000)
+        self.assertEqual(sorted(df["anno"].unique()), [2003, 2004])
+        # i d_tfr corrispondono a orizzonte annuo
+        self.assertAlmostEqual(
+            float(df[df.anno == 2004]["d_tfr"].iloc[0]), -0.1, delta=1e-9)

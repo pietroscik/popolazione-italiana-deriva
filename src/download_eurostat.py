@@ -174,6 +174,75 @@ def add_dr_t15(df: pd.DataFrame, raw_dir: Path | None = None,
     return df.drop(columns=["anno_strumento"])
 
 
+def _json_to_tidy_geo_time(path: Path, value_name: str) -> pd.DataFrame:
+    """JSON-stat multidimensionale generico (freq/unit/indicatore/geo/time)
+    -> DataFrame tidy geo-anno, decodificando secondo l'ordine di id/size."""
+    data = json.loads(path.read_text())
+    dims = list(data["id"])
+    size = list(data["size"])
+    cats = {d_: list(data["dimension"][d_]["category"]["index"])
+            for d_ in dims}
+    rows = []
+    for flat_key, value in data["value"].items():
+        rem = int(flat_key)
+        coords = {}
+        for d_ in reversed(dims):
+            si = dims.index(d_)
+            coords[d_] = rem % size[si]
+            rem //= size[si]
+        rows.append({"geo": cats["geo"][coords["geo"]],
+                     "anno": int(cats["time"][coords["time"]]),
+                     value_name: float(value)})
+    return pd.DataFrame(rows)
+
+
+def build_panel_long(raw_dir: Path | None = None,
+                     out_dir: Path | None = None) -> pd.DataFrame:
+    """Panel NUTS-2 esteso 1990-2024 per la stima PSTR a finestra lunga.
+
+    Serie: TFR (demo_r_find2, 1990-2024), PIL pro-capite (nama_10r_2gdp,
+    2000-2024), DR regionale (demo_r_pjangroup, 1990-2025), strumento dr_t15.
+
+    Crosswalk: nessuna mappa manuale — i codici NUTS-2 sono trattati come
+    regioni distinte; le regioni con codice/confine cambiato tra vintaggi
+    (FR 2016, UK 2020, PL 2018, DE regioni solo dal 2010 nel TFR) entrano
+    nel panel solo nel proprio intervallo a codice stabile. Il panel e'
+    sbilanciato e la stima pooled con dummies anno lo gestisce nativamente.
+
+    Limitazione dichiarata: il TFR regionale della Germania (nuovi Laender
+    compresi) non esiste in Eurostat prima del 2010, quindi la risalita
+    post-1989 della Germania Est resta fuori campione."""
+    raw = raw_dir or ROOT / "data" / "raw" / "eurostat"
+    out = out_dir or ROOT / "data" / "processed"
+    raw.mkdir(parents=True, exist_ok=True)
+
+    tfr_dest = raw / "tfr_nuts2_storico.json"
+    if not tfr_dest.exists():
+        url = f"{BASE}/demo_r_find2?format=JSON&lang=EN&indic_de=TOTFERRT"
+        with urllib.request.urlopen(url, timeout=240) as resp:
+            tfr_dest.write_bytes(resp.read())
+    gdp_dest = raw / "gdp_nuts2_storico.json"
+    if not gdp_dest.exists():
+        url = f"{BASE}/nama_10r_2gdp?format=JSON&lang=EN" \
+              f"&unit=PPS_EU27_2020_HAB"
+        with urllib.request.urlopen(url, timeout=240) as resp:
+            gdp_dest.write_bytes(resp.read())
+
+    tfr = _json_to_tidy_geo_time(tfr_dest, "tfr")
+    gdp = _json_to_tidy_geo_time(gdp_dest, "gdp_pc")
+    hist = build_dr_history(raw, out)[["geo", "anno", "dr_hist"]]
+    hist = hist.rename(columns={"dr_hist": "dr"})
+
+    df = tfr.merge(gdp, on=["geo", "anno"], how="left")
+    df = df.merge(hist, on=["geo", "anno"], how="left")
+    df = df[df["geo"].str.len() == 4]
+    df = df.sort_values(["geo", "anno"]).reset_index(drop=True)
+    df = add_dr_t15(df, raw, out)
+    df = df.sort_values(["geo", "anno"]).reset_index(drop=True)
+    df.to_csv(out / "eurostat_panel_1990.csv", index=False)
+    return df
+
+
 def _pop_to_age_columns(pop_json: Path, pop: pd.DataFrame) -> pd.DataFrame:
     """demo_r_pjanaggr3 (age: TOTAL/Y_LT15/Y15-64/Y_GE65) -> colonne wide.
     Decodifica il flat-index JSON-stat secondo l'ordine reale di id/size."""
