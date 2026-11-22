@@ -113,19 +113,25 @@ def project_two_sex(n_f: np.ndarray, n_m: np.ndarray, fertility: np.ndarray,
 
 def simulate_two_sex(n0_f, n0_m, fertility, P_f, P_m, years=100,
                      tfr_scale=1.0, net_migration_total=0.0,
-                     mig=None) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+                     mig=None, store_ages=False):
     """Proiezione a due sessi con saldo migratorio annuo costante.
 
     net_migration_total: migranti netti annui (livello, non tasso). Se mig non
     e' fornito, il profilo per eta' e sesso e' Rogers-Castro pesato.
-    Restituisce (traiettoria totale, traiettoria femmine, traiettoria maschi)."""
+    Restituisce (traiettoria totale, traiettoria femmine, traiettoria maschi).
+    Con store_ages=True restituisce anche le matrici (anni x eta') per sesso.
+    """
     nf = n0_f.astype(float).copy()
     nm = n0_m.astype(float).copy()
     tot = np.zeros(years + 1)
     tr_f = np.zeros(years + 1)
     tr_m = np.zeros(years + 1)
+    ages_f = np.zeros((years + 1, len(nf))) if store_ages else None
+    ages_m = np.zeros((years + 1, len(nm))) if store_ages else None
     tot[0] = nf.sum() + nm.sum()
     tr_f[0], tr_m[0] = nf.sum(), nm.sum()
+    if store_ages:
+        ages_f[0], ages_m[0] = nf, nm
     if mig is None and net_migration_total != 0.0:
         from migration import build_migration_profile
         mig_f = build_migration_profile(nf, net_migration_total * 0.5)
@@ -137,6 +143,10 @@ def simulate_two_sex(n0_f, n0_m, fertility, P_f, P_m, years=100,
                                   mig_f, mig_m, tfr_scale)
         tot[t] = nf.sum() + nm.sum()
         tr_f[t], tr_m[t] = nf.sum(), nm.sum()
+        if store_ages:
+            ages_f[t], ages_m[t] = nf, nm
+    if store_ages:
+        return tot, tr_f, tr_m, ages_f, ages_m
     return tot, tr_f, tr_m
 
 
