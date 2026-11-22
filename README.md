@@ -46,8 +46,8 @@ Ogni generazione di madri viene sostituita al ~55%: la popolazione femminile in 
 
 - [x] **Fase 1 — Dato e struttura**: download automatico e parser di POSAS 2026 (popolazione per età, sesso, provincia), TVM 2024 (tavole di mortalità provinciali), ASFR 2024 (fecondità per età) — `src/download_istat.py` + `src/parse_istat.py`
 - [x] **Fase 2 — Deriva**: matrice di Leslie sulla piramide reale + sensibilità t½ per TFR 0,95–1,30 — `src/leslie.py` ([risultati](docs/02_dimezzamento.md#5-risultati-dellimplementazione-dati-reali-istat-fase-2-completata))
-- [ ] **Fase 3 — Driver causali**: panel provinciale (ISTAT/OMI/INPS), XGBoost + TreeSHAP per screening, Double Machine Learning per ATE su TFR
-- [ ] **Fase 4 — LTC / prospettive attuariali**: rapporto caregiver/anziani come driver del costo LTC; impatto della coorte 1960–1975 sulle richieste LTC 2040–2055
+- [ ] **Fase 3 — Driver causali**: panel provinciale (ISTAT/OMI/INPS), XGBoost + TreeSHAP per screening, Double Machine Learning per ATE su TFR (design: [04_architettura_due_strati.md](docs/04_architettura_due_strati.md))
+- [ ] **Fase 4 — LTC / prospettive attuariali**: rapporto caregiver/anziani come driver del costo LTC; impatto della coorte 1960–1975 sulle richieste LTC 2040–2055. Estensione non lineare (Low Fertility Trap, TFR endogeno con isteresi): [05_low_fertility_trap.md](docs/05_low_fertility_trap.md)
 - [ ] **Fase 5 — Econometria collegata**: proiezioni popolazione attiva, pressione previdenziale, housing
 
 ## Fonti dati
@@ -73,9 +73,14 @@ python3 -m unittest discover tests
 ## Contenuto
 
 La documentazione dettagliata si trova in [docs/](docs/):
-- [01_dati.md](docs/01_dati.md) — fonti dati e formati
-- [02_dimezzamento.md](docs/02_dimezzamento.md) — tempo di dimezzamento: modello di Lotka e matrice di Leslie
+- [01_dati.md](docs/01_dati.md) — fonti dati e formati (download automatico)
+- [02_dimezzamento.md](docs/02_dimezzamento.md) — tempo di dimezzamento: modello di Lotka e matrice di Leslie (con risultati su dati reali)
 - [03_roadmap_ltc.md](docs/03_roadmap_ltc.md) — verso le stime attuariali LTC
+- [04_architettura_due_strati.md](docs/04_architettura_due_strati.md) — architettura target: strato causale offline + simulatore dinamico online
+- [05_low_fertility_trap.md](docs/05_low_fertility_trap.md) — formalizzazione della trappola della bassa fecondità: isteresi, biforcazione, identificazione PSTR
+- [06_backtest_protocol.md](docs/06_backtest_protocol.md) — protocollo di validazione out-of-sample (benchmark M0/M1/M2, Clark-West/DM, robustezza)
+
+Bozza del working paper in inglese: [paper/draft.md](paper/draft.md) — *Escaping the Low Fertility Trap*.
 
 ## Licenza
 
