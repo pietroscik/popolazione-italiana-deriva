@@ -61,4 +61,12 @@ L'RMSE medio europeo maschera il punto: la sigmoide è quasi piatta lontano da �
 
 ## 5. Nota di raccordo con lo stato attuale del repo
 
-Il backtest richiede il panel Eurostat NUTS-2 (TFR regionale, struttura per età, covariate macro) e le Fasi 1–2 completate. Il repo implementa già il **baseline M0** (Leslie a fertilità costante su dati reali ISTAT, [02_dimezzamento.md §5](02_dimezzamento.md)); M1 e M2 sono oggetto delle Fasi 2–4 della roadmap del [README](../README.md).
+**Quanto è già pronto** (a che punto è il protocollo):
+
+- Panel Eurostat NUTS-2 richiesto dal backtest: **assemblato e versionato** ([12_fase3_panel_europeo.md](12_fase3_panel_europeo.md); ESTENSIONE richiesta: il disegno originale prevede train 1995–2012, il panel copre 2013–2023 — per un fixed-origin test pieno serve estendere indietro TFR/PIL regionali, disponibili per il PIL ma parzialmente per il TFR NUTS-2; in alternativa expanding-window 2013–2023 con test 2020–2024)
+- **Baseline M0**: Leslie a fertilità costante, validata su dati reali ([02 §5](02_dimezzamento.md))
+- **M2 (PSTR)**: stima puntuale di (a, b0, b1, θ, k, γ) eseguita ([13](13_pstr_soglia_theta.md)); la versione dinamica-ricorsiva da inizializzare con n_2012 richiede la matrice Leslie-Rogers per singola regione (infrastruttura pronta al livello nazionale, da regionalizzare)
+- **M1 (lineare)**: ricavabile come caso k → 0 della stessa griglia — implementazione immediata
+- Da costruire: la suite DM/Clark-West, il CRPS dal bootstrap (infrastruttura bootstrap già in `pstr_trap.bootstrap_theta`), la stratificazione per regime, le batterie di robustezza
+
+Il vincolo operativo più stringente è la finestra temporale del TFR regionale: la priorità essere allungare il panel indietro (Eurostat ha TFR NUTS-2 dal 2013; i dati pre-2013 a livello regionale sono in ricostruzione ISTAT/Eurostat).

@@ -44,3 +44,17 @@ Confrontare con i comunicati ISTAT: TFR implicito atteso 1,18 (2024); popolazion
 
 - Quando ISTAT pubblica l'ASFR 2025/2026: rieseguire con `python3 src/download_istat.py 2027` (la disponibilità dell'ASFR dipende dal comunicato annuale natalità/fecondità)
 - Per esercizi territoriali: sono disponibili anche `POSAS_<anno>_it_Ripartizioni.zip` e i singoli zips provinciali
+- La CI scarica e riprocessa tutto a ogni push/PR: una pubblicazione ISTAT nuova si rileva automaticamente fallendo o aggiornando i controlli di qualità (`summary.json`)
+
+## Fonti previste non ancora integrate (Fase 2-3)
+
+| Dato | Fonte | Unità | Uso previsto |
+|---|---|---|---|
+| Canoni di locazione OMI | Agenzia delle Entrate (dati.agenziaentrate.gov.it, semiportali OMI) | €/m² per comune e tipologia | leva `ratio_affitto_reddito` (housing affordability) |
+| Redditi fiscali | MEF / Open BDAP (dichiarazioni per comune) | reddito mediano | denominatore del rapporto affitto/reddito |
+| Occupazione e tipi di contratto | INPS (Osservatorio sul lavoro) | quote a termine/part-time 25-39 | leva `quota_indet_f25_39` (precarietà) |
+| Copertura asili nido | ISTAT BES / Regioni | posti per 100 bambini 0-2 | leva `copertura_nidi` |
+| TFR regionale e PIL | Eurostat `demo_r_find2`, `nama_10r_2gdp` | panel NUTS-2 | ✔ già integrati (Fase 3) |
+| Dependency ratio regionale | Eurostat `demo_r_pjanaggr3` | 65+/15-64 | ✔ già integrata (PSTR) |
+
+Politica di provenienza: ogni dataset ha tag di fonte e data di estrazione nel nome file o in `summary.json`; i dati grezzi non sono versionati (dimensione) ma sono riscaricabili in modo deterministico dagli endpoint pubblici.
