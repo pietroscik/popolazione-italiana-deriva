@@ -68,15 +68,57 @@ def build_panel(raw_dir: Path | None = None,
                       raw / "tfr_nuts2.json")
     gdp_json = _fetch("nama_10r_2gdp", {"unit": "PPS_EU27_2020_HAB"},
                       raw / "gdp_nuts2.json")
+    pop_json = _fetch("demo_r_pjanaggr3", {"unit": "NR", "sex": "T"},
+                      raw / "pop_eta_nuts2.json")
 
     tfr = js_to_tidy(tfr_json, "tfr")
     gdp = js_to_tidy(gdp_json, "gdp_pc")
+    pop = js_to_tidy(pop_json, "pop")
+    pop["age"] = [None] * len(pop)
+
+    pop = _pop_to_age_columns(pop_json, pop)
 
     df = tfr.merge(gdp, on=["geo", "anno"], how="inner")
+    df = df.merge(pop, on=["geo", "anno"], how="left")
     df = df[df["geo"].str.len() == 4]
+    df["dr"] = df["pop_65piu"] / df["pop_15_64"]
+    df = df.drop(columns=[c for c in ("pop", "pop_15_64", "pop_65piu")
+                          if c in df.columns and c not in ("dr",)], errors="ignore")
     df = df.sort_values(["geo", "anno"]).reset_index(drop=True)
     df.to_csv(out / "eurostat_panel.csv", index=False)
     return df
+
+
+def _pop_to_age_columns(pop_json: Path, pop: pd.DataFrame) -> pd.DataFrame:
+    """demo_r_pjanaggr3 (age: TOTAL/Y_LT15/Y15-64/Y_GE65) -> colonne wide.
+    Decodifica il flat-index JSON-stat secondo l'ordine reale di id/size."""
+    data = json.loads(pop_json.read_text())
+    dims = list(data["id"])
+    size = list(data["size"])
+    cats = {d_: list(data["dimension"][d_]["category"]["index"])
+            for d_ in dims}
+
+    def decode(pos):
+        coords = {}
+        rem = pos
+        for d_, s in zip(reversed(dims), reversed(size)):
+            coords[d_] = rem % s
+            rem //= s
+        return coords
+
+    rows = {}
+    for flat_key, value in data["value"].items():
+        c = decode(int(flat_key))
+        geo = cats["geo"][c["geo"]]
+        anno = int(cats["time"][c["time"]])
+        age = cats["age"][c["age"]]
+        rows.setdefault((geo, anno), {})[age] = float(value)
+
+    recs = [{"geo": k[0], "anno": k[1],
+             "pop_15_64": v.get("Y15-64", np.nan),
+             "pop_65piu": v.get("Y_GE65", np.nan)}
+            for k, v in rows.items()]
+    return pd.DataFrame(recs)
 
 
 if __name__ == "__main__":
