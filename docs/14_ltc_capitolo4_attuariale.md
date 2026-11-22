@@ -21,6 +21,22 @@
 | **Adesioni automatiche** | 21 € | 219 € | **251 €** |
 | Benchmark Ordine Attuari (equilibrio) | — | — | 113 € (costante) / 74 € (crescente) |
 
+## 2-bis. Scenario indicizzato (rivalutazione della rendita al 2% annuo)
+
+L'indicizzazione della rendita (raccomandata dal modello tedesco: adeguamento annuo all'inflazione di fondo dal 2029, vedi [00](00_origine_evento_attuari.md)) cambia l'ordine di grandezza nominale del premio ma non la sostanza demografica:
+
+| Scenario (adesioni automatiche) | 2026 | 2056 | 2081 |
+|---|---|---|---|
+| Rendita nominale fissa (500 €/mese) | 21 € | 219 € | 251 € |
+| **Rendita indicizzata al 2% annuo** | 21 € | **396 €** | **746 €** |
+| Indicizzata, deflata ai prezzi 2026 | 21 € | 219 € | 251 € |
+
+**Letture**:
+
+1. **L'indicizzazione è puro effetto-prezzo**: il premio reale deflato al 2% coincide esattamente con lo scenario non indicizzato (verificato anche da un test di consistenza) — la demografia sottostante non cambia, cambia solo l'unità di conto
+2. **Il moltiplicatore nominale è però rilevante per la sostenibilità percepita**: a 2% annuo per 55 anni il fattore è ~3x (746 vs 251 €/anno al 2081). Se i salari indicizzano all'inflazione, il peso **reale** è invariato; ma ogni gap retribuzione-inflazione (stagnazione reale dei salari, come accaduto in Italia negli anni 2012-2019) si traduce integralmente in aumento del carico relativo
+3. **Va quantificato il costo dell'indicizzazione come opzione separata** — esattamente il criterio adottato dal Pnog tedesco: importi fissi fino al 2028, poi indicizzazione dal 2029 — il costo differito è la scelta politica esplicita, non un dettaglio tecnico
+
 ## 3. Letture
 
 1. **L'ordine di grandezza del 2026 è plausibile** (21 €/anno per fondo appena costituito: pochissimi claimants) e converrà verso i tre cifre man mano che il fondo matura — ma **la traiettoria è il dato nuovo** rispetto all'esempio dell'Ordine: il livello di equilibrio non è raggiunto in regime stazionario, è attraversato in salita mentre la coorte fondatrice invecchia.
@@ -36,4 +52,4 @@
 - **Struttura della platea**: scalata dalla popolazione 25-64, non dagli aderenti reali (dati COVIP per fascia quando integrati — attenzione COVIP pubblica adesioni aggregate); la struttura occupati è la prossima approssimazione, ottenibile per differenza fra forze lavoro e popolazione
 - **Incidenza**: da sostituire con le tavole multistato ANIA-Sapienza aggiornate (i claimants incrementano per incidenza netta vera, non per gradiente di prevalenza — che resta la forma prudenziale dichiarata)
 - **Assicurazione del rischio longevità morbidità**: nessun caricamento, nessuna gestione dell'asimmetria di mortalità (NAS muoiono prima: qui la sopravvivenza applicata ai claimants è quella generale, non quella specifica NAS — un secondo livello prudenziale che amplifica la stima)
-- **Rischio di sistema**: la rendita è nominale (nessuna indicizzazione); l'Ordine aveva raccomandato prestazioni indicizzate come la Germania dal 2029 (vedi [00](00_origine_evento_attuari.md) § De Tommaso) — un costo addizionale da quantificare
+- **Rischio di sistema**: la rendita è nominale (nessuna indicizzazione); l'Ordine aveva raccomandato prestazioni indicizzate come la Germania dal 2029 (vedi [00](00_origine_evento_attuari.md) § De Tommaso) — il costo dell'indicizzazione è ora quantificato nello scenario 2-bis (~3x nominale a 55 anni)

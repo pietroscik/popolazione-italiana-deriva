@@ -34,6 +34,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 RENDA_ANNUA = 6_000.0
 PLATEA = 10.0e6
+INFLAZIONE = 0.02
 ETA_ATTIVA = (25, 64)
 POP_TOTALE_2026 = 58_942_828.0
 
@@ -48,6 +49,7 @@ def net_incidence_by_age(max_age: int = 100) -> np.ndarray:
 
 
 def simulate_fund(adesioni_automatiche: bool = False,
+                  indicizzazione: float = 0.0,
                   start_year: int = 2026, years: int = 55) -> dict:
     """Proiezione del fondo LTC: premio puro anno per anno a ripartizione."""
     from leslie import load_processed, survive
@@ -76,15 +78,18 @@ def simulate_fund(adesioni_automatiche: bool = False,
 
         contributors = (nf[ETA_ATTIVA[0]:ETA_ATTIVA[1] + 1].sum() +
                         nm[ETA_ATTIVA[0]:ETA_ATTIVA[1] + 1].sum())
-        rendite = (claim_f.sum() + claim_m.sum()) * RENDA_ANNUA
+        rendita_t = RENDA_ANNUA * (1.0 + indicizzazione) ** t
+        rendite = (claim_f.sum() + claim_m.sum()) * rendita_t
         premio = rendite / contributors if contributors > 0 else float("nan")
 
+        deflator = (1.0 + indicizzazione) ** t
         rows.append({
             "anno": start_year + t,
             "aderenti_mln": float((nf.sum() + nm.sum()) / 1e6),
             "claimants": float(claim_f.sum() + claim_m.sum()),
             "contribuenti_mln": float(contributors / 1e6),
             "premio_puro_eur": float(premio),
+            "premio_reale_eur": float(premio / deflator),
         })
 
         claim_f = survive(claim_f, pf)
@@ -95,31 +100,41 @@ def simulate_fund(adesioni_automatiche: bool = False,
             nf[ETA_ATTIVA[0]] += inflow_f
             nm[ETA_ATTIVA[0]] += inflow_m
 
-    return {"adesioni_automatiche": adesioni_automatiche, "serie": rows}
+    return {"adesioni_automatiche": adesioni_automatiche,
+            "indicizzazione": indicizzazione, "serie": rows}
 
 
 def attuariale_report(verbose: bool = True) -> dict:
     costante = simulate_fund(adesioni_automatiche=False)
     crescente = simulate_fund(adesioni_automatiche=True)
+    crescente_idx = simulate_fund(adesioni_automatiche=True,
+                                 indicizzazione=INFLAZIONE)
 
-    def at(rep, anno):
+    def at(rep, anno, field="premio_puro_eur"):
         for r in rep["serie"]:
             if r["anno"] == anno:
-                return r["premio_puro_eur"]
-        return rep["serie"][-1]["premio_puro_eur"]
+                return r[field]
+        return rep["serie"][-1][field]
+
+    def scen(rep):
+        return {
+            "premio_2026": at(rep, 2026),
+            "premio_2056": at(rep, 2056),
+            "premio_2081": at(rep, 2081),
+        }
 
     res = {
         "rendita_annua_eur": RENDA_ANNUA,
         "platea_iniziale_mln": PLATEA / 1e6,
-        "platea_costante": {
-            "premio_2026": at(costante, 2026),
-            "premio_2056": at(costante, 2056),
-            "premio_2081": at(costante, 2081),
-        },
-        "adesioni_automatiche": {
-            "premio_2026": at(crescente, 2026),
-            "premio_2056": at(crescente, 2056),
-            "premio_2081": at(crescente, 2081),
+        "inflazione_scenario_indicizzato": INFLAZIONE,
+        "platea_costante": scen(costante),
+        "adesioni_automatiche": scen(crescente),
+        "adesioni_automatiche_indicizzata_2pct": {
+            "premio_nominal": scen(crescente_idx),
+            "premio_reale_2026": {
+                "premio_2056": at(crescente_idx, 2056, "premio_reale_eur"),
+                "premio_2081": at(crescente_idx, 2081, "premio_reale_eur"),
+            },
         },
         "benchmark_ordine_attuari_eur": {"costante": 113.0, "crescente": 74.0},
     }

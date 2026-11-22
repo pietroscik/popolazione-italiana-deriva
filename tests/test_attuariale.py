@@ -63,5 +63,26 @@ class TestFondo(unittest.TestCase):
                         res["platea_costante"]["premio_2056"])
 
 
+class TestIndicizzazione(unittest.TestCase):
+    @patch("leslie.load_processed")
+    def test_indicizzazione_pura_e_demografia_separate(self, mock):
+        mock.return_value = fake_processed()
+        inc = np.zeros(101)
+        inc[60:] = 0.01
+        with patch.object(act, "PLATEA", 1_000_000.0):
+            with patch.object(act, "net_incidence_by_age", return_value=inc):
+                base = act.simulate_fund(adesioni_automatiche=True,
+                                          indicizzazione=0.0, years=10)
+                idx = act.simulate_fund(adesioni_automatiche=True,
+                                        indicizzazione=0.02, years=10)
+        inflaz = (1.02) ** 10
+        self.assertAlmostEqual(idx["serie"][-1]["premio_puro_eur"],
+                                base["serie"][-1]["premio_puro_eur"] * inflaz,
+                                delta=1e-6)
+        self.assertAlmostEqual(idx["serie"][-1]["premio_reale_eur"],
+                                base["serie"][-1]["premio_puro_eur"],
+                                delta=1e-6)
+
+
 if __name__ == "__main__":
     unittest.main()
