@@ -184,7 +184,7 @@ def report(verbose: bool = True) -> dict:
     return res
 
 
-def scenario_table(tfr_values=(0.95, 1.18, 1.20, 1.30)) -> list[dict]:
+def scenario_table(tfr_values=(0.95, 1.14, 1.18, 1.20, 1.30)) -> list[dict]:
     data = load_processed()
     n0, P, F = data["n0"], data["survival"], data["fertility"]
     base_tfr = F.sum()
