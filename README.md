@@ -2,6 +2,8 @@
 
 Analisi della struttura per età e della deriva demografica della popolazione residente in Italia, a partire dai dati ufficiali ISTAT, con proiezioni tramite matrice di Leslie e stima del tempo di dimezzamento. Base per stime attuariali LTC e modelli econometrici collegati.
 
+> **Origine del progetto**: il seminario del Consiglio Nazionale degli Attuari *"Quale sviluppo in Italia per le coperture di Long Term Care"* (Roma, 26 ottobre 2026). Il cross-reading fra gli interventi (ANIA, Secondo Welfare, Casdic, Ordine degli Attuari) e i risultati di questo repo: [docs/00_origine_evento_attuari.md](docs/00_origine_evento_attuari.md).
+
 ## Quadro attuale (fonte: ISTAT, Indicatori demografici 2025)
 
 | Indicatore | Valore |
@@ -91,6 +93,7 @@ python3 -m unittest discover tests
 ## Contenuto
 
 La documentazione dettagliata si trova in [docs/](docs/):
+- [00_origine_evento_attuari.md](docs/00_origine_evento_attuari.md) — origine del progetto: seminario CN Attuari sul LTC e cross-reading con i risultati del repo
 - [01_dati.md](docs/01_dati.md) — fonti dati e formati (download automatico)
 - [02_dimezzamento.md](docs/02_dimezzamento.md) — tempo di dimezzamento: modello di Lotka e matrice di Leslie (con risultati su dati reali)
 - [03_roadmap_ltc.md](docs/03_roadmap_ltc.md) — verso le stime attuariali LTC
