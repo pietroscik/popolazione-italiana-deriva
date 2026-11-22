@@ -217,6 +217,46 @@ def loco_by_country(df: pd.DataFrame, theta_grid=THETA_GRID,
     }
 
 
+DR0_GRID = np.round(np.arange(0.20, 0.46, 0.01), 2)
+
+
+def fit_pstr_kinked(df: pd.DataFrame, theta_grid=THETA_GRID,
+                    k_grid=K_GRID, dr0_grid=DR0_GRID) -> dict:
+    """Test discriminante della forma attesa dalla teoria (docs/05, eq. di
+    Phi): gamma * max(0, DR - DR0). La teoria prevede che il freno fiscale
+    si accenda SOLO oltre la soglia DR0; le letture alternative (rimbalzo
+    post-rinvio, Myrskyla-Kohler-Billari) implicano un effetto positivo al
+    livello, cioe' gamma_lineare > 0 anche senza kink.
+
+    Concentrated LS 3D su (k, theta, DR0): la forma kinked sostituisce
+    dr_lag con max(0, dr_lag - DR0). Confronto: gamma_delivira il segno
+    del freno oltre DR0. Se il minimo e' a DR0 al bordo INFERIORE della
+    griglia e gamma>0, la forma kinked non compra nulla: il livello
+    spiega tutto (lettura rebound)."""
+    y = df["d_tfr"].values
+    dr = df["dr_lag"].values
+    best = None
+    for theta in theta_grid:
+        for k in k_grid:
+            X0, _ = _design(df, k, theta)
+            exog = X0[:, [0, 1, 2, 3]]
+            dummies = X0[:, 5:]
+            for dr0 in dr0_grid:
+                ex = np.column_stack([exog, np.maximum(0.0, dr - dr0), dummies])
+                beta, *_ = np.linalg.lstsq(ex, y, rcond=None)
+                resid = y - ex @ beta
+                ssr = float(resid @ resid)
+                if best is None or ssr < best["ssr"]:
+                    best = {"ssr": ssr, "k": float(k), "theta": float(theta),
+                            "dr0": float(dr0),
+                            "gamma_kinked": float(beta[4]),
+                            "eta": float(beta[3]), "b1": float(beta[2]),
+                            "b0": float(beta[1]), "a": float(beta[0])}
+    best["control_means"] = {c: float(df[c].mean()) for c in CONTROLS}
+    best["n_obs"] = int(len(df))
+    return best
+
+
 def bootstrap_theta(df: pd.DataFrame, B: int = 399, seed: int = 7) -> dict:
     """Cluster bootstrap sulle regioni (preserva la correlazione seriale)."""
     rng = np.random.default_rng(seed)

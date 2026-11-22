@@ -57,7 +57,7 @@ L'RMSE medio europeo maschera il punto: la sigmoide è quasi piatta lontano da �
 | Perturbazione W_spat (KNN k ∈ {3,5,8}, IDW 200/400 km, Queen con isole, row vs spectral normalization) | stabilità spaziale (SUTVA) | segno e significatività stabili; Moran's I p > 0,05 sui residui |
 | Leave-One-Country-Out (escludere a rotazione IT/FR/DE/ES) | generalizzabilità europea | θ̂ varia entro ±0,05 (altrimenti: effetto fisso nazionale, non legge generale) |
 | TFR vs TFR* (Bongaarts-Feeney) | effetto quantum puro | condizione di bistabilità confermata anche sul quantum depurato dal tempo |
-| Diagnostica strumenti (DR_t endogeno) | weak instruments | Kleibergen-Paap F > 10 (preferibile > 20); Hansen J p > 0,10 |
+| Diagnostica strumenti (DR_t endogeno) | weak instruments | Kleibergen-Paap F > 10 (preferibile > 20); Hansen J p > 0,10 — **nota**: J richiede ≥2 strumenti; con il solo t-15 non è calcolabile, ritirata dalle promesse correnti, secondo strumento t-20 pianificato |
 
 ## 5. Nota di raccordo con lo stato attuale del repo
 

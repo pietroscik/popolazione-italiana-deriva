@@ -64,7 +64,7 @@ A regime base **senza DR** (modello headline), **la soglia di non ritorno è ~0,
 
 **γ̂ = +0,081: positivo, non negativo come previsto dalla teoria.** Letture non escludentisi:
 
-1. **Endogeneità meccanica del DR** — il DR di oggi è costruito dalle nascite di 15-65 anni or sono: una regione con TFR basso da decenni ha per costruzione un DR alto. Cio' che γ̂ cattura con segno positivo e' probabilmente il rimbalzo meccanico (le regioni molto vecchie hanno esaurito il hiatus di rinvio). E' ESATTAMENTE il caso d'uso degli strumenti ritardati t-15 previsto dal design ([06_backtest_protocol.md](06_backtest_protocol.md) appendice B): strumentare DR con la struttura per eta' indietro di 15 anni e stimare la forma strutturale.
+1. **Endogeneità meccanica del DR — testata con strumento t-15 (F=340, γ̂_IV=+0,129)**: il segno resta positivo con la strumentazione, MA la validità dello strumento stesso è condizionata (v. §5 punto 4): sotto norme persistenti la DR a t-15 proxya il regime storico di fecondità.
 2. **Confondente da country-level welfare** — Nord Europa: DR alto E welfare family-friendly (pensioni sustentabili, asili): nel pooled il segno di γ e' contaminato da questa correlazione territoriale. Il test LOCO per paese (docs/06) e' la robustezza diretta.
 3. La teoria prevede il segno negativo sul ΔDR oltre la soglia fiscale DR0 — non sul livello: la forma `γ·max(0, DR-DR0)` con DR0 stimato resta da provare (prossimo passo naturale).
 
@@ -77,3 +77,16 @@ A regime base **senza DR** (modello headline), **la soglia di non ritorno è ~0,
 - **Identificazione del regime basso**: la finestra 2013-2023 non contiene transizioni complete sotto F≈1; il controesempio storico (Germania Est anni '90: TFR 0,77 → 1,4+) è fuori campione. L'estensione del panel a 1990+ è l'upgrade con maggior valore identificativo.
 - **IV sotto-campione**: la merge t-15 copre il 25,7% del panel (i codici NUTS-2 di molti paesi sono cambiati tra 1998-2008 e oggi); DE/FR/ES/IT sono ben coperti, ma la selezione geografica va pesata nella lettura di γ̂_IV.
 - Identificazione limitata dal raggio osservato (min TFR 0,84): il regime F<1 non è attraversato da nessuna coorte ampia di regioni.
+
+### 5.4 Test discriminante: forma kinked γ·max(0, DR−DR₀) — ESEGUITO
+
+La teoria prevede che il freno fiscale si accenda **solo oltre una soglia DR₀** (`fit_pstr_kinked`: concentrated LS con griglia profilata anche su DR₀ ∈ [0,20; 0,45]):
+
+| Specificazione | Parametri | Risultato |
+|---|---|---|
+| Lineare γ·DR (headline) | SSR 7,2339 | γ̂ = +0,0767 |
+| Kinked γ·max(0, DR−DR₀) | SSR 7,2335 | **DR̂₀ = limite inferiore della griglia** (0,20; estesa a [0,05; 0,45] → DR̂₀ = 0,06), **γ̂_kinked ≈ γ̂_lineare** |
+
+**Lettura (pre-registrata prima dell'esecuzione)**: il minimo spinge DR₀ al pavimento e il SSR non migliora → la forma kinked non compra nulla: **l'effetto della DR è di livello, non il freno fiscale a soglia della teoria**. La lettura compatibile è il rebound ad alto sviluppo / esaurimento del rinvio, non il meccanismo di crowding-out fiscale kinked. Il segno resta robusto a IV e LOCO, ma la sua interpretazione causale resta aperta (§5, punto 4).
+
+Nota su Hansen J: con un solo strumento (t-15) il test di over-identificazione non è calcolabile — la promessa del design (docs/06 appendice B) è ritirata; un secondo strumento (t-20, DR a 20 anni) è pianificato per rendere J testabile.

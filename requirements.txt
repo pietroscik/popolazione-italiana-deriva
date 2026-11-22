@@ -2,3 +2,5 @@ numpy>=1.26
 pandas>=2.1
 
 xgboost>=2.0
+
+matplotlib>=3.8  # solo per rigenerare le figure (PDF/PNG gia' committati)
