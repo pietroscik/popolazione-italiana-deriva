@@ -37,7 +37,8 @@ Ogni generazione di madri viene sostituita al ~55%: la popolazione femminile in 
 │   ├── parse_istat.py    # Parser CSV ISTAT Demo → vettori nazionali (due sessi)
 │   ├── leslie.py         # Leslie, due sessi, scenari, migrazioni
 │   ├── migration.py      # Profilo migratorio Rogers-Castro + calibrazione saldo
-│   ├── ltc.py            # Capitolo LTC: claimants, caregiver, rapporti
+│   ├── ltc.py            # Capitolo LTC 1: claimants, caregiver, rapporti
+│   ├── ltc_costi.py      # Capitolo LTC 2: costo aggregato (informale/domiciliare/residenziale)
 │   └── halving.py        # Modello asintotico di Lotka (t½ analitico)
 ├── notebooks/
 ├── docs/                 # Capitoli di analisi
@@ -50,7 +51,8 @@ Ogni generazione di madri viene sostituita al ~55%: la popolazione femminile in 
 - [x] **Fase 2 — Deriva**: matrice di Leslie sulla piramide reale + sensibilità t½ per TFR 0,95–1,30 — `src/leslie.py` ([risultati](docs/02_dimezzamento.md#5-risultati-dellimplementazione-dati-reali-istat-fase-2-completata))
 - [x] **Blocco dinamico completo**: modello a due sessi + migrazione per età Rogers-Castro, scenari di saldo migratorio e **saldo di break-even (~+600k/anno)** — [07_leslie_rogers_migrazioni.md](docs/07_leslie_rogers_migrazioni.md)
 - [ ] **Fase 3 — Driver causali**: panel provinciale (ISTAT/OMI/INPS), XGBoost + TreeSHAP per screening, Double Machine Learning per ATE su TFR (design: [04_architettura_due_strati.md](docs/04_architettura_due_strati.md))
-- [x] **Fase 4 — LTC, capitolo 1**: proiezione claimants e caregiver potenziali (2026–2081), rapporto caregiver/claimant (-43%): [08_ltc_capitolo1.md](docs/08_ltc_capitolo1.md). Estensione non lineare (Low Fertility Trap, TFR endogeno con isteresi): [05_low_fertility_trap.md](docs/05_low_fertility_trap.md)
+- [x] **Fase 4 — LTC, capitolo 1**: proiezione claimants e caregiver potenziali (2026–2081), rapporto caregiver/claimant (-43%): [08_ltc_capitolo1.md](docs/08_ltc_capitolo1.md)
+- [x] **Fase 4 — LTC, capitolo 2**: modello di copertura a tre livelli e costo aggregato — picco **31 mld € (1,4% PIL) al 2056**, x6 sul 2026: [09_ltc_capitolo2_costi.md](docs/09_ltc_capitolo2_costi.md). Estensione non lineare (Low Fertility Trap, TFR endogeno con isteresi): [05_low_fertility_trap.md](docs/05_low_fertility_trap.md)
 - [ ] **Fase 5 — Econometria collegata**: proiezioni popolazione attiva, pressione previdenziale, housing
 
 ## Fonti dati
@@ -71,7 +73,8 @@ python3 src/download_istat.py     # scarica i dati ISTAT in data/raw/
 python3 src/parse_istat.py       # genera i vettori in data/processed/
 python3 src/leslie.py --scenari  # report + tabella scenari TFR
 python3 src/leslie.py --migrazioni  # scenari saldo migratorio + break-even
-python3 src/ltc.py                  # capitolo LTC: claimants e caregiver
+python3 src/ltc.py                  # capitolo LTC 1: claimants e caregiver
+python3 src/ltc_costi.py            # capitolo LTC 2: costo aggregato formale
 python3 -m unittest discover tests
 ```
 
@@ -86,6 +89,7 @@ La documentazione dettagliata si trova in [docs/](docs/):
 - [06_backtest_protocol.md](docs/06_backtest_protocol.md) — protocollo di validazione out-of-sample (benchmark M0/M1/M2, Clark-West/DM, robustezza)
 - [07_leslie_rogers_migrazioni.md](docs/07_leslie_rogers_migrazioni.md) — migrazione per età (Rogers-Castro), modello a due sessi, saldo di break-even
 - [08_ltc_capitolo1.md](docs/08_ltc_capitolo1.md) — LTC: claimants non autosufficienti, caregiver potenziali, rapporto e finestra 2040–2055
+- [09_ltc_capitolo2_costi.md](docs/09_ltc_capitolo2_costi.md) — LTC: costo aggregato, cedimento assistenza informale, picco di spesa 2056
 
 Bozza del working paper in inglese: [paper/draft.md](paper/draft.md) — *Escaping the Low Fertility Trap*.
 
