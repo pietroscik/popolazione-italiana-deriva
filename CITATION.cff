@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: >-
+  Se usi questo repository in un lavoro di ricerca o professionale, citarlo
+  come indicato qui sotto.
+title: "popolazione-italiana-deriva"
+type: software
+authors:
+  - family-names: Scik
+    given-names: Pietro
+repository-code: "https://github.com/pietroscik/popolazione-italiana-deriva"
+abstract: >-
+  Struttura e deriva della popolazione italiana: pipeline ISTAT riproducibile
+  (POSAS 2026, TVM 2024, ASFR 2024), modello Leslie due sessi con migrazione
+  Rogers-Castro, stima PSTR della soglia della Low Fertility Trap su panel
+  NUTS-2 europeo con strumenti IV e robustezza LOCO, catena LTC
+  (claimants, costi, caregiving informale, Monte Carlo attuariale) e
+  capitolo attuariale sul premio puro di una rendita LTC.
+keywords:
+  - demografia
+  - Leslie
+  - low fertility trap
+  - PSTR
+  - long-term care
+  - attuaria
+license: MIT

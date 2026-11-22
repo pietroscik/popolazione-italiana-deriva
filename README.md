@@ -4,6 +4,10 @@ Analisi della struttura per età e della deriva demografica della popolazione re
 
 > **Origine del progetto**: il seminario del Consiglio Nazionale degli Attuari *"Quale sviluppo in Italia per le coperture di Long Term Care"* (Roma, 26 ottobre 2026). Il cross-reading fra gli interventi (ANIA, Secondo Welfare, Casdic, Ordine degli Attuari) e i risultati di questo repo: [docs/00_origine_evento_attuari.md](docs/00_origine_evento_attuari.md).
 
+[![tests](https://github.com/pietroscik/popolazione-italiana-deriva/actions/workflows/tests.yml/badge.svg)](https://github.com/pietroscik/popolazione-italiana-deriva/actions/workflows/tests.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+**[Executive summary (1 pagina, per il pubblico attuariale)](docs/executive_summary.md)**
+
 ## Quadro attuale (fonte: ISTAT, Indicatori demografici 2025)
 
 | Indicatore | Valore |
@@ -13,6 +17,16 @@ Analisi della struttura per età e della deriva demografica della popolazione re
 | Decessi 2025 | ~652.000 → saldo naturale ≈ **-296.000/anno** |
 | Età media al parto | 32,7 anni |
 | Femmine 15–49 anni | 11,4 milioni (da 14,3 milioni nel 1995) |
+
+## Figure chiave
+
+| Piramide 2026 vs 2056 | Mappa PSTR con soglia |
+|---|---|
+| ![Piramide](docs/figures/piramide_2026_2056.png) | ![Mappa PSTR](docs/figures/mappa_pstr.png) |
+| **Scenari di traiettoria** | **Costo LTC (banda Monte Carlo)** |
+| ![Traiettorie](docs/figures/traiettoria_dimezzamento.png) | ![Costi LTC](docs/figures/costi_ltc.png) |
+
+Regenerate con `python3 src/plots.py` (matplotlib; i PNG sono committati).
 
 ## Risultato chiave del modello asintotico (Lotka)
 
@@ -114,6 +128,8 @@ python3 -m unittest discover tests
 ```
 
 ## Contenuto
+
+- [docs/executive_summary.md](docs/executive_summary.md) — una pagina per il pubblico attuariale: i cinque numeri che contano, con status epistemico
 
 La documentazione dettagliata si trova in [docs/](docs/):
 - [00_origine_evento_attuari.md](docs/00_origine_evento_attuari.md) — origine del progetto: seminario CN Attuari sul LTC e cross-reading con i risultati del repo
