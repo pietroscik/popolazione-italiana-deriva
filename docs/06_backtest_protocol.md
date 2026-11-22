@@ -61,12 +61,17 @@ L'RMSE medio europeo maschera il punto: la sigmoide è quasi piatta lontano da �
 
 ## 5. Nota di raccordo con lo stato attuale del repo
 
+**Stato attuale**: la suite M0/M1/M2 con DM e Clark-West è **eseguita** su fixed-origin 2013-2024 e expanding h=1 — esito: la condizione di promozione del §2 NON è superata (M2 non batte né M0 né M1; a h=1 vince il random walk). Risultati e letture: [16_backtest.md](16_backtest.md), con la spiegazione strutturale in [15_panel_1990.md](15_panel_1990.md) (costanza dei parametri rigettata tra ere).
+
 **Quanto è già pronto** (a che punto è il protocollo):
 
 - Panel Eurostat NUTS-2 richiesto dal backtest: **assemblato e versionato** ([12_fase3_panel_europeo.md](12_fase3_panel_europeo.md); ESTENSIONE richiesta: il disegno originale prevede train 1995–2012, il panel copre 2013–2023 — per un fixed-origin test pieno serve estendere indietro TFR/PIL regionali, disponibili per il PIL ma parzialmente per il TFR NUTS-2; in alternativa expanding-window 2013–2023 con test 2020–2024)
 - **Baseline M0**: Leslie a fertilità costante, validata su dati reali ([02 §5](02_dimezzamento.md))
 - **M2 (PSTR)**: stima puntuale di (a, b0, b1, θ, k, γ) eseguita ([13](13_pstr_soglia_theta.md)); la versione dinamica-ricorsiva da inizializzare con n_2012 richiede la matrice Leslie-Rogers per singola regione (infrastruttura pronta al livello nazionale, da regionalizzare)
 - **M1 (lineare)**: ricavabile come caso k → 0 della stessa griglia — implementazione immediata
-- Da costruire: la suite DM/Clark-West, il CRPS dal bootstrap (infrastruttura bootstrap già in `pstr_trap.bootstrap_theta`), la stratificazione per regime, le batterie di robustezza
+- ~~Suite DM/Clark-West~~ **eseguita** ([16_backtest.md](16_backtest.md))
+- ~~Stratificazione per regime~~ **eseguita** (RMSE per F_2012 < 1,35 / 1,35-1,65 / > 1,65)
+- CRPS/coverage: eseguiti con B=20 ridotto (target B=1000 con block bootstrap sui residui)
+- Da costruire: il coupling Leslie regionale (MAPE coorte 0-11), le batterie di robustezza §4 (Chow/Wald, placebo θ, ESTR/spline, W_spat, TFR*)
 
 Il vincolo operativo più stringente è la finestra temporale del TFR regionale: la priorità essere allungare il panel indietro (Eurostat ha TFR NUTS-2 dal 2013; i dati pre-2013 a livello regionale sono in ricostruzione ISTAT/Eurostat).
