@@ -24,7 +24,7 @@ r  ≈ ln(0,551)/32,7 ≈ -1,82% all'anno
 t½ ≈ 38 anni per generazione
 ```
 
-Ogni generazione di madri viene sostituita al ~55%: la popolazione femminile in regime stabile si dimezza ogni ~38 anni. Vedi [docs/02_dimezzamento.md](docs/02_dimezzamento.md).
+Ogni generazione di madri viene sostituita al **57,3%** (R₀ esatto, lotka integrale): la popolazione femminile in regime stabile si dimezza ogni ~38 anni. Vedi [docs/02_dimezzamento.md](docs/02_dimezzamento.md) e [docs/18_lotka_sensitivity.md](docs/18_lotka_sensitivity.md) per la tripla verifica esatta (r Lotka = ln λ₁ = −1,6685%).
 
 ⚠️ **Nota critica sul perimetro**: si tratta dello scenario "zero migrazione" (il break-even strutturale), non della previsione centrale ISTAT — che con i flussi migratori attuali non prevede un dimezzamento entro il 2080. Vedi il documento per il ruolo di momentum e migrazioni.
 
@@ -81,6 +81,7 @@ Coerenza temporale degli input: n₀ = **2026** (POSAS), mortalità e ASFR = **2
 - [x] **Fase 4 — LTC, capitolo 4 (attuariale)**: premio puro di una rendita LTC 500 EUR/mese sulla platea previdenza complementare (~10M aderenti) proiettata con la Leslie-Rogers - platea chiusa insostenibile (1.397 EUR/anno al 2081), adesioni automatiche stabili (~251 EUR): [14_ltc_capitolo4_attuariale.md](docs/14_ltc_capitolo4_attuariale.md)
 - [x] **Fase 4 - LTC, capitolo 3**: valore del caregiving informale (19,9 mld €/anno), sensitività ±25% sulla calibrazione, **caregiver gap non colmabile dalla sola migrazione** (soglia irraggiungibile anche a +2,5M netti/anno): [10_ltc_capitolo3_informale.md](docs/10_ltc_capitolo3_informale.md). Estensione non lineare (Low Fertility Trap, TFR endogeno con isteresi): [05_low_fertility_trap.md](docs/05_low_fertility_trap.md)
 - [x] **Fase 4 — LTC, capitolo 5 (Monte Carlo)**: prevalenza F/M (claimants 2:1 al 2056), severità lieve/medio/grave calibrata sui costi del cap. 2, B=5.000 repliche con demografia ristimata per replica — **C₂₀₅₆ = 31,8 [23,2; 40,2] mld€**, PV 2026-81 ~1.057 mld€, longevità +1%/anno = solo +0,8% claimants (v. λ₁) — [17_ltc_capitolo5_montecarlo.md](docs/17_ltc_capitolo5_montecarlo.md)
+- [x] **Lotka integrale esatto + sensitivity sistematica**: tripla verifica chiusa (r approx −1,733% / r Lotka esatto −1,6685% = ln λ₁ alla sesta cifra, R₀ esatto 0,5733, T=32,11); tornado OAT su C₂₀₅₆ — driver dominanti: **prevalenza (el. 2,12)** e **r₀ break informale (el. 1,26)**, il TFR pesa solo 0,08 al 2056 — [18_lotka_sensitivity.md](docs/18_lotka_sensitivity.md)
 - [x] **Fase 5 — Econometria collegata**: proiezioni di popolazione attiva, dependency ratio previdenziale (0,40 → 0,72), coorti scolastiche (-45%), nuclei di formazione famiglia (-39%): [11_fase5_economia_collegata.md](docs/11_fase5_economia_collegata.md)
 
 ## Fonti dati
@@ -131,6 +132,7 @@ La documentazione dettagliata si trova in [docs/](docs/):
 - [15_panel_1990.md](docs/15_panel_1990.md) — panel esteso 1990-2024: test di costanza dei parametri per sotto-era, limiti di copertura (TFR tedesco solo dal 2010)
 - [16_backtest.md](docs/16_backtest.md) — backtest M0/M1/M2 con DM e Clark-West: la PSTR non supera i benchmark out-of-sample (valore strutturale, non previsivo)
 - [17_ltc_capitolo5_montecarlo.md](docs/17_ltc_capitolo5_montecarlo.md) — modello attuariale probabilistico: severità, sesso, Monte Carlo, PV e scenari di longevità
+- [18_lotka_sensitivity.md](docs/18_lotka_sensitivity.md) — Lotka integrale esatto (r = ln λ₁ alla sesta cifra) e sensitivity sistematica OAT (tornado su C₂₀₅₆)
 
 Bozza del working paper in inglese: [paper/draft.md](paper/draft.md) — *Escaping the Low Fertility Trap*.
 
