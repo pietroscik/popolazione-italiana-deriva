@@ -50,12 +50,14 @@ def prepare_panel(df: pd.DataFrame) -> pd.DataFrame:
     df["d_tfr"] = df.groupby("geo")["tfr"].diff()
     df["F_lag"] = df.groupby("geo")["tfr"].shift(1)
     df["gdp_lag"] = df.groupby("geo")["gdp_pc"].shift(1)
-    df["d_log_gdp"] = np.log(df["gdp_lag"]).diff()
+    df["d_log_gdp"] = np.log(df["gdp_lag"]).groupby(df["geo"]).diff()
     if "dr" in df.columns:
         df["dr_lag"] = df.groupby("geo")["dr"].shift(1)
     else:
         df["dr_lag"] = 0.3
     df = df.dropna(subset=["d_tfr", "F_lag", "d_log_gdp", "dr_lag"])
+    if "dr_t15" in df.columns:
+        df["_has_iv"] = df["dr_t15"].notna()
     return df.reset_index(drop=True)
 
 
@@ -65,23 +67,26 @@ def _design(df, k, theta):
     X = np.column_stack([np.ones(len(df)), F, F * _G(F, k, theta),
                          df["d_log_gdp"].values, df["dr_lag"].values,
                          year_dummies])
-    return X
+    return X, year_dummies
 
 
 def fit_pstr(df: pd.DataFrame, theta_grid=THETA_GRID, k_grid=K_GRID) -> dict:
     y = df["d_tfr"].values
     means = {c: float(df[c].mean()) for c in CONTROLS}
     best = None
+    dummy_share = None
     for theta in theta_grid:
         for k in k_grid:
-            X = _design(df, k, theta)
+            X, year_dummies = _design(df, k, theta)
             beta, *_ = np.linalg.lstsq(X, y, rcond=None)
             resid = y - X @ beta
             ssr = float(resid @ resid)
             if best is None or ssr < best["ssr"]:
                 best = {"ssr": ssr, "k": float(k), "theta": float(theta),
                         "beta": beta}
+                dummy_share = year_dummies.mean(axis=0)
     best["control_means"] = means
+    best["dummy_share"] = dummy_share
     best["n_obs"] = int(len(df))
     best["n_regioni"] = int(df["geo"].nunique())
     best["resid_std"] = float(np.sqrt(best["ssr"] / max(len(df) - 30, 1)))
@@ -93,8 +98,14 @@ def implied_map(best: dict, F_grid=None):
         F_grid = np.linspace(0.7, 3.5, 561)
     a, b0, b1, eta_dlgdp, gamma_dr = best["beta"][:5]
     k, theta = best["k"], best["theta"]
-    means = best.get("control_means", {"d_log_gdp": 0.0, "dr_lag": 0.0})
-    offset = eta_dlgdp * means["d_log_gdp"] + gamma_dr * means["dr_lag"]
+    means = best.get("control_means", {})
+    offset = eta_dlgdp * means.get("d_log_gdp", 0.0) + gamma_dr * means.get("dr_lag", 0.0)
+    beta_dummies = best["beta"][5:]
+    share = best.get("dummy_share")
+    if share is not None and len(beta_dummies) == len(share):
+        # effetto medio delle dummies anno sulle osservazioni del panel
+        # (la dummy dell'anno base e' implicitamente 0)
+        offset += float(beta_dummies @ share)
     return F_grid, a + offset + b0 * F_grid + b1 * F_grid * _G(F_grid, k, theta)
 
 
@@ -110,7 +121,98 @@ def equilibrium_points(best: dict):
     return roots
 
 
-def bootstrap_theta(df: pd.DataFrame, B: int = 40, seed: int = 7) -> dict:
+def fit_pstr_iv(df: pd.DataFrame, theta_grid=THETA_GRID,
+               k_grid=K_GRID) -> dict:
+    """2SLS concentrato: come fit_pstr ma con la DR strumentata da dr_t15.
+
+    La DR di oggi e' costruita dalle nascite di 15-65 anni orsono: e'
+    meccanicamente correlata con la fertilita' storica della regione e con
+    gli errori dell'equazione del TFR (endogeneita' meccanica, docs/13
+    par. 5.1). La DR osservata 15 anni prima e' predeterminata rispetto
+    agli shock recenti del TFR (protocollo docs/06, appendice B).
+
+    Per ogni (k, theta) sulla griglia: il primo stadio proietta dr_lag
+    sugli strumenti (tutti i regressori ma con dr_t15 al posto di dr_lag);
+    il secondo stima beta sulla proiezione. La selezione sulla griglia
+    minimizza la SSR strutturale 2SLS. Statistica F parziale del primo
+    stadio per l'esclusione dello strumento (regola empirica: F > 10)."""
+    y = df["d_tfr"].values
+    dr = df["dr_lag"].values
+    z = df["dr_t15"].values
+    best = None
+    for theta in theta_grid:
+        for k in k_grid:
+            X, _ = _design(df, k, theta)
+            Z = X.copy()
+            Z[:, 4] = z
+            # primo stazio: dr_lag su Z
+            pi, *_ = np.linalg.lstsq(Z, dr, rcond=None)
+            dr_hat = Z @ pi
+            # F parziale del primo stadio: modello ristretto senza lo
+            # strumento (solo regressori esogeni) vs modello completo
+            W = np.delete(X, 4, axis=1)
+            beta_r, *_ = np.linalg.lstsq(W, dr, rcond=None)
+            resid_r = dr - W @ beta_r
+            ssr_r = float(resid_r @ resid_r)
+            resid1 = dr - dr_hat
+            ssr_f = float(resid1 @ resid1)
+            q = Z.shape[1]
+            if ssr_f <= 0 or len(dr) - q <= 0:
+                continue
+            F1 = (ssr_r - ssr_f) / ssr_f * (len(dr) - q)
+            # secondo stadio
+            X_hat = X.copy()
+            X_hat[:, 4] = dr_hat
+            beta_iv, *_ = np.linalg.lstsq(X_hat, y, rcond=None)
+            resid = y - X @ beta_iv
+            ssr = float(resid @ resid)
+            if best is None or ssr < best["ssr"]:
+                best = {"ssr": ssr, "k": float(k), "theta": float(theta),
+                        "beta": beta_iv, "first_stage_F": float(F1)}
+    best["control_means"] = {c: float(df[c].mean()) for c in CONTROLS}
+    X_opt, _ = _design(df, best["k"], best["theta"])
+    best["dummy_share"] = X_opt[:, 5:].mean(axis=0)
+    best["n_obs"] = int(len(df))
+    best["n_regioni"] = int(df["geo"].nunique())
+    return best
+
+
+def loco_by_country(df: pd.DataFrame, theta_grid=THETA_GRID,
+                    k_grid=K_GRID) -> dict:
+    """Robustezza LOCO (leave-one-country-out) per la stima pooled.
+
+    Esclude iterativamente ciascun paese (prefisso ISO a 2 caratteri del
+    codice NUTS-2) e ristima (k, theta) e gamma_DR."""
+    df = df.copy()
+    df["paese"] = df["geo"].str[:2]
+    freq = df["paese"].value_counts()
+    records = []
+    for paese in freq.index:
+        sub = df[df["paese"] != paese]
+        if sub["geo"].nunique() < 20:
+            continue
+        try:
+            res = fit_pstr(sub, theta_grid=theta_grid, k_grid=k_grid)
+        except Exception:
+            continue
+        records.append({"paese_escluso": paese,
+                        "n_regioni": res["n_regioni"],
+                        "theta": res["theta"], "k": res["k"],
+                        "gamma_DR": float(res["beta"][4]),
+                        "eta_d_log_gdp": float(res["beta"][3]),
+                        "equilibri": [(round(f, 3), t)
+                                       for f, t in equilibrium_points(res)]})
+    thetas = [r["theta"] for r in records]
+    gammas = [r["gamma_DR"] for r in records]
+    return {
+        "n_propri": len(records),
+        "theta_min": float(min(thetas)), "theta_max": float(max(thetas)),
+        "gamma_DR_min": float(min(gammas)), "gamma_DR_max": float(max(gammas)),
+        "per_paese": records,
+    }
+
+
+def bootstrap_theta(df: pd.DataFrame, B: int = 399, seed: int = 7) -> dict:
     """Cluster bootstrap sulle regioni (preserva la correlazione seriale)."""
     rng = np.random.default_rng(seed)
     geos = df["geo"].unique()
@@ -123,7 +225,12 @@ def bootstrap_theta(df: pd.DataFrame, B: int = 40, seed: int = 7) -> dict:
         res = fit_pstr(sample, theta_grid=coarse_theta)
         thetas.append(res["theta"])
         ks.append(res["k"])
-        roots = equilibrium_points(res)
+        # conteggio della soglia a regime ad anno base (ambiente costante):
+        # al regime medio il panel 2013-2023 non ha incroci interni di
+        # per se' (effetti 2022-23), sarebbe un conteggio sempre vuoto
+        base_year = dict(res)
+        base_year["dummy_share"] = np.zeros(len(res["beta"]) - 5)
+        roots = equilibrium_points(base_year)
         unstable_roots.append(min([f for f, t in roots if t == "instabile"],
                                   default=np.nan))
     thetas = np.array(thetas)
@@ -146,7 +253,8 @@ def pstr_report(boot: bool = True, verbose: bool = True) -> dict:
     best = fit_pstr(df)
     roots = equilibrium_points(best)
     res = {
-        "stima": {k: v for k, v in best.items() if k != "beta"},
+        "stima": {k: v for k, v in best.items()
+                  if k not in ("beta", "dummy_share")},
         "beta": {"a": float(best["beta"][0]),
                  "b0_F": float(best["beta"][1]),
                  "b1_FxG": float(best["beta"][2]),
@@ -156,6 +264,27 @@ def pstr_report(boot: bool = True, verbose: bool = True) -> dict:
         "n_equilibri": len(roots),
         "bootstrap": bootstrap_theta(df) if boot else None,
     }
+    # La mappa include l'effetto medio delle dummies anno (regime medio, che
+    # nel 2013-2023 e' dominato dagli effetti 2022-23, molto negativi): con
+    # quell'offset la dinamica recente non ha incroci interni. Si riporta
+    # anche il regime ad anno base (ambiente costante, dummies = 0).
+    base_year = dict(best)
+    base_year["dummy_share"] = np.zeros(len(best["beta"]) - 5)
+    res["equilibri_anno_base"] = [{"F": round(f, 3), "tipo": t}
+                                   for f, t in equilibrium_points(base_year)]
+    if "dr_t15" in df.columns and df["dr_t15"].notna().sum() > 200:
+        df_iv = df.dropna(subset=["dr_t15"]).reset_index(drop=True)
+        iv = fit_pstr_iv(df_iv)
+        res["strumento_iv_dr_t15"] = {
+            "n_obs": iv["n_obs"],
+            "theta": iv["theta"], "k": iv["k"],
+            "gamma_DR_iv": float(iv["beta"][4]),
+            "eta_d_log_gdp_iv": float(iv["beta"][3]),
+            "first_stage_F": iv.get("first_stage_F"),
+            "equilibri": [{"F": round(f, 3), "tipo": t}
+                          for f, t in equilibrium_points(iv)],
+        }
+        res["loco"] = loco_by_country(df)
     if verbose:
         print(json.dumps(res, indent=2, ensure_ascii=False))
     return res

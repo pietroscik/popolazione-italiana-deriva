@@ -39,4 +39,4 @@ Il denominatore comune di tutti gli indici di questa fase è la popolazione in e
 | Dependency ratio anziani | 0,72 | 0,76 | +6% rel. |
 | Nuclei 20-44 | 10,0 M | 6,9 M | -31% |
 
-Nota: a saldo zero gli attivi scendono sotto i 16 milioni — ma il dependency ratio sale solo di un 6% relativo, perché senza migrazione scendono sia gli attivi sia gli anziani (coorti più piccole in ingresso nelle fasce 65+ dopo il 2050). L'effetto dominante della migrazione è sul **livello** della base attiva e dei nuclei, non sul rapporto: è il riflesso del risultato del [07](07_leslie_rogers_migrazioni.md) (break-even a ~600k/anno per la stabilità numerica).
+Nota: a saldo zero gli attivi scendono sotto i 16 milioni — ma il dependency ratio sale solo di un 6% relativo, perché senza migrazione scendono sia gli attivi sia gli anziani (coorti più piccole in ingresso nelle fasce 65+ dopo il 2050). L'effetto dominante della migrazione è sul **livello** della base attiva e dei nuclei, non sul rapporto: è il riflesso del risultato del [07](07_leslie_rogers_migrazioni.md) (break-even a ~617k/anno per la stabilità numerica).
