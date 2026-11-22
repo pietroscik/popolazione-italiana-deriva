@@ -38,6 +38,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 THETA_GRID = np.round(np.arange(1.10, 2.06, 0.02), 2)
 K_GRID = np.exp(np.arange(np.log(0.5), np.log(60.0), 0.20))
+CONTROLS = ["d_log_gdp", "dr_lag"]
 
 
 def _G(q, k, theta):
@@ -50,7 +51,11 @@ def prepare_panel(df: pd.DataFrame) -> pd.DataFrame:
     df["F_lag"] = df.groupby("geo")["tfr"].shift(1)
     df["gdp_lag"] = df.groupby("geo")["gdp_pc"].shift(1)
     df["d_log_gdp"] = np.log(df["gdp_lag"]).diff()
-    df = df.dropna(subset=["d_tfr", "F_lag", "d_log_gdp"])
+    if "dr" in df.columns:
+        df["dr_lag"] = df.groupby("geo")["dr"].shift(1)
+    else:
+        df["dr_lag"] = 0.3
+    df = df.dropna(subset=["d_tfr", "F_lag", "d_log_gdp", "dr_lag"])
     return df.reset_index(drop=True)
 
 
@@ -58,12 +63,14 @@ def _design(df, k, theta):
     F = df["F_lag"].values
     year_dummies = pd.get_dummies(df["anno"], drop_first=True).values.astype(float)
     X = np.column_stack([np.ones(len(df)), F, F * _G(F, k, theta),
-                         df["d_log_gdp"].values, year_dummies])
+                         df["d_log_gdp"].values, df["dr_lag"].values,
+                         year_dummies])
     return X
 
 
 def fit_pstr(df: pd.DataFrame, theta_grid=THETA_GRID, k_grid=K_GRID) -> dict:
     y = df["d_tfr"].values
+    means = {c: float(df[c].mean()) for c in CONTROLS}
     best = None
     for theta in theta_grid:
         for k in k_grid:
@@ -74,6 +81,7 @@ def fit_pstr(df: pd.DataFrame, theta_grid=THETA_GRID, k_grid=K_GRID) -> dict:
             if best is None or ssr < best["ssr"]:
                 best = {"ssr": ssr, "k": float(k), "theta": float(theta),
                         "beta": beta}
+    best["control_means"] = means
     best["n_obs"] = int(len(df))
     best["n_regioni"] = int(df["geo"].nunique())
     best["resid_std"] = float(np.sqrt(best["ssr"] / max(len(df) - 30, 1)))
@@ -83,9 +91,11 @@ def fit_pstr(df: pd.DataFrame, theta_grid=THETA_GRID, k_grid=K_GRID) -> dict:
 def implied_map(best: dict, F_grid=None):
     if F_grid is None:
         F_grid = np.linspace(0.7, 3.5, 561)
-    a, b0, b1, *_ = best["beta"]
+    a, b0, b1, eta_dlgdp, gamma_dr = best["beta"][:5]
     k, theta = best["k"], best["theta"]
-    return F_grid, a + b0 * F_grid + b1 * F_grid * _G(F_grid, k, theta)
+    means = best.get("control_means", {"d_log_gdp": 0.0, "dr_lag": 0.0})
+    offset = eta_dlgdp * means["d_log_gdp"] + gamma_dr * means["dr_lag"]
+    return F_grid, a + offset + b0 * F_grid + b1 * F_grid * _G(F_grid, k, theta)
 
 
 def equilibrium_points(best: dict):
@@ -140,7 +150,8 @@ def pstr_report(boot: bool = True, verbose: bool = True) -> dict:
         "beta": {"a": float(best["beta"][0]),
                  "b0_F": float(best["beta"][1]),
                  "b1_FxG": float(best["beta"][2]),
-                 "eta_d_log_gdp": float(best["beta"][3])},
+                 "eta_d_log_gdp": float(best["beta"][3]),
+                 "gamma_DR": float(best["beta"][4])},
         "equilibri": [{"F": round(f, 3), "tipo": t} for f, t in roots],
         "n_equilibri": len(roots),
         "bootstrap": bootstrap_theta(df) if boot else None,

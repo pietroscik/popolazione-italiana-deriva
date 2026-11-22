@@ -18,8 +18,10 @@ from pstr_trap import (
 
 
 def panel_sintetico(a=-0.081, b0=0.085, b1=-0.087, k=3.7, theta=1.66,
-                    noise=0.03, n_regioni=200, n_anni=14, seed=3):
-    """DGP con transizione logistica vera: dF = a + b0 F + b1 F G(F;k,theta) + eps.
+                    gamma_dr=0.08, noise=0.03, n_regioni=200, n_anni=14,
+                    seed=3):
+    """DGP con transizione logistica vera e freno DR:
+    dF = a + b0 F + b1 F G(F;k,theta) + gamma_dr * DR + eps.
     Nota: il regressore F_lag e' correlato con gli errori passati (feedback
     dinamico), quindi lo stimatore OLS concentrato soffre del classico bias
     dei panel dinamici (Nickell): i test verificano il recupero entro
@@ -29,12 +31,14 @@ def panel_sintetico(a=-0.081, b0=0.085, b1=-0.087, k=3.7, theta=1.66,
     for i in range(n_regioni):
         F = rng.uniform(0.9, 2.6)
         gdp = 25_000.0
+        dr = 0.30 + 0.001 * i + 0.002 * rng.standard_normal()
         for t in range(n_anni):
             rows.append({"geo": f"R{i:04d}", "anno": 2013 + t,
-                         "tfr": F, "gdp_pc": gdp})
+                         "tfr": F, "gdp_pc": gdp, "dr": dr})
             gdp *= np.exp(0.02 + 0.02 * rng.standard_normal())
+            dr += 0.003 + 0.001 * rng.standard_normal()
             F = F + a + b0 * F + b1 * F * _G(F, k, theta) + \
-                noise * rng.standard_normal()
+                gamma_dr * (dr - 0.30) + noise * rng.standard_normal()
     return pd.DataFrame(rows)
 
 
@@ -64,7 +68,8 @@ class TestFitPstr(unittest.TestCase):
 class TestEquilibri(unittest.TestCase):
     def test_radici_noto(self):
         best = {"k": 3.7, "theta": 1.66,
-                "beta": [-0.081, 0.085, -0.087, 0.0]}
+                "beta": [-0.081, 0.085, -0.087, 0.0, 0.0],
+                "control_means": {"d_log_gdp": 0.0, "dr_lag": 0.0}}
         roots = equilibrium_points(best)
         tipi = [t for _, t in roots]
         self.assertIn("stabile", tipi)
@@ -76,7 +81,8 @@ class TestEquilibri(unittest.TestCase):
 
     def test_mappa_negativa_nessuna_radice(self):
         best = {"k": 3.7, "theta": 1.66,
-                "beta": [-0.3, 0.09, -0.087, 0.0]}
+                "beta": [-0.3, 0.09, -0.087, 0.0, 0.0],
+                "control_means": {"d_log_gdp": 0.0, "dr_lag": 0.0}}
         Fg, f = implied_map(best)
         self.assertTrue((f < 0).all())
         self.assertEqual(equilibrium_points(best), [])
