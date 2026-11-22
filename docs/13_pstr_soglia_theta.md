@@ -27,36 +27,38 @@ La teoria ([05_low_fertility_trap.md](05_low_fertility_trap.md), equazione di Φ
 | Parametro | Stima (senza DR) | Stima (con DR) | Lettura |
 |---|---|---|---|
 | **θ̂ (soglia transizione)** | 1,66 | **1,70** | punto di flesso del feedback del regime alto |
-| k̂ (pendenza) | 3,69 | 6,73 | transizione più netta |
-| a | -0,081 | -0,060 | deriva negativa di base |
-| b0 (persistenza regime basso) | +0,085 | +0,035 | autoregressione sotto θ |
-| b1 (feedback regime alto) | -0,087 | -0,043 | freno sopra θ |
-| η (dlog PIL) | +0,217 | +0,219 | stabile: condizioni economiche di breve periodo |
-| **γ (DR)** | — | **+0,081** | segno OPPOSTO alla teoria - vedi §5 |
+| k̂ (pendenza) | 3,69 | 10,0 | transizione più netta |
+| a | -0,078 | -0,038 | deriva negativa di base |
+| b0 (persistenza regime basso) | +0,083 | +0,016 | autoregressione sotto θ |
+| b1 (feedback regime alto) | -0,085 | -0,031 | freno sopra θ |
+| η (dlog PIL) | +0,204 | +0,214 | stabile: condizioni economiche di breve periodo |
+| **γ (DR)** | — | **+0,077** | segno OPPOSTO alla teoria - vedi §5 |
+| n osservazioni | 2.366 | 2.366 | panel post-fix (26 righe con gap temporale scartate) |
 
 **Correzione dall'audit (P0)**: il differenziale del log-PIL era calcolato con `diff()` globale invece che per regione — la prima osservazione di ogni regione (~12% del panel) era differenziata contro l'ultimo anno della regione precedente. Fix: `groupby(geo).diff()`. Effetto marginale (θ e γ immutati a due decimali); tutti i numeri di questa pagina sono post-fix e ristimati.
 
-**Bootstrap a cluster sulle regioni (B=399)**: θ̂ = 1,56 ± 0,18, intervallo [1,20; 1,75]; **la soglia instabile emerge in 256/399 repliche (64%), media 0,95** (conteggio a regime anno base). Con B=40 la frequenza apparentemente più bassa (19/40) era in parte rumore da poche repliche: il supporto alla soglia è ora quantificato con stabilità adeguata.
+**Bootstrap a cluster sulle regioni (B=399)**: θ̂ = 1,57 ± 0,18, intervallo [1,20; 1,75]; **la soglia instabile emerge in 265/399 repliche (66%), media 0,90** (conteggio a regime anno base). Con B=40 la frequenza apparentemente più bassa (19/40) era in parte rumore da poche repliche: il supporto alla soglia è ora quantificato con stabilità adeguata.
 
 ### Punti di equilibrio: i due regimi della mappa (fix dell'audit)
 
 La mappa implicita ora include l'effetto medio delle dummies anno (prima era valutata solo all'anno base). I due regimi danno letture diverse e complementari:
 
-| Regime | Radici di f̂(F)=0 in [0,7; 3,5] | Lettura |
+| Regime | Radici di f̂(F)=0 in [0,4; 3,5] | Lettura |
 |---|---|---|
-| **Anno base** (dummies = 0, ambiente costante) | **0,81 instabile / 1,64 stabile** | soglia di non ritorno e attrattore del sistema a regime pre-2020 |
+| **Anno base, senza DR** (headline) | **0,91 instabile / 1,61 stabile** | soglia di non ritorno e attrattore del sistema a regime pre-2020 |
+| **Anno base, con DR** | **0,49 instabile / 1,65 stabile** | la radice bassa è sotto il supporto osservato (min TFR 0,84): pura estrapolazione del ramo lineare, non interpretabile; affidabile solo l'attrattore alto |
 | **Anno medio 2013-2023** | **nessuna radice interna** (f̂ < 0 ovunque) | gli effetti 2022-23 (-0,09 ciascuno) dominano la media: nella dinamica recente la mappa punta verso il basso a qualunque F — il collasso post-pandemico trascina sotto ogni bacino interno |
 
-A regime base, con la DR nel modello, **la soglia di non ritorno scende sotto l'unità e l'attrattore sale a ~1,64**: la mappa diventa più "generosa" con il regime basso (più margini di risalita) ma anche più dipendente dal profilo DR della regione. Il regime medio dice però che il *presente* (2022-23) non contiene alcun equilibrio interno: le due letture insieme sono il quadro corretto — la struttura della trappola esiste, la congiuntura attuale la sta attraversando verso il basso.
+A regime base **senza DR** (modello headline), **la soglia di non ritorno è ~0,91 e l'attrattore ~1,61**: la Sardegna (0,85 nel 2025) è sotto soglia, l'Italia (1,14) sopra. Aggiungere la DR restringe il fit del ramo basso e sposta la radice sotto il supporto dei dati: segno che il regime F<0,9 non è identificato dal panel — non che la soglia sia a 0,49. Il regime medio dice però che il *presente* (2022-23) non contiene alcun equilibrio interno: le letture insieme sono il quadro corretto — la struttura della trappola esiste, la congiuntura attuale la sta attraversando verso il basso.
 
 ## 4. Letture base (soglia e attrattore)
 
-> **Convenzione post-audit**: il *modello headline* è quello **senza DR** (θ̂=1,66, soglia ~1,05, attrattore ~1,51); la specificazione **estesa con DR** (θ̂=1,70, 0,81/1,64) è esplorazione/robustezza — ora supportata da IV strumento-forte e LOCO, ma con γ di segno non ancora interpretato causalmente (§5). Le letture che seguono si riferiscono al modello headline se non indicato diversamente.
+> **Convenzione post-audit**: il *modello headline* è quello **senza DR** (θ̂=1,66, soglia ~0,91, attrattore ~1,61); la specificazione **estesa con DR** (θ̂=1,70; 0,49 estrapolazione/1,65) è esplorazione/robustezza — ora supportata da IV strumento-forte e LOCO, ma con γ di segno non ancora interpretato causalmente (§5). Le letture che seguono si riferiscono al modello headline se non indicato diversamente.
 
-1. **C'è una soglia di non ritorno stimata empiricamente, e l'Italia è vicina**: il TFR italiano (1,18 nel 2024, 1,14 nel 2025) sta' **sopra** la soglia di ~1,05 — la dinamica di lungo periodo implicita è di risalita lenta verso l'attrattore ~1,51 — ma la **Sardegna è già sotto** (0,85 nel 2025, settimo anno consecutivo sotto l'unità, datas ISTAT): per il modello il declino sardo è destinato a continuare, e il dato osservato (0,91 → 0,85) è coerente.
-2. **La soglia pratica (~1,05) è piu' bassa della soglia teorica sociologica (~1,35-1,50)** di [05_low_fertility_trap.md](05_low_fertility_trap.md): la transizione G(F;k,θ) stimata a 1,66 descrive dove *si spegne il feedback del regime alto*, mentre il punto di non ritorno emerge a F molto piu' basso. Le due soglie non coincidono -- e la differenza è informative: il sistema europeo mostra piu' resilienza di quanto la teoria della trappola teme, ma **sotto F≈1,0-1,1 nessuna regione del panel è mai risalita** con dati osservati.
-3. **L'attrattore europeo è ~1,51, non il rimpiazzo (2,1)**: anche uscendo dal regime basso, la dinamica stimata converge a un equilibrio sotto il rimpiazzo — coerente con la capacità attracting della gamma francese/nordica osservata (1,6-1,9) e non oltre.
-4. **Il quarto attrattore basso (~1,05-1,15 nella teoria) non è identificato dal panel**: le osservazioni persistentemente sotto 1,05 sono troppo rare (solo livelli tipo Sardegna). Il pavimento bio-sociale F_min della teoria non è visibile nei dati 2013-2023 — servirebbero serie piu' lunghe.
+1. **C'è una soglia di non ritorno stimata empiricamente, e l'Italia è vicina**: il TFR italiano (1,18 nel 2024, 1,14 nel 2025) sta' **sopra** la soglia di ~0,91 — la dinamica di lungo periodo implicita è di risalita lenta verso l'attrattore ~1,61 — ma la **Sardegna è già sotto** (0,85 nel 2025, settimo anno consecutivo sotto l'unità, datas ISTAT): per il modello il declino sardo è destinato a continuare, e il dato osservato (0,91 → 0,85) è coerente.
+2. **La soglia pratica (~0,91) è piu' bassa della soglia teorica sociologica (~1,35-1,50)** di [05_low_fertility_trap.md](05_low_fertility_trap.md): la transizione G(F;k,θ) stimata a 1,66 descrive dove *si spegne il feedback del regime alto*, mentre il punto di non ritorno emerge a F molto piu' basso. Le due soglie non coincidono -- e la differenza è informative: il sistema europeo mostra piu' resilienza di quanto la teoria della trappola teme, ma **sotto F≈1,0-1,1 nessuna regione del panel è mai risalita** con dati osservati.
+3. **L'attrattore europeo è ~1,61, non il rimpiazzo (2,1)**: anche uscendo dal regime basso, la dinamica stimata converge a un equilibrio sotto il rimpiazzo — coerente con la capacità attracting della gamma francese/nordica osservata (1,6-1,9) e non oltre.
+4. **Il quarto attrattore basso (~1,05-1,15 nella teoria) non è identificato dal panel** (v. il ramo basso della specificazione DR, radice a 0,49 fuori dal supporto): le osservazioni persistentemente sotto 1,05 sono troppo rare (solo livelli tipo Sardegna). Il pavimento bio-sociale F_min della teoria non è visibile nei dati 2013-2023 — servirebbero serie piu' lunghe.
 
 ## 5. Letture aggiuntive: il segno di γ
 
