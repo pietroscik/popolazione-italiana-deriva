@@ -44,8 +44,8 @@ Ogni generazione di madri viene sostituita al ~55%: la popolazione femminile in 
 
 ## Roadmap
 
-- [ ] **Fase 1 — Dato e struttura**: parser ISTAT (popolazione per età × sesso, tavole di mortalità, fecondità per età della madre)
-- [ ] **Fase 2 — Deriva**: modello asintotico di Lotka + matrice di Leslie sul pyramid reale; sensitivity t½ su TFR ∈ [0,85; 1,30] e T
+- [x] **Fase 1 — Dato e struttura**: download automatico e parser di POSAS 2026 (popolazione per età, sesso, provincia), TVM 2024 (tavole di mortalità provinciali), ASFR 2024 (fecondità per età) — `src/download_istat.py` + `src/parse_istat.py`
+- [x] **Fase 2 — Deriva**: matrice di Leslie sulla piramide reale + sensibilità t½ per TFR 0,95–1,30 — `src/leslie.py` ([risultati](docs/02_dimezzamento.md#5-risultati-dellimplementazione-dati-reali-istat-fase-2-completata))
 - [ ] **Fase 3 — Driver causali**: panel provinciale (ISTAT/OMI/INPS), XGBoost + TreeSHAP per screening, Double Machine Learning per ATE su TFR
 - [ ] **Fase 4 — LTC / prospettive attuariali**: rapporto caregiver/anziani come driver del costo LTC; impatto della coorte 1960–1975 sulle richieste LTC 2040–2055
 - [ ] **Fase 5 — Econometria collegata**: proiezioni popolazione attiva, pressione previdenziale, housing
@@ -59,7 +59,16 @@ Ogni generazione di madri viene sostituita al ~55%: la popolazione femminile in 
 
 ## Requisiti
 
-Python 3.10+. Nessuna dipendenza aggiuntiva per Fase 1–2 (numpy, pandas, scipy).
+Python 3.10+; dipendenze: `numpy`, `pandas` (`pip install -r requirements.txt`).
+
+Per riprodurre l'analisi:
+
+```bash
+python3 src/download_istat.py     # scarica i dati ISTAT in data/raw/
+python3 src/parse_istat.py       # genera i vettori in data/processed/
+python3 src/leslie.py --scenari  # report + tabella scenari
+python3 -m unittest discover tests
+```
 
 ## Contenuto
 
