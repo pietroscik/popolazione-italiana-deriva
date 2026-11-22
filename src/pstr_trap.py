@@ -47,10 +47,15 @@ def _G(q, k, theta):
 
 def prepare_panel(df: pd.DataFrame) -> pd.DataFrame:
     df = df.sort_values(["geo", "anno"]).copy()
+    # nei panel sbilanciati: lag e differenze valide solo tra anni
+    # consecutivi — un buco temporale non deve produrre diff a orizzonte misto
+    gap = df.groupby("geo")["anno"].diff()
+    consecutive = gap.eq(1)
     df["d_tfr"] = df.groupby("geo")["tfr"].diff()
     df["F_lag"] = df.groupby("geo")["tfr"].shift(1)
     df["gdp_lag"] = df.groupby("geo")["gdp_pc"].shift(1)
     df["d_log_gdp"] = np.log(df["gdp_lag"]).groupby(df["geo"]).diff()
+    df.loc[~consecutive, ["d_tfr", "F_lag", "gdp_lag", "d_log_gdp"]] = np.nan
     if "dr" in df.columns:
         df["dr_lag"] = df.groupby("geo")["dr"].shift(1)
     else:
@@ -95,7 +100,7 @@ def fit_pstr(df: pd.DataFrame, theta_grid=THETA_GRID, k_grid=K_GRID) -> dict:
 
 def implied_map(best: dict, F_grid=None):
     if F_grid is None:
-        F_grid = np.linspace(0.7, 3.5, 561)
+        F_grid = np.linspace(0.4, 3.5, 621)
     a, b0, b1, eta_dlgdp, gamma_dr = best["beta"][:5]
     k, theta = best["k"], best["theta"]
     means = best.get("control_means", {})
@@ -246,13 +251,20 @@ def bootstrap_theta(df: pd.DataFrame, B: int = 399, seed: int = 7) -> dict:
     }
 
 
-def pstr_report(boot: bool = True, verbose: bool = True) -> dict:
-    from download_eurostat import build_panel
+def pstr_report(boot: bool = True, verbose: bool = True,
+                panel: str = "2013") -> dict:
+    if panel == "1990":
+        from download_eurostat import build_panel_long
+        raw = build_panel_long()
+    else:
+        from download_eurostat import build_panel
+        raw = build_panel()
 
-    df = prepare_panel(build_panel())
+    df = prepare_panel(raw)
     best = fit_pstr(df)
     roots = equilibrium_points(best)
     res = {
+        "panel": panel,
         "stima": {k: v for k, v in best.items()
                   if k not in ("beta", "dummy_share")},
         "beta": {"a": float(best["beta"][0]),
@@ -291,4 +303,5 @@ def pstr_report(boot: bool = True, verbose: bool = True) -> dict:
 
 
 if __name__ == "__main__":
-    pstr_report(boot="--no-boot" not in sys.argv)
+    pstr_report(boot="--no-boot" not in sys.argv,
+                panel="1990" if "--panel-1990" in sys.argv else "2013")
