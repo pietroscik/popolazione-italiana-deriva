@@ -8,7 +8,7 @@ Con TFR 2025 a **1,14** (355.772 nati, ISTAT) e quota femminile alla nascita 0,4
 
 ## La soglia
 
-Su 282 regioni europee (1990-2024), la stima PSTR con strumentazione della dependency ratio (first-stage F=340; γ_IV = +0,129) identifica un **punto di non ritorno a TFR ≈ 0,91** e un attrattore a ≈ 1,61, γ>0 robusto per paese (LOCO) e finestra. L'Italia è **sopra** soglia ma vicino; la **Sardegna (0,85) è dentro la trappola**: la sua Leslie regionale dimezza in **26 anni** (−44% di popolazione al 2081). Risultato onesto: il backtest DM/CW mostra che la PSTR **non** prevede meglio di un modello lineare o di un random walk — il suo valore è strutturale (regimi e soglie), non previsivo.
+Sul panel europeo NUTS-2 — **stima headline sulla finestra 2013-2023** (282 regioni, 2.366 osservazioni post-filtraggio) e **panel esteso 1990-2024** usato per il test di stabilità temporale — la PSTR con strumentazione della dependency ratio (first-stage F=340; γ_IV = +0,129; backtest fixed-origin addestrato su 2001-2012) identifica un **punto di non ritorno a TFR ≈ 0,91** e un attrattore a ≈ 1,61, γ>0 robusto per paese (LOCO) e finestra. L'Italia è **sopra** soglia ma vicino; la **Sardegna (0,85) è dentro la trappola**: la sua Leslie regionale dimezza in **26 anni** (−44% di popolazione al 2081). Risultato onesto: il backtest DM/CW mostra che la PSTR **non** prevede meglio di un modello lineare o di un random walk — il suo valore è strutturale (regimi e soglie), non previsivo.
 
 ## Il costo LTC
 
