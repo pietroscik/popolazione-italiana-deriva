@@ -53,7 +53,24 @@ Il valore di t½ descrive il ritmo **asintotico**, raggiunto quando la distribuz
 - Sottodiagonale `P_x = L_{x+1}/L_x` dagli anni vissuti delle tavole ISTAT (più accurato di `1-q_x`).
 - Interpolazione lineare per il calcolo di t½ sulla traiettoria simulata.
 
-## 5. Collegamento con le policy (Fase 3, outline)
+## 5. Risultati dell'implementazione (dati reali ISTAT, Fase 2 completata)
+
+Esecuzione su dati reali: popolazione POSAS 2026 (30,02 M femmine, 26,0% over-65), tavole TVM 2024 (medie provinciali pesate), ASFR 2024 (TFR implicito 1,18 — coincide col dato ufficiale ISTAT; T media feconda 32,1 anni):
+
+| Scenario (TFR) | r intrinseco | t½ asintotico | Primo dimezzamento | Femmine 2056 | Femmine 2076 |
+|---|---|---|---|---|---|
+| 0,95 | -2,31%/y | 30,0 anni | 49,0 anni | 21,5 M | 14,7 M |
+| **1,18 (attuale)** | **-1,67%/y** | **41,5 anni** | **55,1 anni** | **22,4 M** | **16,2 M** |
+| 1,20 | -1,62%/y | 42,8 anni | 55,8 anni | 22,5 M | 16,4 M |
+| 1,30 | -1,38%/y | 50,2 anni | 59,6 anni | 22,9 M | 17,1 M |
+
+Letture chiave:
+
+- Il **t½ asintotico sul modello completo (41,5 anni a TFR 1,18)** è leggermente superiore ai ~40 anni della formula di Lotka della sezione 2: la formula R₀ ≈ TFR·0,488·0,99 è un'approssimazione, mentre il λ₁ della Leslie usa il profilo fecondità × sopravvivenza reale.
+- Il **primo dimezzamento (~55 anni)** è più lontano dell'asintotico: effetto del momentum; la piramide attuale (26,0% over-65) è più "giovane" dell'autovettore stabile — che converge al **39,2% di over-65**.
+- Prompt per riprodurre: `python3 src/download_istat.py && python3 src/parse_istat.py && python3 src/leslie.py --scenari`.
+
+## 6. Collegamento con le policy (Fase 3, outline)
 
 Il framework causale per stimare come una leva (es. copertura asili nido, rapporto affitto/reddito, precarietà femminile 25–39) muove il TFR — e quindi il t½ — è il seguente:
 
