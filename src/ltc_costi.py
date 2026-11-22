@@ -43,9 +43,10 @@ def informal_share(ratio: np.ndarray | float,
     return 1.0 / (1.0 + np.exp(-(ratio - r0) / b))
 
 
-def cost_breakdown(claimants, ratio):
+def cost_breakdown(claimants, ratio, r0: float = R_RATIO_INFLESSO,
+                   b: float = R_LOGIT_PENDENZA):
     """Scomposizione dei claimants nei tre livelli di copertura."""
-    informal = claimants * informal_share(ratio)
+    informal = claimants * informal_share(ratio, r0=r0, b=b)
     formal = claimants - informal
     domiciliare = formal * SHARE_DOMICILIARE_FORMALE
     residenziale = formal * (1.0 - SHARE_DOMICILIARE_FORMALE)
