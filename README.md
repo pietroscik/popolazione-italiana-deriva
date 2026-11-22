@@ -37,7 +37,7 @@ I numeri di questo repo hanno quattro status diversi — mescolarli è l'errore 
 | TFR 2024 = 1,18 / 2025 = 1,14; 355.772 nati; pop. 2026 | **osservato** | ISTAT (demo.istat.it) | [01_dati.md](docs/01_dati.md) |
 | λ₁ = 0,9834, t½ asintotico 41,5 / primo 55,1 anni; θ̂ PSTR e soglie della mappa | **stimato dal modello** (su dati osservati) | Leslie due-sessi / PSTR con IV e LOCO | [02_dimezzamento.md](docs/02_dimezzamento.md), [13_pstr_soglia_theta.md](docs/13_pstr_soglia_theta.md) |
 | Prevalenze LTC per età (bande); costi unitari (15k/48k €); quota domiciliare 65%; parametri Rogers-Castro | **assunto** (parametrico, ancorato a benchmark tedeschi/ANIA) | dichiarati nei moduli | [09_ltc_capitolo2_costi.md](docs/09_ltc_capitolo2_costi.md), [07_leslie_rogers_migrazioni.md](docs/07_leslie_rogers_migrazioni.md) |
-| Costo LTC 2056 ≈ 31 mld (a prezzi costanti); premio puro 2081 = 251 €; equilibri della mappa f(F) | **simulato** (scenario derivato da osservato + assunto + stimato) | pipeline end-to-end | [09](docs/09_ltc_capitolo2_costi.md), [14](docs/14_ltc_capitolo4_attuariale.md) |
+| Costo LTC 2056 = 31,8 **[23,2; 40,2]** mld (MC B=5.000); premio puro 2081 = 251 €; equilibri della mappa f(F) | **simulato** (scenario derivato da osservato + assunto + stimato) | pipeline end-to-end | [09](docs/09_ltc_capitolo2_costi.md), [14](docs/14_ltc_capitolo4_attuariale.md), [17](docs/17_ltc_capitolo5_montecarlo.md) |
 | Break-even migrazione ~+617k/anno | **controfattuale** (che saldo servirebbe a TFR e profilo attuali) | bisezione sul modello | [07_leslie_rogers_migrazioni.md](docs/07_leslie_rogers_migrazioni.md) |
 
 Coerenza temporale degli input: n₀ = **2026** (POSAS), mortalità e ASFR = **2024**; scenario A (TFR 1,18 implicito) vs B (1,14 del 2025) separati esplicitamente — vedi [01_dati.md](docs/01_dati.md#coerenza-temporale-degli-input-dichiarazione-esplicita).
@@ -80,6 +80,7 @@ Coerenza temporale degli input: n₀ = **2026** (POSAS), mortalità e ASFR = **2
 - [x] **Fase 4 — LTC, capitolo 2**: modello di copertura a tre livelli e costo aggregato — picco **31 mld € (1,4% PIL) al 2056**, x6 sul 2026: [09_ltc_capitolo2_costi.md](docs/09_ltc_capitolo2_costi.md)
 - [x] **Fase 4 — LTC, capitolo 4 (attuariale)**: premio puro di una rendita LTC 500 EUR/mese sulla platea previdenza complementare (~10M aderenti) proiettata con la Leslie-Rogers - platea chiusa insostenibile (1.397 EUR/anno al 2081), adesioni automatiche stabili (~251 EUR): [14_ltc_capitolo4_attuariale.md](docs/14_ltc_capitolo4_attuariale.md)
 - [x] **Fase 4 - LTC, capitolo 3**: valore del caregiving informale (19,9 mld €/anno), sensitività ±25% sulla calibrazione, **caregiver gap non colmabile dalla sola migrazione** (soglia irraggiungibile anche a +2,5M netti/anno): [10_ltc_capitolo3_informale.md](docs/10_ltc_capitolo3_informale.md). Estensione non lineare (Low Fertility Trap, TFR endogeno con isteresi): [05_low_fertility_trap.md](docs/05_low_fertility_trap.md)
+- [x] **Fase 4 — LTC, capitolo 5 (Monte Carlo)**: prevalenza F/M (claimants 2:1 al 2056), severità lieve/medio/grave calibrata sui costi del cap. 2, B=5.000 repliche con demografia ristimata per replica — **C₂₀₅₆ = 31,8 [23,2; 40,2] mld€**, PV 2026-81 ~1.057 mld€, longevità +1%/anno = solo +0,8% claimants (v. λ₁) — [17_ltc_capitolo5_montecarlo.md](docs/17_ltc_capitolo5_montecarlo.md)
 - [x] **Fase 5 — Econometria collegata**: proiezioni di popolazione attiva, dependency ratio previdenziale (0,40 → 0,72), coorti scolastiche (-45%), nuclei di formazione famiglia (-39%): [11_fase5_economia_collegata.md](docs/11_fase5_economia_collegata.md)
 
 ## Fonti dati
@@ -128,6 +129,8 @@ La documentazione dettagliata si trova in [docs/](docs/):
 - [12_fase3_panel_europeo.md](docs/12_fase3_panel_europeo.md) — Fase 3: panel Eurostat NUTS-2 e screening TreeSHAP del TFR
 - [13_pstr_soglia_theta.md](docs/13_pstr_soglia_theta.md) — PSTR: stima della soglia della Low Fertility Trap, punti di non ritorno e attrattore alto
 - [15_panel_1990.md](docs/15_panel_1990.md) — panel esteso 1990-2024: test di costanza dei parametri per sotto-era, limiti di copertura (TFR tedesco solo dal 2010)
+- [16_backtest.md](docs/16_backtest.md) — backtest M0/M1/M2 con DM e Clark-West: la PSTR non supera i benchmark out-of-sample (valore strutturale, non previsivo)
+- [17_ltc_capitolo5_montecarlo.md](docs/17_ltc_capitolo5_montecarlo.md) — modello attuariale probabilistico: severità, sesso, Monte Carlo, PV e scenari di longevità
 
 Bozza del working paper in inglese: [paper/draft.md](paper/draft.md) — *Escaping the Low Fertility Trap*.
 
