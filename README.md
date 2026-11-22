@@ -40,6 +40,9 @@ Ogni generazione di madri viene sostituita al ~55%: la popolazione femminile in 
 │   ├── ltc.py            # Capitolo LTC 1: claimants, caregiver, rapporti
 │   ├── ltc_costi.py      # Capitolo LTC 2: costo aggregato (informale/domiciliare/residenziale)
 │   ├── ltc_informale.py  # Capitolo LTC 3: valore caregiving informale, sensitivita', caregiver gap
+│   ├── economia_collegata.py # Fase 5: attivi, dependency ratio, coorti, nuclei
+│   ├── download_eurostat.py  # Fase 3: panel NUTS-2 (TFR + PIL pro-capite)
+│   ├── panel_screening.py    # Fase 3: XGBoost + TreeSHAP, pooling e within-FE
 │   └── halving.py        # Modello asintotico di Lotka (t½ analitico)
 ├── notebooks/
 ├── docs/                 # Capitoli di analisi
@@ -51,11 +54,11 @@ Ogni generazione di madri viene sostituita al ~55%: la popolazione femminile in 
 - [x] **Fase 1 — Dato e struttura**: download automatico e parser di POSAS 2026 (popolazione per età, sesso, provincia), TVM 2024 (tavole di mortalità provinciali), ASFR 2024 (fecondità per età) — `src/download_istat.py` + `src/parse_istat.py`
 - [x] **Fase 2 — Deriva**: matrice di Leslie sulla piramide reale + sensibilità t½ per TFR 0,95–1,30 — `src/leslie.py` ([risultati](docs/02_dimezzamento.md#5-risultati-dellimplementazione-dati-reali-istat-fase-2-completata))
 - [x] **Blocco dinamico completo**: modello a due sessi + migrazione per età Rogers-Castro, scenari di saldo migratorio e **saldo di break-even (~+600k/anno)** — [07_leslie_rogers_migrazioni.md](docs/07_leslie_rogers_migrazioni.md)
-- [ ] **Fase 3 — Driver causali**: panel provinciale (ISTAT/OMI/INPS), XGBoost + TreeSHAP per screening, Double Machine Learning per ATE su TFR (design: [04_architettura_due_strati.md](docs/04_architettura_due_strati.md))
+- [x] **Fase 3, capitolo 1 — panel europeo e screening**: panel Eurostat NUTS-2 reale (285 regioni × 2013-2023, TFR + PIL), screening XGBoost + TreeSHAP nativo, variante within-FE — [12_fase3_panel_europeo.md](docs/12_fase3_panel_europeo.md). Restano da implementare: panel provinciale OMI/INPS, DML/EconML, Morris — design completo in [04_architettura_due_strati.md](docs/04_architettura_due_strati.md)
 - [x] **Fase 4 — LTC, capitolo 1**: proiezione claimants e caregiver potenziali (2026–2081), rapporto caregiver/claimant (-43%): [08_ltc_capitolo1.md](docs/08_ltc_capitolo1.md)
 - [x] **Fase 4 — LTC, capitolo 2**: modello di copertura a tre livelli e costo aggregato — picco **31 mld € (1,4% PIL) al 2056**, x6 sul 2026: [09_ltc_capitolo2_costi.md](docs/09_ltc_capitolo2_costi.md)
 - [x] **Fase 4 — LTC, capitolo 3**: valore del caregiving informale (19,9 mld €/anno), sensitività ±25% sulla calibrazione, **caregiver gap non colmabile dalla sola migrazione** (soglia irraggiungibile anche a +2,5M netti/anno): [10_ltc_capitolo3_informale.md](docs/10_ltc_capitolo3_informale.md). Estensione non lineare (Low Fertility Trap, TFR endogeno con isteresi): [05_low_fertility_trap.md](docs/05_low_fertility_trap.md)
-- [ ] **Fase 5 — Econometria collegata**: proiezioni popolazione attiva, pressione previdenziale, housing
+- [x] **Fase 5 — Econometria collegata**: proiezioni di popolazione attiva, dependency ratio previdenziale (0,40 → 0,72), coorti scolastiche (-45%), nuclei di formazione famiglia (-39%): [11_fase5_economia_collegata.md](docs/11_fase5_economia_collegata.md)
 
 ## Fonti dati
 
@@ -78,6 +81,8 @@ python3 src/leslie.py --migrazioni  # scenari saldo migratorio + break-even
 python3 src/ltc.py                  # capitolo LTC 1: claimants e caregiver
 python3 src/ltc_costi.py            # capitolo LTC 2: costo aggregato formale
 python3 src/ltc_informale.py        # capitolo LTC 3: valore informale, sensitivita', gap
+python3 src/economia_collegata.py  # fase 5: attivi, dependency ratio, coorti
+python3 src/panel_screening.py     # fase 3: screening TFR su panel europeo
 python3 -m unittest discover tests
 ```
 
@@ -94,6 +99,8 @@ La documentazione dettagliata si trova in [docs/](docs/):
 - [08_ltc_capitolo1.md](docs/08_ltc_capitolo1.md) — LTC: claimants non autosufficienti, caregiver potenziali, rapporto e finestra 2040–2055
 - [09_ltc_capitolo2_costi.md](docs/09_ltc_capitolo2_costi.md) — LTC: costo aggregato, cedimento assistenza informale, picco di spesa 2056
 - [10_ltc_capitolo3_informale.md](docs/10_ltc_capitolo3_informale.md) — LTC: valore del caregiving informale, sensitività calibrazione, caregiver gap migratorio
+- [11_fase5_economia_collegata.md](docs/11_fase5_economia_collegata.md) — Fase 5: attivi, pressione previdenziale, coorti scolastiche, nuclei
+- [12_fase3_panel_europeo.md](docs/12_fase3_panel_europeo.md) — Fase 3: panel Eurostat NUTS-2 e screening TreeSHAP del TFR
 
 Bozza del working paper in inglese: [paper/draft.md](paper/draft.md) — *Escaping the Low Fertility Trap*.
 
