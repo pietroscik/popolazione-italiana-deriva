@@ -42,6 +42,7 @@ Ogni generazione di madri viene sostituita al ~55%: la popolazione femminile in 
 │   ├── ltc.py            # Capitolo LTC 1: claimants, caregiver, rapporti
 │   ├── ltc_costi.py      # Capitolo LTC 2: costo aggregato (informale/domiciliare/residenziale)
 │   ├── ltc_informale.py  # Capitolo LTC 3: valore caregiving informale, sensitivita', caregiver gap
+│   ├── ltc_attuariale.py  # Capitolo LTC 4: premio puro rendita LTC su platea previdenza complementare
 │   ├── economia_collegata.py # Fase 5: attivi, dependency ratio, coorti, nuclei
 │   ├── download_eurostat.py  # Fase 3: panel NUTS-2 (TFR + PIL pro-capite)
 │   ├── panel_screening.py    # Fase 3: XGBoost + TreeSHAP, pooling e within-FE
@@ -61,7 +62,8 @@ Ogni generazione di madri viene sostituita al ~55%: la popolazione femminile in 
 - [x] **Fase 3/4 — PSTR, soglia della Low Fertility Trap**: **θ̂ = 1,66 [1,25–1,75]**, **soglia di non ritorno F ≈ 1,05** (instabile) e attrattore alto **F ≈ 1,51** sul panel europeo reale; bootstrap a cluster, equilibri della mappa implicita — [13_pstr_soglia_theta.md](docs/13_pstr_soglia_theta.md)
 - [x] **Fase 4 — LTC, capitolo 1**: proiezione claimants e caregiver potenziali (2026–2081), rapporto caregiver/claimant (-43%): [08_ltc_capitolo1.md](docs/08_ltc_capitolo1.md)
 - [x] **Fase 4 — LTC, capitolo 2**: modello di copertura a tre livelli e costo aggregato — picco **31 mld € (1,4% PIL) al 2056**, x6 sul 2026: [09_ltc_capitolo2_costi.md](docs/09_ltc_capitolo2_costi.md)
-- [x] **Fase 4 — LTC, capitolo 3**: valore del caregiving informale (19,9 mld €/anno), sensitività ±25% sulla calibrazione, **caregiver gap non colmabile dalla sola migrazione** (soglia irraggiungibile anche a +2,5M netti/anno): [10_ltc_capitolo3_informale.md](docs/10_ltc_capitolo3_informale.md). Estensione non lineare (Low Fertility Trap, TFR endogeno con isteresi): [05_low_fertility_trap.md](docs/05_low_fertility_trap.md)
+- [x] **Fase 4 — LTC, capitolo 4 (attuariale)**: premio puro di una rendita LTC 500 EUR/mese sulla platea previdenza complementare (~10M aderenti) proiettata con la Leslie-Rogers - platea chiusa insostenibile (1.397 EUR/anno al 2081), adesioni automatiche stabili (~251 EUR): [14_ltc_capitolo4_attuariale.md](docs/14_ltc_capitolo4_attuariale.md)
+- [x] **Fase 4 - LTC, capitolo 3**: valore del caregiving informale (19,9 mld €/anno), sensitività ±25% sulla calibrazione, **caregiver gap non colmabile dalla sola migrazione** (soglia irraggiungibile anche a +2,5M netti/anno): [10_ltc_capitolo3_informale.md](docs/10_ltc_capitolo3_informale.md). Estensione non lineare (Low Fertility Trap, TFR endogeno con isteresi): [05_low_fertility_trap.md](docs/05_low_fertility_trap.md)
 - [x] **Fase 5 — Econometria collegata**: proiezioni di popolazione attiva, dependency ratio previdenziale (0,40 → 0,72), coorti scolastiche (-45%), nuclei di formazione famiglia (-39%): [11_fase5_economia_collegata.md](docs/11_fase5_economia_collegata.md)
 
 ## Fonti dati
@@ -85,6 +87,7 @@ python3 src/leslie.py --migrazioni  # scenari saldo migratorio + break-even
 python3 src/ltc.py                  # capitolo LTC 1: claimants e caregiver
 python3 src/ltc_costi.py            # capitolo LTC 2: costo aggregato formale
 python3 src/ltc_informale.py        # capitolo LTC 3: valore informale, sensitivita', gap
+python3 src/ltc_attuariale.py       # capitolo LTC 4: premio puro rendita LTC
 python3 src/economia_collegata.py  # fase 5: attivi, dependency ratio, coorti
 python3 src/panel_screening.py     # fase 3: screening TFR su panel europeo
 python3 -m unittest discover tests
@@ -104,6 +107,7 @@ La documentazione dettagliata si trova in [docs/](docs/):
 - [08_ltc_capitolo1.md](docs/08_ltc_capitolo1.md) — LTC: claimants non autosufficienti, caregiver potenziali, rapporto e finestra 2040–2055
 - [09_ltc_capitolo2_costi.md](docs/09_ltc_capitolo2_costi.md) — LTC: costo aggregato, cedimento assistenza informale, picco di spesa 2056
 - [10_ltc_capitolo3_informale.md](docs/10_ltc_capitolo3_informale.md) — LTC: valore del caregiving informale, sensitività calibrazione, caregiver gap migratorio
+- [14_ltc_capitolo4_attuariale.md](docs/14_ltc_capitolo4_attuariale.md) — LTC 4: premio puro rendita LTC, differenza platea chiusa vs adesioni automatiche
 - [11_fase5_economia_collegata.md](docs/11_fase5_economia_collegata.md) — Fase 5: attivi, pressione previdenziale, coorti scolastiche, nuclei
 - [12_fase3_panel_europeo.md](docs/12_fase3_panel_europeo.md) — Fase 3: panel Eurostat NUTS-2 e screening TreeSHAP del TFR
 - [13_pstr_soglia_theta.md](docs/13_pstr_soglia_theta.md) — PSTR: stima della soglia della Low Fertility Trap, punti di non ritorno e attrattore alto
