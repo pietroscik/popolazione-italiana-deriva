@@ -4,7 +4,7 @@ Analisi della struttura per età e della deriva demografica della popolazione re
 
 > **Origine del progetto**: il seminario del Consiglio Nazionale degli Attuari *"Quale sviluppo in Italia per le coperture di Long Term Care"* (Roma, 26 ottobre 2026). Il cross-reading fra gli interventi (ANIA, Secondo Welfare, Casdic, Ordine degli Attuari) e i risultati di questo repo: [docs/00_origine_evento_attuari.md](docs/00_origine_evento_attuari.md).
 
-[![tests](https://github.com/pietroscik/popolazione-italiana-deriva/actions/workflows/tests.yml/badge.svg)](https://github.com/pietroscik/popolazione-italiana-deriva/actions/workflows/tests.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![tests](https://github.com/pietroscik/popolazione-italiana-deriva/actions/workflows/tests.yml/badge.svg)](https://github.com/pietroscik/popolazione-italiana-deriva/actions/workflows/tests.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.24460968-blue)](https://doi.org/10.5281/zenodo.24460968)
 
 **[Executive summary (1 pagina, per il pubblico attuariale)](docs/executive_summary.md)**
 
@@ -160,3 +160,7 @@ Bozza del working paper in inglese: [paper/draft.md](paper/draft.md) — *Escapi
 ## Licenza
 
 Distribuito con [Licenza MIT](LICENSE).
+
+## Citazione
+
+Pietro Maietta (2026). *popolazione-italiana-deriva v1.1.0*. Zenodo. DOI versione: [10.5281/zenodo.24460968](https://doi.org/10.5281/zenodo.24460968) — DOI concettuale (tutte le versioni): [10.5281/zenodo.24460967](https://doi.org/10.5281/zenodo.24460967). Metadati completi in [CITATION.cff](CITATION.cff).

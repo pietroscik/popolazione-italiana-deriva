@@ -10,6 +10,13 @@ authors:
   - family-names: Maietta
     given-names: Pietro
 repository-code: "https://github.com/pietroscik/popolazione-italiana-deriva"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.24460968"
+    description: "DOI della versione v1.1.0 (Zenodo)"
+  - type: doi
+    value: "10.5281/zenodo.24460967"
+    description: "DOI concettuale (tutte le versioni, Zenodo)"
 abstract: >-
   Struttura e deriva della popolazione italiana: pipeline ISTAT riproducibile
   (POSAS 2026, TVM 2024, ASFR 2024), modello Leslie due sessi con migrazione
