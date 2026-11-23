@@ -22,7 +22,7 @@ Una rendita LTC di **500€/mese** (esempio Ordine Attuari) erogata sulla platea
 
 | Solido (osservato/stimato/verificato) | Parametrico (dichiarato) |
 |---|---|
-| dati ISTAT/Eurostat pipelineati, 76 test, CI end-to-end | prevalenze LTC per età/sesso |
+| dati ISTAT/Eurostat pipelineati, 82 test, CI end-to-end | prevalenze LTC per età/sesso |
 | λ₁, R₀, Lotka = Leslie (6ª cifra) — scenario A e B | profilo migratorio Rogers-Castro |
 | soglia PSTR (**era post-2013**, supporto bootstrap 66%, kinked DR₀→0) | costi unitari 15k/48k€ |
 | backtest DM/CW (negativo, dichiarato) | mix di severità LTC |
