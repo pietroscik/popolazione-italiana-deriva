@@ -18,6 +18,10 @@ identifiers:
     value: "10.5281/zenodo.24460967"
     description: "DOI concettuale (tutte le versioni, Zenodo)"
 abstract: >-
+  Software di ricerca demografica, econometrica e di modellizzazione
+  del rischio LTC (long-term care), sviluppato come ricerca quantitativa
+  indipendente; non una prestazione professionale né una valutazione
+  tecnica ai fini assicurativi.
   Struttura e deriva della popolazione italiana: pipeline ISTAT riproducibile
   (POSAS 2026, TVM 2024, ASFR 2024), modello Leslie due sessi con migrazione
   Rogers-Castro, stima PSTR della soglia della Low Fertility Trap su panel

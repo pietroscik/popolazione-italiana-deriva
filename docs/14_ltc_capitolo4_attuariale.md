@@ -2,6 +2,8 @@
 
 > Sequenza naturale dell'[origine del progetto](00_origine_evento_attuari.md): replica la logica dell'esempio numerico dell'Ordine degli Attuari (rendita LTC 500 €/mese, premio puro 74-113 €/anno) sulla piramide proiettata Leslie-Rogers due sessi. Implementazione: `src/ltc_attuariale.py`, esecuzione: `python3 src/ltc_attuariale.py`.
 
+> **Qualificazione del risultato**: i valori di questo capitolo (es. 253 €/anno al 2081) sono **contributi annui teorici simulati, in ipotesi di ripartizione del costo, sulla base delle assunzioni demografiche e parametriche dichiarate**. All'interno della spiegazione matematica si usa l'espressione tecnica "premio puro" come sinonimo di valore attuale senza caricamenti né margini: si tratta di un **indicatore modellistico, non di una tariffa assicurativa validata né di una valutazione tecnica professionale**. Il confronto con i benchmark pubblici (es. Ordine degli Attuari) ha finalità esclusivamente di calibrazione documentale.
+
 ## 1. Il modello
 
 - **Platea iniziale**: 10 milioni di aderenti alla previdenza complementare, con struttura per età e sesso della fascia nazionale 25-64 scalata (ipotesi dichiarata: la struttura reale degli aderenti è più vicina agli occupati; l'effetto robusto del modello è la **dinamica** del premio, non il livello puntuale)

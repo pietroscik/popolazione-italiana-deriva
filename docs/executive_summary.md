@@ -16,7 +16,7 @@ Catena dei claimants: **1,69 M non autosufficienti al 2056 (unisex; per sesso: 1
 
 ## Il capitolo attuariale
 
-Una rendita LTC di **500€/mese** (esempio Ordine Attuari) erogata sulla platea della previdenza complementare (~10M aderenti), premio puro pay-as-you-go: **~21€/anno** oggi, **253€ al 2081** con adesioni automatiche; **1.409€** con platea chiusa (insostenibile). Con indicizzazione 2%: 750€ nominali (3%: 1.284€) — il premio reale deflato è identico (253€), l'indicizzazione è puro effetto-prezzo. La platea chiusa è la soluzione fallimentare; servono adesioni automatiche o meccanismi equivalenti.
+Una rendita LTC di **500€/mese** (esempio Ordine Attuari) erogata sulla platea della previdenza complementare (~10M aderenti), contributo annuo teorico simulato in ripartizione del costo ("premio puro": indicatore modellistico, non tariffa): **~21€/anno** oggi, **253€ al 2081** con adesioni automatiche; **1.409€** con platea chiusa (insostenibile). Con indicizzazione 2%: 750€ nominali (3%: 1.284€) — il premio reale deflato è identico (253€), l'indicizzazione è puro effetto-prezzo. La platea chiusa è la soluzione fallimentare; servono adesioni automatiche o meccanismi equivalenti.
 
 ## Cosa è solido e cosa è parametrico
 
