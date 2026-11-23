@@ -30,7 +30,7 @@ Territorial panels also inherently violate SUTVA: labor markets, commuting basin
 
 ### 1.3 Contributions
 
-1. **A validated two-sex Leslie-Rogers dynamic layer** on real ISTAT data: automated ISTAT ingestion (POSAS 2026, TVM 2024, ASFR 2024), two-sex projection, Rogers-Castro age-specific migration calibrated on observed net balances (+263k in 2024), and a break-even estimate of ~617k net migrants/year needed for population stability at current fertility.
+1. **A validated two-sex Leslie-Rogers dynamic layer** on real ISTAT data: automated ISTAT ingestion (POSAS 2026, TVM 2024, ASFR 2024), two-sex projection, Rogers-Castro age-specific migration calibrated on observed net balances (+263k in 2024), and a break-even estimate of ~616k net migrants/year needed for population stability at current fertility.
 2. **Screening of policy levers, decoupled from (future) causal estimation**: the executed layer is a predictive screening (XGBoost + native TreeSHAP, pooling and two-way demeaned) on the assembled and versioned European NUTS-2 panel (285 regions 2013-2023, TFR + GDP pc PPS + regional DR, plus a 1990-2024 long panel); the causal layer it feeds — Spatial-SLX DML with spatial block cross-fitting, Moran's I residual diagnostics, and NDE/NIE mediation — is specified in Section 4 and remains to be executed.
 3. **Empirical identification of hysteresis**: the trap is estimated — not assumed — as a Dynamic PSTR on the multi-year NUTS-2 panel, yielding θ̂ = 1.66, an unstable no-return threshold at F ≈ 0.91, a high attractor at F ≈ 1.61, and a positive — theory-contradicting — γ_DR = +0.077 that survives lagged-instrument estimation (t−15 cohort structure, first-stage F = 340, γ̂_IV = +0.129) and leave-one-country-out robustness (positive in all 33 exclusions): the sign is robust to the two testable identification threats (IV and LOCO), with the causal interpretation left open and the kinked form executed as the discriminating test.
 4. **A fully reproducible open framework**: every result in this paper is regenerated from raw providers by a single command per layer (`src/download_istat.py`, `src/download_eurostat.py`, `src/pstr_trap.py`...), with 76 unit tests and end-to-end CI.
@@ -117,7 +117,7 @@ Three readings. **(i)** The no-return threshold sits below the sociological theo
 
 ### 5.3 Dynamic layer results (Italy, two-sex Leslie-Rogers)
 
-At TFR 1.18 and observed migration balance: λ₁ = 0.983 (r = −1.67%/yr), asymptotic halving 41.5 years, first halving ~55 years, break-even migration ~617k/yr (2.2× observed); stable structure converges to 39% aged 65+. LTC application: caregiver-per-claimant ratio falls 43% by 2081, shifting an irreducible share of the demand from informal to formal care and raising formal LTC spending from ~5 to 22–38 billion €/yr by mid-century (calibration-sensitive band).
+At TFR 1.18 and observed migration balance: λ₁ = 0.983 (r = −1.67%/yr), asymptotic halving 41.5 years, first halving ~55 years, break-even migration ~617k/yr (2.2× observed); stable structure converges to 39% aged 65+. LTC application: caregiver-per-claimant ratio falls 46% by 2081 (14.5 → 7.9), shifting an irreducible share of the demand from informal to formal care and raising formal LTC spending from ~5 to 20–44 billion €/yr by mid-century (Monte Carlo 90% band).
 
 ## 6. Out-of-Sample Backtest (executed)
 

@@ -75,3 +75,23 @@ class TestScenariLongevita(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+@unittest.skipUnless(HAS_DATA, "dati ISTAT processati non presenti")
+class TestMoltiplicatoriSessoNelMC(unittest.TestCase):
+    def test_moltiplicatore_campionato_arranta_i_claimants(self):
+        """Il moltiplicatore per sesso passato a simulate_claimants_m deve
+        propagarsi: raddoppiare il moltiplicatore femminile aumenta i
+        claimants femminili (e non lascia tutto invariato come nel bug)."""
+        from leslie import load_processed
+        from ltc_montecarlo import simulate_claimants_m
+        data = load_processed()
+        args = (data["n0"], data["n0_male"], data["fertility"],
+                data["survival"], data["survival_male"], 1.0, 0.0, 5, 280_000.0)
+        cl_f0, cl_m0, cl0, _ = simulate_claimants_m(*args)
+        cl_f1, cl_m1, cl1, _ = simulate_claimants_m(*args, sex_mult_f=2.40)
+        # doppio moltiplicatore femminile: claimants femminili aumentano
+        # di piu' del 20% (prevalenza sistemica sopra i 65)
+        self.assertGreater(cl_f1[3] / cl_f0[3], 1.20)
+        # i maschi restano identici
+        self.assertAlmostEqual(cl_m1[3], cl_m0[3], delta=1e-6)

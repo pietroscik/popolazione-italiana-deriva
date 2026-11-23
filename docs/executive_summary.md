@@ -12,11 +12,11 @@ Sul panel europeo NUTS-2 — **stima headline sulla finestra 2013-2023** (282 re
 
 ## Il costo LTC
 
-Catena dei claimants: **1,69 M non autosufficienti al 2056 (~67% femmine, rapporto 2:1)**; caregiver potenziali 45-64 anni: **livello −37% (18,1→11,4 M)** e **rapporto caregiver/claimant −45% (14,5→7,9)** tra 2026 e 2081 — è il rapporto, non la sola base, a innescare la migrazione verso il formale. Il costo formale aggregato al 2056 è **C = 31,8 [23,2; 40,2] mld€** (Monte Carlo B=5.000, prezzi 2026, ipotesi dichiarate) e il valore attuale 2026-2081 ammonta a **~1.057 mld€** (sconto reale 1,5%). Driver dominante per elasticità: **prevalenza** (el. 2,12) e **break della rete informale** (el. 1,26) — non il TFR (0,08). Longevità +1%/anno aggiunge solo 0,8% di domanda: con λ₁<1, la struttura per età prevale sulla sopravvivenza.
+Catena dei claimants: **1,69 M non autosufficienti al 2056 (unisex; per sesso: 1,14 M F vs 0,57 M M, ~67% femmine)**; caregiver potenziali 45-64 anni: **livello −37% (18,1→11,4 M)** e **rapporto caregiver/claimant −46% (14,5→7,9)** tra 2026 e 2081 — è il rapporto, non la sola base, a innescare la migrazione verso il formale. Il costo formale aggregato al 2056 è **C = 32,3 [20,6; 44,2] mld€** (Monte Carlo B=5.000, prezzi 2026, ipotesi dichiarate) e il valore attuale 2026-2081 ammonta a **~1.084 mld€** (sconto reale 1,5%). Driver dominante per elasticità: **prevalenza** (el. 2,12) e **break della rete informale** (el. 1,26) — non il TFR (0,08). Longevità +1%/anno aggiunge solo 0,8% di domanda: con λ₁<1, la struttura per età prevale sulla sopravvivenza.
 
 ## Il capitolo attuariale
 
-Una rendita LTC di **500€/mese** (esempio Ordine Attuari) erogata sulla platea della previdenza complementare (~10M aderenti), premio puro pay-as-you-go: **~21€/anno** oggi, **251€ al 2081** con adesioni automatiche; **1.397€** con platea chiusa (insostenibile). Con indicizzazione 2%: 746€ nominali (3%: 1.275€) — il costo reale deflato è identico, l'indicizzazione è puro effetto-prezzo. La platea chiusa è la soluzione fallimentare; servono adesioni automatiche o meccanismi equivalenti.
+Una rendita LTC di **500€/mese** (esempio Ordine Attuari) erogata sulla platea della previdenza complementare (~10M aderenti), premio puro pay-as-you-go: **~21€/anno** oggi, **253€ al 2081** con adesioni automatiche; **1.409€** con platea chiusa (insostenibile). Con indicizzazione 2%: 750€ nominali (3%: 1.284€) — il premio reale deflato è identico (253€), l'indicizzazione è puro effetto-prezzo. La platea chiusa è la soluzione fallimentare; servono adesioni automatiche o meccanismi equivalenti.
 
 ## Cosa è solido e cosa è parametrico
 

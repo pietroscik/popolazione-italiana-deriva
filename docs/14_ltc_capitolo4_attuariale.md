@@ -17,8 +17,8 @@
 
 | Scenario | 2026 | 2056 | 2081 |
 |---|---|---|---|
-| **Platea costante (chiusa)** | 21 € | 436 € | **1.397 €** |
-| **Adesioni automatiche** | 21 € | 219 € | **251 €** |
+| **Platea costante (chiusa)** | 21 € | 438 € | **1.409 €** |
+| **Adesioni automatiche** | 21 € | 220 € | **253 €** |
 | Benchmark Ordine Attuari (equilibrio) | — | — | 113 € (costante) / 74 € (crescente) |
 
 ## 2-bis. Scenario indicizzato (rivalutazione della rendita al 2% annuo)
@@ -27,10 +27,10 @@ L'indicizzazione della rendita (raccomandata dal modello tedesco: adeguamento an
 
 | Scenario (adesioni automatiche) | 2026 | 2056 | 2081 |
 |---|---|---|---|
-| Rendita nominale fissa (500 €/mese) | 21 € | 219 € | 251 € |
-| Rendita indicizzata al **2%** annuo | 21 € | 396 € | 746 € |
-| Rendita indicizzata al **3%** annuo | 21 € | 531 € | **1.275 €** |
-| Qualsiasi, deflata ai prezzi 2026 | 21 € | 219 € | 251 € |
+| Rendita nominale fissa (500 €/mese) | 21 € | 220 € | 253 € |
+| Rendita indicizzata al **2%** annuo | 21 € | 398 € | 750 € |
+| Rendita indicizzata al **3%** annuo | 21 € | 534 € | **1.284 €** |
+| Qualsiasi, deflata ai prezzi 2026 | 21 € | 220 € | 253 € |
 
 **Letture**:
 

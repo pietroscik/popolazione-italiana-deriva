@@ -36,10 +36,25 @@ class TestBilancioDemografico(unittest.TestCase):
         nascite = (self.nf * self.fert).sum()
         sopravv_f = (self.nf[:-1] * self.P_f[:-1]).sum()
         sopravv_m = (self.nm[:-1] * self.P_m[:-1]).sum()
-        # bilancio demografico chiuso: la coorte 100+ esce dal vettore
-        # (l'ultima eta' sopravvissuta e' 99 -> 100)
-        atteso = nascite + sopravv_f + sopravv_m
+        # bilancio demografico chiuso: la classe aperta 100+ RITIENE una
+        # quota P[100] dei suoi membri (classe terminale aperta)
+        ritenuti = (self.nf[-1] * self.P_f[-1] + self.nm[-1] * self.P_m[-1])
+        atteso = nascite + sopravv_f + sopravv_m + ritenuti
         self.assertAlmostEqual(nf1.sum() + nm1.sum(), atteso, delta=1.0)
+
+    def test_classe_terminale_aperta_ritiene_i_sopravviventi(self):
+        n = np.zeros(101); n[100] = 1000.0
+        P = np.full(101, 0.9)
+        from leslie import survive
+        out = survive(n, P)
+        self.assertAlmostEqual(out[100], 1000.0 * 0.9, delta=1e-9)
+
+    def test_matrice_leslie_con_diagonale_terminale(self):
+        from leslie import build_leslie_matrix
+        P = np.full(101, 0.9); P[-1] = 0.5
+        L = build_leslie_matrix(np.zeros(101), P)
+        self.assertAlmostEqual(L[-1, -1], 0.5, delta=1e-12)
+        self.assertAlmostEqual(L[-1, -2], 0.9, delta=1e-12)
 
     def test_saldo_migratorio_nullo_lascia_invariato_il_bilancio(self):
         tot, tr_f, tr_m = simulate_two_sex(self.nf, self.nm, self.fert,

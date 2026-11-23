@@ -124,9 +124,8 @@ def survival_by_group(tvm_csv: Path, pop: pd.DataFrame,
     den = merged.groupby("eta")[sex].sum()
     p_bar = num / den
     probs = np.zeros(MAX_AGE + 1)
-    for age in range(MAX_AGE):
+    for age in range(MAX_AGE + 1):
         probs[age] = float(p_bar.get(age, 0.0))
-    probs[MAX_AGE] = 0.0
     return np.clip(probs, 0.0, 1.0)
 
 

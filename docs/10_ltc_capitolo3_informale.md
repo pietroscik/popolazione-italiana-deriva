@@ -20,7 +20,7 @@ Tutti i risultati del capitolo 2 dipendono dal flesso r0 della logistica della q
 | r0 (flesso logistico) | Picco di costo formale | Anno del picco | Costo 2081 |
 |---|---|---|---|
 | 9 (famiglia più resistente) | 22,0 mld € | 2081 | 22,0 mld |
-| **11 (calibrazione base)** | **31,0 mld €** | **2056** | 29,8 mld |
+| **11 (calibrazione base)** | **31,7 mld €** | **2056** | 31,5 mld |
 | 13 (famiglia più fragile) | 38,1 mld € | 2056 | 34,3 mld |
 
 Il picco si muove di **±25%** attorno alla calibrazione base (22-38 mld €), ma la **qualità del risultato non cambia**: in tutte le calibrazioni il costo formale cresce di un ordine di grandezza (da ~5 a 22-38 mld) e non torna ai livelli attuali entro il 2081. La datazione del picco (2056 vs fine orizzonte) è l'elemento più sensibile: se la famiglia risultasse più resistente, il picco slitta oltre il 2081 (dopo il passaggio della coorte boomer, su livelli comunque doppi di oggi).
@@ -43,8 +43,8 @@ Il picco si muove di **±25%** attorno alla calibrazione base (22-38 mld €), m
 
 | Capitolo | Risultato |
 |---|---|
-| 1 — domanda e caregivers | picco over-80 7,3 M (2056); rapporto caregiver/claimant -43% |
-| 2 — costo formale | picco 31 mld € / 1,4% PIL (2056), x6 sul 2026 |
+| 1 — domanda e caregivers | picco over-80 7,5 M (2056); rapporto caregiver/claimant -46% |
+| 2 — costo formale | picco 31,7 mld € / 1,4% PIL (2056), x6 sul 2026 |
 | 3 — valore ombra e gap | valore informale 19,9 → 9,2 mld €; caregiver gap non colmabile dalla sola migrazione |
 
 Limiti dichiarati di tutti i capitoli: prevalenze e costi parametrici (da ancorare a fonti ufficiali), PIL congelato al 2026, assistenza informale modellata come aggregato nazionale (eterogeneità regionale fuori perimetro: raccordo naturale con l'infrastruttura provinciale della Fase 3).
