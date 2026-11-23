@@ -1,6 +1,8 @@
 # Origine del progetto — Seminario CN Attuari "Quale sviluppo in Italia per le coperture LTC"
 
 > Roma, 26 ottobre 2026 — Consiglio Nazionale degli Attuari / Assoprevidenza. Questo repository nasce da quell'evento: i materiali (Di Falco/ANIA, De Tommaso/Secondo Welfare, Casdic, Ordine degli Attuari) sono la domanda a cui le analisi qui dentro cercano di dare una base quantitativa. Questo documento mette in correlazione i contenuti dell'evento con i risultati del repo.
+>
+> **Natura del riferimento**: esclusivamente documentale. Il presente progetto è autonomo e indipendente; non è commissionato, patrocinato, approvato o validato dal Consiglio Nazionale degli Attuari, da Assoprevidenza né da altri organismi citati.
 
 ## I quattro interventi e cosa dicono
 
