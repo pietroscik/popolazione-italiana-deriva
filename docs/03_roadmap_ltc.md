@@ -24,7 +24,7 @@ La coorte del baby boom italiano (nati 1960–1975, oggi 50–65enni) entrerà n
 |---|---|---|
 | 1. Prevalenza LTC per fascia | ◐ parametrica ([08](08_ltc_capitolo1.md)): 0,5% <65 → 28% 90+ | da ancorare a fonti ufficiali |
 | 2. Claimants attesi 2040-2080 | ✔ | picco 1,66 M al 2056 ([08](08_ltc_capitolo1.md)) |
-| 3. Sbalzi di costo | ✔ | picco 31 mld € / 1,4% PIL al 2056, robustezza ±25% ([09](09_ltc_capitolo2_costi.md), [10](10_ltc_capitolo3_informale.md)) |
+| 3. Sbalzi di costo | ✔ | picco 31,7 mld € / 1,4% PIL al 2056, robustezza ±25% ([09](09_ltc_capitolo2_costi.md), [10](10_ltc_capitolo3_informale.md)) |
 | 4. Valutazione attuariale (premium, riserve, duration) | ⬜ | finestra di stress 2041-2081 quantificata (~28-31 mld/anno formali) |
 | Extra: caregiver gap | ✔ | non colmabile dalla sola migrazione ([10](10_ltc_capitolo3_informale.md)) |
 

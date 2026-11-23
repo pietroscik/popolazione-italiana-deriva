@@ -68,6 +68,21 @@ A regime base **senza DR** (modello headline), **la soglia di non ritorno è ~0,
 2. **Confondente da country-level welfare** — Nord Europa: DR alto E welfare family-friendly (pensioni sustentabili, asili): nel pooled il segno di γ e' contaminato da questa correlazione territoriale. Il test LOCO per paese (docs/06) e' la robustezza diretta.
 3. La teoria prevede il segno negativo sul ΔDR oltre la soglia fiscale DR0 — non sul livello: la forma `γ·max(0, DR-DR0)` con DR0 stimato resta da provare (prossimo passo naturale).
 
+## 5-bis. Batteria di robustezza della soglia (eseguita)
+
+`theta_stability_battery` (`src/pstr_trap.py`): θ̂, γ e soglia attraverso le specificazioni — la lettura corretta è su questa batteria, non su una singola stima:
+
+| Specificazione | θ̂ | γ (DR) | Nota |
+|---|---|---|---|
+| Headline senza DR | 1,66 | — | modello base |
+| Con DR | 1,70 | +0,077 | specificazione estesa |
+| **CRE/Mundlak** (medie regionali) | **1,72** | **+0,483** | eterogeneità regionale permanente correlata assorbita (coeff. media-F +0,24): θ̂ stabile, γ sale — coerente con la diagnosi di eterogeneità correlata (§6) |
+| Kinked max(0, DR−DR₀) | 1,72 | +0,060 (DR₀→bordo) | §5.4: nessun kink |
+| IV t-15 (sotto-campione) | 1,94 | +0,129 | strumento forte (F=340) ma validità condizionata (§5.4) |
+| Finestra 2013-2024 | 1,70 | +0,077 | estensione forwards |
+
+**Conclusione della batteria**: θ̂ è **stabile in [1,66–1,72]** su tutte le specificazioni campionali (l'IV sul sotto-campione meno coperto sale a 1,94), γ̂ > 0 sempre. **La soglia di non ritorno F ≈ 0,91 non va presentata come costante strutturale consolidata**: è identificata nell'era 2013-2023, con supporto bootstrap al 66%, e i suoi valori dipendono dal regime (anno base vs anno medio, §3). Formulazione corretta: *evidenza compatibile con una soglia di non ritorno ~0,9 nell'era post-2013, con supporto moderato — non una legge strutturale*. La stabilità tra ere è RIGETTATA (docs/15).
+
 ## 6. Limiti dichiarati (aggiornati post-audit)
 
 - ~~Endogeneità della DR~~ **chiuso con l'IV t-15** (§5): strumento forte (F=340), segno confermato e rinforzato. La strumentazione della fertilità stessa (F_lag) resta invece aperta: punto seguente.

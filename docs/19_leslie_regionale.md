@@ -14,13 +14,13 @@
 
 | Ripartizione | Pop 2026 | λ₁ | r | t½ asint. | Pop 2056 | Pop 2081 | Claimants 2056 | Over-80 2056 |
 |---|---|---|---|---|---|---|---|---|
-| Nord-ovest | 15,96 M | 0,9835 | −1,67% | 41,6 | 14,25 M | 11,65 M | 462k | 2,08 M |
+| Nord-ovest | 15,96 M | 0,9835 | −1,67% | 41,6 | 14,25 M | 11,66 M | 462k | 2,08 M |
 | Nord-est | 11,62 M | 0,9835 | −1,67% | 41,5 | 10,45 M | 8,56 M | 345k | 1,56 M |
-| Centro | 11,70 M | 0,9835 | −1,67% | 41,6 | 10,33 M | 8,35 M | 341k | 1,54 M |
-| Sud | 13,34 M | 0,9834 | −1,67% | 41,5 | 12,03 M | 9,91 M | 353k | 1,52 M |
-| Isole | 6,33 M | 0,9834 | −1,67% | 41,5 | 5,59 M | 4,58 M | 169k | 0,74 M |
+| Centro | 11,70 M | 0,9835 | −1,67% | 41,6 | 10,33 M | 8,36 M | 341k | 1,54 M |
+| Sud | 13,34 M | 0,9834 | −1,67% | 41,5 | 12,03 M | 9,92 M | 353k | 1,52 M |
+| Isole | 6,33 M | 0,9834 | −1,67% | 41,5 | 5,59 M | 4,59 M | 169k | 0,74 M |
 
-Somma claimants 2056 = **1,67 M**: coincide col nazionale del capitolo 5 (1,69 M media MC) — la scomposizione è coerente.
+Somma claimants 2056 = **1,68 M**: coincide col nazionale del capitolo 5 (1,69 M media MC) — la scomposizione è coerente.
 
 **Lettura principale**: le cinque ripartizioni sono nello **stesso regime asintotico** (λ₁ = 0,9834-0,9835, t½ 41,5-41,6): le differenze di mortalità tra nord e sud esistono ma la media prospettica pesata le appiattisce, e la struttura per età conta più della geografia sulla dinamica. **L'Italia del dimezzamento non ha macro-regioni divergenti: divergono i livelli (momentum), non i regimi.** Le differenze rilevanti emergono sotto la soglia: è lì che la dinamica cambia qualità.
 

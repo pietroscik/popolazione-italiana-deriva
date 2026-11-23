@@ -31,7 +31,7 @@
 | Tesi dell'evento | Riscontro quantitativo in questo repo |
 |---|---|
 | "Più anziani e **meno caregiver familiari**" (Di Falco, apertura) | Capitolo LTC 1: rapporto caregiver/claimant **-43%** al 2081 ([08](08_ltc_capitolo1.md)) |
-| "Il peso sulle famiglie non è sostenibile" | Capitolo 2: spesa formale da 4,9 a **31 mld €/anno** (+x6) quando il caregiving informale cede dal 85% al 21% ([09](09_ltc_capitolo2_costi.md)); valore ombra dell'informale 19,9 mld €/anno ([10](10_ltc_capitolo3_informale.md)) |
+| "Il peso sulle famiglie non è sostenibile" | Capitolo 2: spesa formale da 4,9 a **31,7 mld €/anno** (+x6) quando il caregiving informale cede dal 85% al 21% ([09](09_ltc_capitolo2_costi.md)); valore ombra dell'informale 19,9 mld €/anno ([10](10_ltc_capitolo3_informale.md)) |
 | Basi tecniche "da costruire su dati italiani" (Di Falco, Sapienza 2016) | Il bisogno che quel tipo di basi incorporano — la piramide proiettata due sessi con migrazioni — è esattamente il substrato costruito in [02](02_dimezzamento.md)/[07](07_leslie_rogers_migrazioni.md): **fascia 80+ da 4,6 a 7,3 M al 2056** |
 | Quota a carico residenza tedesca: **3.364 €/mese** (= ~40.400 €/anno) | Il nostro costo unitario residenziale parametrico (48.000 €/anno, [09 §1](09_ltc_capitolo2_costi.md)) è **dello stesso ordine** del caso tedesco osservato: la calibrazione iniziale era ragionevole, l'ancoraggio tedesco la conferma |
 | "Il rischio grava su famiglie e finanza pubblica" (Ordine Attuari) | Caregiver gap non colmabile dalla sola migrazione ([10 §3](10_ltc_capitolo3_informale.md)); pressione previdenziale 0,40 → 0,72 ([11](11_fase5_economia_collegata.md)) |

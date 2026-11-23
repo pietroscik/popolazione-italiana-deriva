@@ -19,6 +19,7 @@ def build_leslie_matrix(fertility_rates: np.ndarray, survival_probs: np.ndarray,
     L = np.zeros((n, n))
     L[0, :len(fertility_rates)] = fertility_rates * sex_ratio_f
     L[1:, :-1] = np.diag(survival_probs[:-1])
+    L[-1, -1] = survival_probs[-1]
     return L
 
 
@@ -33,6 +34,7 @@ def dominant_eigen(L: np.ndarray) -> tuple[float, np.ndarray]:
 def survive(n: np.ndarray, probs: np.ndarray) -> np.ndarray:
     out = np.zeros_like(n)
     out[1:] = n[:-1] * probs[:-1]
+    out[-1] += n[-1] * probs[-1]
     return out
 
 

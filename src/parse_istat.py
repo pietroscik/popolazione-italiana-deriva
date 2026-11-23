@@ -72,9 +72,9 @@ def load_survival_probs(tvm_csv: Path | str, pop: pd.DataFrame,
     p_bar = num / den
 
     probs = np.zeros(max_age + 1)
-    for age in range(max_age):
+    for age in range(max_age + 1):
         probs[age] = p_bar.get(age, 0.0).item() if age in p_bar.index else 0.0
-    probs[max_age] = 0.0
+    probs[max_age] = float(p_bar.get(max_age, 0.0))
     return np.clip(probs, 0.0, 1.0)
 
 

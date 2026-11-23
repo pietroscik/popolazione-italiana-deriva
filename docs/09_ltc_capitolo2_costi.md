@@ -20,15 +20,15 @@ Il costo aggregato del capitolo è quello del **formale** (domiciliare + residen
 |---|---|---|---|---|---|---|---|
 | 2026 | 1,25 M | 14,5 | 1,07 M | 0,12 M | 0,06 M | 4,9 | 0,22% |
 | 2041 | 1,49 M | 10,3 | 0,62 M | 0,57 M | 0,31 M | 23,2 | 1,05% |
-| **2056** | **1,66 M** | 9,3 | 0,49 M | 0,76 M | 0,41 M | **31,0** | **1,41%** |
+| **2056** | **1,68 M** | 9,2 | 0,50 M | 0,77 M | 0,41 M | **31,7** | **1,44%** |
 | 2071 | 1,47 M | 9,1 | 0,42 M | 0,69 M | 0,37 M | 28,1 | 1,28% |
 | 2081 | 1,41 M | 8,3 | 0,29 M | 0,73 M | 0,39 M | 29,8 | 1,35% |
 
-**Picco del costo: 31,0 mld € (1,41% del PIL) nel 2056** — piccolo picco coerente con il picco over-80 del capitolo 1.
+**Picco del costo: 31,7 mld € (1,44% del PIL) nel 2056** — piccolo picco coerente con il picco over-80 del capitolo 1.
 
 ## 3. Letture
 
-1. **Il costo cresce 6 volte in 15 anni** (da 4,9 a 31 mld) per due motori congiunti: la crescita dei claimants (+33%) e il **cedimento dell'assistenza informale** (da 85% a 49%) — il secondo fattore domina: il costo non scende sensibilmente dopo il 2056 pur scendendo i claimants, perché la quota informale continua a cedere con il rapporto.
+1. **Il costo cresce 6 volte in 15 anni** (da 4,9 a 31,7 mld) per due motori congiunti: la crescita dei claimants (+33%) e il **cedimento dell'assistenza informale** (da 85% a 49%) — il secondo fattore domina: il costo non scende sensibilmente dopo il 2056 pur scendendo i claimants, perché la quota informale continua a cedere con il rapporto.
 2. **Il driver di costo non è l'invecchiamento quanto la scarsità di caregivers**: a parità di domanda, un rapporto caregiver/claimant che scende da 14 a 8 raddoppia-triplica il costo formale del sistema. È l'arco di ponte tra questo capitolo e il capitolo 1: la stessa dinamica demografica (coorti 45-64 in contrazione strutturale) che erode il numeratore del rapporto diventa, qui, il moltiplicatore dei costi formali.
 3. **Implicazione per il perimetro attuariale**: il salto di costo medio per assistito formale (~28-31k €/anno medi) e la finestra di stress 2041-2071 sono i termini entro cui dimensionare **premium LTCI e riserve**. La finestra coincide con quella prevista nella [roadmap attuariale](03_roadmap_ltc.md) — con il picco sito a metà coorte del baby boom negli 80+.
 

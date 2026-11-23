@@ -217,6 +217,79 @@ def loco_by_country(df: pd.DataFrame, theta_grid=THETA_GRID,
     }
 
 
+
+def fit_pstr_mundlak(df: pd.DataFrame, theta_grid=THETA_GRID,
+                     k_grid=K_GRID) -> dict:
+    """CRE/Mundlak: pooled + medie regionali dei regressori come controlli.
+
+    Corregge il canale di eterogeneita' regionale permanente correlata con
+    F_lag (la versione pooled del problema del panel dinamico; docs/13 S6)
+    senza assorbire i livelli nel fixed effect: la scelta identificativa
+    sulla mappa globale resta intatta e il coefficiente sulle medie regionali
+    quantifica l'eterogeneita' assorbita (attesa positiva su media-F)."""
+    y = df["d_tfr"].values
+    mF = df.groupby("geo")["F_lag"].transform("mean").values
+    mG = df.groupby("geo")["d_log_gdp"].transform("mean").values
+    mD = df.groupby("geo")["dr_lag"].transform("mean").values
+    best = None
+    for theta in theta_grid:
+        for k in k_grid:
+            F = df["F_lag"].values
+            X, _ = _design(df, k, theta)
+            X = np.column_stack([X, mF, mG, mD])
+            beta, *_ = np.linalg.lstsq(X, y, rcond=None)
+            resid = y - X @ beta
+            ssr = float(resid @ resid)
+            if best is None or ssr < best["ssr"]:
+                best = {"ssr": ssr, "k": float(k), "theta": float(theta),
+                        "beta": beta}
+    best["mundlak"] = {"media_F": float(best["beta"][-3]),
+                       "media_dlog_gdp": float(best["beta"][-2]),
+                       "media_dr": float(best["beta"][-1])}
+    best["control_means"] = {c: float(df[c].mean()) for c in CONTROLS}
+    best["n_obs"] = int(len(df))
+    return best
+
+
+def theta_stability_battery(df: pd.DataFrame) -> dict:
+    """Batteria di stabilita' della soglia (robustezza, audit P1):
+    theta, gamma_DR e soglia instabile (anno base) attraverso le
+    specificazioni. La soglia 0,91 va letta con questa batteria, non come
+    costante strutturale (v. docs/13 S4)."""
+    res = {}
+    # 1. headline senza DR
+    nd = df.copy()
+    nd["dr_lag"] = 0.0
+    f1 = fit_pstr(nd)
+    res["senza_dr"] = {"theta": f1["theta"], "gamma": None}
+    # 2. con DR
+    f2 = fit_pstr(df)
+    res["con_dr"] = {"theta": f2["theta"], "gamma": float(f2["beta"][4])}
+    # 3. CRE/Mundlak
+    f3 = fit_pstr_mundlak(df)
+    res["mundlak_cre"] = {"theta": f3["theta"],
+                          "gamma": float(f3["beta"][4])}
+    # 4. kinked (DR0 profilato)
+    f4 = fit_pstr_kinked(df)
+    res["kinked"] = {"theta": f4["theta"],
+                     "gamma": float(f4["gamma_kinked"]),
+                     "dr0": f4["dr0"]}
+    # 5. IV t-15 (se lo strumento e' presente)
+    if "dr_t15" in df.columns:
+        div = df.dropna(subset=["dr_t15"]).reset_index(drop=True)
+        if len(div) > 500:
+            f5 = fit_pstr_iv(div)
+            res["iv_t15"] = {"theta": f5["theta"],
+                             "gamma_iv": float(f5["beta"][4])}
+    # 6. finestra estesa 2013-2024 (panel lungo)
+    ext = df[df["anno"] >= 2013]
+    if len(ext) > 1500:
+        f6 = fit_pstr(ext.reset_index(drop=True))
+        res["finestra_2013_2024"] = {"theta": f6["theta"],
+                                     "gamma": float(f6["beta"][4])}
+    return res
+
+
 DR0_GRID = np.round(np.arange(0.20, 0.46, 0.01), 2)
 
 

@@ -67,9 +67,13 @@ def blended_unit_costs(sev_mix: np.ndarray = SEVERITY_MIX) -> tuple[float, float
 
 
 def simulate_claimants_m(n0_f, n0_m, fertility, P_f, P_m, tfr_scale,
-                         surv_improvement, years, saldo):
+                         surv_improvement, years, saldo,
+                         sex_mult_f=SEX_MULTIPLIER["F"],
+                         sex_mult_m=SEX_MULTIPLIER["M"]):
     """Due sessi con mortalita' migliorata e TFR scala; ritorna claimants per
-    sesso (anni x 1) e il rapporto caregiver/claimant combinato."""
+    sesso (anni x 1) e il rapporto caregiver/claimant combinato. I moltiplicatori
+    di prevalenza per sesso sono argomento: nel Monte Carlo vengono campionati
+    per replica, fuori dal MC restano ai valori centrali dichiarati."""
     from leslie import simulate_two_sex
     if surv_improvement > 0.0:
         P_f = 1.0 - (1.0 - P_f) * (1.0 - surv_improvement)
@@ -80,6 +84,10 @@ def simulate_claimants_m(n0_f, n0_m, fertility, P_f, P_m, tfr_scale,
     tot, tr_f, tr_m, ages_f, ages_m = out
     prev_f = prevalence_by_age_sex("F", len(n0_f) - 1)
     prev_m = prevalence_by_age_sex("M", len(n0_m) - 1)
+    prev_f[SEXAGE:] /= SEX_MULTIPLIER["F"]
+    prev_f[SEXAGE:] *= sex_mult_f
+    prev_m[SEXAGE:] /= SEX_MULTIPLIER["M"]
+    prev_m[SEXAGE:] *= sex_mult_m
     cl_f = (ages_f * prev_f[None, :]).sum(axis=1)
     cl_m = (ages_m * prev_m[None, :]).sum(axis=1)
     caregivers = (ages_f + ages_m)[:, 45:65].sum(axis=1)
@@ -134,7 +142,8 @@ def monte_carlo_ltc(B: int = 500, seed: int = 7, years: int = 55,
         tfr_scale = rng.normal(tfr_center, 0.03)
 
         cl_f, cl_m, claimants, ratio = simulate_claimants_m(
-            n0_f, n0_m, fert, P_f, P_m, tfr_scale, rho, years, saldo)
+            n0_f, n0_m, fert, P_f, P_m, tfr_scale, rho, years, saldo,
+            sex_mult_f=sex_mult_f, sex_mult_m=sex_mult_m)
 
         costs[b] = annual_cost_mc(claimants, ratio, sev, cost_dom, cost_res,
                                   share_dom, r0, b_par) / 1e9

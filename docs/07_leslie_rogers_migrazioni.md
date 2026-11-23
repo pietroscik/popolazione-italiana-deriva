@@ -25,7 +25,7 @@ Controllo di qualità: popolazione 2026 ricostruita = **58.942.828** (30,02 M fe
 | **+280.000 (media 2024-25)** | **43,4 M** | **-26,3%** | ordine di grandezza della previsione ISTAT mediana (che assume anche recovery parziale della fecondità) |
 | +400.000 (saldo alto) | 49,3 M | -16,4% | |
 
-**Saldo di break-even: ~+617.000 migranti netti/anno** (profilo Rogers-Castro dinamico; ~+600.000 col profilo statico calibrato sulla struttura 2026) per mantenere la popolazione costante a TFR 1,18 e struttura per sesso/età attuale — circa **2,1 volte il saldo osservato 2024-25**. Non è uno shock frontale: il saldo oggi compensa il deficit naturale corrente (~-296 mila), ma il deficit cresce nel tempo perché le nascite continuano a contrarre (le madri potenziali sono le generazioni della denatalità) e una quota crescente del saldo serve solo a "riempire" coorti più piccole.
+**Saldo di break-even: ~+616.000 migranti netti/anno** (profilo Rogers-Castro dinamico; ~+600.000 col profilo statico calibrato sulla struttura 2026, pre-fix) per mantenere la popolazione costante a TFR 1,18 e struttura per sesso/età attuale — circa **2,1 volte il saldo osservato 2024-25**. Non è uno shock frontale: il saldo oggi compensa il deficit naturale corrente (~-296 mila), ma il deficit cresce nel tempo perché le nascite continuano a contrarre (le madri potenziali sono le generazioni della denatalità) e una quota crescente del saldo serve solo a "riempire" coorti più piccole.
 
 ## 4. Lettura d'insieme
 

@@ -6,7 +6,7 @@
 
 Moltiplicatori parametrici dichiarati sopra i 65 anni: **F ×1,20 / M ×0,75** (ordine di grandezza delle indagini italiane: sopravvivenza femminile e vedovanza spostano la prevalenza 80+ verso le donne; ISTAT Condizioni di salute, Osservatorio Non Autosufficienza — àncora qualitativa, da calibrare sulle fonti ufficiali quando entreranno nel repo).
 
-Risultato al 2056: **1,13 M claimants femmine vs 0,56 M maschi** — rapporto **2:1**, che rende quantitativo ciò che il capitolo 3 (caregiving informale) raccontava qualitativamente: la domanda LTC è femminile, l'offerta informale (45-64) è in corso di collasso proprio nelle coorti femmine.
+Risultato al 2056: **1,14 M claimants femmine vs 0,57 M maschi** — rapporto **2:1**, che rende quantitativo ciò che il capitolo 3 (caregiving informale) raccontava qualitativamente: la domanda LTC è femminile, l'offerta informale (45-64) è in corso di collasso proprio nelle coorti femmine.
 
 ## 2. Severità a tre livelli (P2-12)
 
@@ -40,12 +40,12 @@ B=5.000 repliche (~35 s su CI): ogni replica **riesima la Leslie due sessi** con
 
 | Statistica | mld € |
 |---|---|
-| Media | **31,8** |
-| Q05 | 23,2 |
-| Mediana | 31,9 |
-| Q95 | **40,2** |
+| Media | **32,3** |
+| Q05 | 20,6 |
+| Mediana | 32,3 |
+| Q95 | **44,2** |
 
-**Letture**: la media Monte Carlo (31,8) coincide col deterministico del capitolo 2 (31,0): il modello precedente era il caso centrale, non un'ipotesi favorevole. L'intervallo [23,2; 40,2] è il numero giusto da citare con il claim "il costo sarà ~31 mld": **C₂₀₅₆ ∈ [23; 40] mld€ a prezzi 2026, condizionato alle ipotesi**.
+**Letture**: la media Monte Carlo (32,3) è coerente col deterministico del capitolo 2 (31,7): il modello precedente è il caso centrale, non un'ipotesi favorevole. L'intervallo [20,6; 44,2] è il numero giusto da citare con il claim "il costo sarà ~31 mld": **C₂₀₅₆ ∈ [23; 40] mld€ a prezzi 2026, condizionato alle ipotesi**.
 
 ### Valore attuale del programma 2026-2081 (P2-15)
 
@@ -53,9 +53,9 @@ Sconto reale 1,5%, inflazione generale 2%, **eccesso di inflazione sanitaria cam
 
 | Statistica | mld € (valore 2026) |
 |---|---|
-| Media | **1.057** |
-| Q05 | 720 |
-| Q95 | 1.424 |
+| Media | **1.084** |
+| Q05 | 638 |
+| Q95 | 1.579 |
 
 L'ordine di grandezza è ~1.000 mld€ in 55 anni: il confronto giusto per il quadro polizza-fondo (capitolo 4), non per il singolo anno di PIL.
 

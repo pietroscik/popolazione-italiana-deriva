@@ -116,3 +116,44 @@ class TestKinked(unittest.TestCase):
             df, dr0_grid=np.round(np.arange(0.15, 0.46, 0.03), 2))
         self.assertAlmostEqual(res["dr0"], 0.30, delta=0.03)
         self.assertAlmostEqual(res["gamma_kinked"], -0.15, delta=0.05)
+
+
+class TestMundlakEBatteria(unittest.TestCase):
+    def test_mundlak_assorbe_l_eterogeneita_e_theta_stabile(self):
+        """DGP con alpha_i correlato con F_lag: il pooled ha bias sul
+        coefficiente; il CRE/Mundlak lo assorbe (media-F significativa) e
+        la theta resta identificata."""
+        rng = np.random.default_rng(9)
+        rows = []
+        for i in range(120):
+            alpha = 0.05 * rng.standard_normal()
+            F = 1.5 + alpha + 0.1 * rng.standard_normal()
+            gdp = 25_000.0
+            pref = f"{chr(65 + (i // 20) % 26)}X"
+            for t in range(11):
+                rows.append({"geo": f"{pref}{i % 20:02d}", "anno": 2013 + t,
+                             "tfr": F, "gdp_pc": gdp,
+                             "dr": 0.30, "dr_t15": 0.30})
+                gdp *= np.exp(0.02 + 0.02 * rng.standard_normal())
+                F = F + alpha + (-0.06 + 0.04 * F
+                                 - 0.05 * F * _G(F, 4.0, 1.66)) \
+                    + 0.008 * rng.standard_normal()
+        from pstr_trap import fit_pstr_mundlak, prepare_panel, theta_stability_battery
+        df = prepare_panel(pd.DataFrame(rows))
+        res = fit_pstr_mundlak(df)
+        self.assertAlmostEqual(res["theta"], 1.66, delta=0.2)
+        bat = theta_stability_battery(df)
+        for k in ("senza_dr", "con_dr", "mundlak_cre", "kinked"):
+            self.assertIn(k, bat)
+
+    def test_su_dati_reali_media_F_assorbe_eterogeneita(self):
+        from pstr_trap import fit_pstr_mundlak, prepare_panel
+        raw = Path("/workspace/github__pietroscik__popolazione-italiana-deriva"
+                   "/data/processed/eurostat_panel.csv")
+        if not raw.exists():
+            self.skipTest("panel Eurostat non presente")
+        import pandas as pd
+        df = prepare_panel(pd.read_csv(raw))
+        res = fit_pstr_mundlak(df)
+        self.assertGreater(abs(res["mundlak"]["media_F"]), 0.05)
+        self.assertTrue(1.60 <= res["theta"] <= 1.80)
