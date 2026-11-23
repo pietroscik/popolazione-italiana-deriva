@@ -153,6 +153,7 @@ La documentazione dettagliata si trova in [docs/](docs/):
 - [17_ltc_capitolo5_montecarlo.md](docs/17_ltc_capitolo5_montecarlo.md) — modello attuariale probabilistico: severità, sesso, Monte Carlo, PV e scenari di longevità
 - [18_lotka_sensitivity.md](docs/18_lotka_sensitivity.md) — Lotka integrale esatto (r = ln λ₁ alla sesta cifra) e sensitivity sistematica OAT (tornado su C₂₀₅₆)
 - [19_leslie_regionale.md](docs/19_leslie_regionale.md) — Leslie regionalizzata per ripartizione con mortalità provinciale aggregata; spotlight Sardegna dentro la soglia di non ritorno
+- [20_audit_finale.md](docs/20_audit_finale.md) — audit di consolidamento su quattro livelli (matematico, computazionale, statistico, riproducibilità) con i due bug corretti e la batteria di robustezza
 
 Bozza del working paper in inglese: [paper/draft.md](paper/draft.md) — *Escaping the Low Fertility Trap*.
 
