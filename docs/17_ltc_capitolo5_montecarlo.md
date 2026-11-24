@@ -45,7 +45,7 @@ B=5.000 repliche (~35 s su CI): ogni replica **riesima la Leslie due sessi** con
 | Mediana | 32,3 |
 | Q95 | **44,2** |
 
-**Letture**: la media Monte Carlo (32,3) è coerente col deterministico del capitolo 2 (31,7): il modello precedente è il caso centrale, non un'ipotesi favorevole. L'intervallo [20,6; 44,2] è il numero giusto da citare con il claim "il costo sarà ~31 mld": **C₂₀₅₆ ∈ [23; 40] mld€ a prezzi 2026, condizionato alle ipotesi**.
+**Letture**: la media Monte Carlo (32,3) è coerente col deterministico del capitolo 2 (31,7): il modello precedente è il caso centrale, non un'ipotesi favorevole. L'intervallo [20,6; 44,2] è il numero giusto da citare con il claim "il costo sarà ~31 mld": **C₂₀₅₆ ∈ [20,6; 44,2] mld€ a prezzi 2026, condizionato alle ipotesi**.
 
 ### Valore attuale del programma 2026-2081 (P2-15)
 

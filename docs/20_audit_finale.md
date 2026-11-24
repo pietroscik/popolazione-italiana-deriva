@@ -19,6 +19,8 @@ Due bug strutturali trovati e corretti nel ciclo (entrambi con test che dimostra
 1. **Classe terminale 100+ trattata come chiusa**: la TVM dice P[100]≈0,64 ma la pipeline forzava 0 — tutti i 100+ uscivano in un anno. Corretto in `parse_istat` (P[100] reale), `leslie.survive` + matrice + `leslie_regionale` (classe aperta ritiene n[100]·P[100]). Test: `test_classe_terminale_aperta_ritiene_i_sopravviventi`, `test_matrice_leslie_con_diagonale_terminale`.
 2. **Moltiplicatori di sesso campionati e mai usati nel Monte Carlo LTC**: la banda di incertezza risultava artificially stretta sulla dimensione sesso. Corretto in `simulate_claimants_m(..., sex_mult_f, sex_mult_m)`; il MC ora li propaga. Test: `test_moltiplicatore_campionato_arranta_i_claimants` (2× donna → claimants F ↑ >20%, M invariati).
 
+3. **Banda della figura `costi_ltc.png` non conforme al cap. 5** (post-v1.1.0, corretto in v1.1.2-editoriale): il pannello di rigenerazione usava un MC ridotto ad-hoc (B=200, demografia fissa a saldo 280k, severità/costi campionati) invece di replicare `monte_carlo_ltc` — la banda disegnata divergeva dai numeri headline della release (32,3 [20,6; 44,2]). `plot_costi_ltc` ora replica esattamente il cap. 5 (B=5.000, seed=7, demografia ristimata per replica con ρ/scala TFR/moltiplicatori sesso campionati) e stampa i quantili di verifica: 2056 → mediana 32,3, q05 20,6, q95 44,2, coincidenti con docs/17.
+
 Copertura: **82 test automatici**, CI end-to-end (download ISTAT + parse + test a ogni push).
 
 ## Livello 3 — Statistico/econometrico
