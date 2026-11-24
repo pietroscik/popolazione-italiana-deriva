@@ -47,6 +47,10 @@ def plot_piramide():
         ax.set_title(f"{2026 + t}")
         ax.set_xlim(-500, 500)
         ax.axvline(0, color="k", lw=0.5)
+        # piramide speculare: i maschi sono tracciati col segno negativo, ma
+        # l'asse mostra magnitudini assolute (entrambi i lati positivi)
+        ax.xaxis.set_major_formatter(
+            plt.FuncFormatter(lambda v, _: f"{abs(v):g}"))
     axes[0].set_ylabel("età")
     axes[0].set_xlabel("migliaia")
     axes[1].set_xlabel("migliaia")
