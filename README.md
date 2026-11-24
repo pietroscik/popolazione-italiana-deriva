@@ -1,3 +1,5 @@
+> **Disclaimer**: This repository is an independent quantitative R&D prototype. It does not constitute a statutory actuarial valuation, regulatory advice, or a certified Solvency II/IFRS 17 model. — *Gli strumenti qui pubblicati sono prototipi di ricerca quantitativa indipendente: non costituiscono valutazioni attuariali ai fini di legge, pareri regolatori né modelli certificati Solvency II/IFRS 17.*
+
 # Popolazione Italiana — Struttura e Deriva
 
 Analisi della struttura per età e della deriva demografica della popolazione residente in Italia, a partire dai dati ufficiali ISTAT, con proiezioni tramite matrice di Leslie e stima del tempo di dimezzamento. Ricerca quantitativa indipendente: modellazione attuariale e modelli econometrici a fini di studio, non una prestazione professionale né una valutazione tecnica ai fini assicurativi.
