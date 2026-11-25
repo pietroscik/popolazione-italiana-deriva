@@ -1,6 +1,6 @@
 {
-  "generato": "2026-11-25T15:20:50.225901+00:00",
-  "versione_codice": "1.1.2",
+  "generato": "2026-11-25T17:10:50.355161+00:00",
+  "versione_codice": "1.1.3",
   "nota": "Ogni numero del repo deriva da questi file: per riproducibilita' completa rigenerare con src/download_istat.py e src/download_eurostat.py e confrontare gli SHA-256 (le fonti ufficiali possono revisionare i microdati tra un vintage e il successivo)",
   "fonti": [
     {
@@ -15,7 +15,7 @@
       "sha256": "4f9fe44430b5915e6fdc2292be1bbcfe91d51626c1008e54fb555b13453e3c02",
       "dimensione_bytes": 375200,
       "data_estrazione": "2026-11-22T18:48:58+00:00",
-      "versione_codice": "1.1.2"
+      "versione_codice": "1.1.3"
     },
     {
       "provider": "ISTAT",
@@ -29,7 +29,7 @@
       "sha256": "4e55065b9c848ba6e457fc7cca5292295d2c509115740eb15b48894109424426",
       "dimensione_bytes": 18013,
       "data_estrazione": "2026-11-22T18:48:58+00:00",
-      "versione_codice": "1.1.2"
+      "versione_codice": "1.1.3"
     },
     {
       "provider": "ISTAT",
@@ -43,7 +43,7 @@
       "sha256": "10e87b5d00573f0eb2babdc5e68185dd4c08be139717b1b431cdf4adf7c4f79c",
       "dimensione_bytes": 2522227,
       "data_estrazione": "2026-11-22T18:48:58+00:00",
-      "versione_codice": "1.1.2"
+      "versione_codice": "1.1.3"
     },
     {
       "provider": "ISTAT",
@@ -57,7 +57,7 @@
       "sha256": "a3f9a95ca3bfff8491b28378a6b1025d8f1058d07af0021b3d1fc1a528790e97",
       "dimensione_bytes": 56464,
       "data_estrazione": "2026-11-22T18:48:58+00:00",
-      "versione_codice": "1.1.2"
+      "versione_codice": "1.1.3"
     },
     {
       "provider": "Eurostat",
@@ -71,7 +71,7 @@
       "sha256": "1337f16f93607716db422630b745505086a5c7367017d828bc9fd57acb8d0218",
       "dimensione_bytes": 84262,
       "data_estrazione": "2026-11-22T20:26:29+00:00",
-      "versione_codice": "1.1.2"
+      "versione_codice": "1.1.3"
     },
     {
       "provider": "Eurostat",
@@ -85,7 +85,7 @@
       "sha256": "1d42dbd2eaf24b5e72330ac40e99473d1a62987d1c1a9e5197411963cdc1c459",
       "dimensione_bytes": 84881,
       "data_estrazione": "2026-11-22T20:26:29+00:00",
-      "versione_codice": "1.1.2"
+      "versione_codice": "1.1.3"
     },
     {
       "provider": "Eurostat",
@@ -99,7 +99,7 @@
       "sha256": "563e7eeafecee4a4462bd0abff0461ee2bf8caa4391af5efec66f346fff1a699",
       "dimensione_bytes": 1632690,
       "data_estrazione": "2026-11-22T20:55:41+00:00",
-      "versione_codice": "1.1.2"
+      "versione_codice": "1.1.3"
     },
     {
       "provider": "Eurostat",
@@ -113,7 +113,7 @@
       "sha256": "5ab28461ec6afcf9ae307e63ae3787fd327a248bb82c2ef73ee08ea1c54b8b0b",
       "dimensione_bytes": 5314946,
       "data_estrazione": "2026-11-22T21:47:40+00:00",
-      "versione_codice": "1.1.2"
+      "versione_codice": "1.1.3"
     },
     {
       "provider": "Eurostat",
@@ -127,7 +127,7 @@
       "sha256": "a45971d2fd64807448ad402ee068982143cbb483c17bf85fd864c2fb50bd6445",
       "dimensione_bytes": 222681,
       "data_estrazione": "2026-11-22T22:29:32+00:00",
-      "versione_codice": "1.1.2"
+      "versione_codice": "1.1.3"
     },
     {
       "provider": "Eurostat",
@@ -141,7 +141,7 @@
       "sha256": "b2c97ebd072402649826b62566f50e17affe2c63b604c362fa3370d17b209eb1",
       "dimensione_bytes": 164149,
       "data_estrazione": "2026-11-22T22:30:24+00:00",
-      "versione_codice": "1.1.2"
+      "versione_codice": "1.1.3"
     }
   ]
 }
