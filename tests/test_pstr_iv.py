@@ -245,3 +245,25 @@ class TestMundlakEBatteria(unittest.TestCase):
         res = fit_pstr_mundlak(df)
         self.assertGreater(abs(res["mundlak"]["media_F"]), 0.05)
         self.assertTrue(1.60 <= res["theta"] <= 1.80)
+
+
+class TestThetaStrutturale(unittest.TestCase):
+    def test_batteria_per_era_su_dati_reali(self):
+        """Regressione docs/13 par. 5.7: nel regime corrente la soglia e'
+        fragile (bassa tangenza, nessuna radice instabile nel punto),
+        nell'era 2001-2012 la mappa ha tre radici con supporto alto."""
+        panel = Path("/workspace/github__pietroscik__popolazione-italiana-deriva"
+                     "/data/processed/eurostat_panel_1990.csv")
+        if not panel.exists():
+            self.skipTest("panel Eurostat esteso non presente")
+        from pstr_trap import prepare_panel, theta_structural_battery
+        df = prepare_panel(pd.read_csv(panel))
+        res = theta_structural_battery(df, B=9)
+        self.assertIn("2013-2024", res)
+        self.assertIn("2001-2012", res)
+        # tangenza del regime corrente: mappa <= 0.02 in F in [0.85;1.10]
+        self.assertLess(res["2013-2024"]["map_abs_max_f_0.85_1.10"], 0.02)
+        # era 2001-2012: struttura a tre radici con supporto della soglia
+        self.assertEqual(len(res["2001-2012"]["radici_base"]), 3)
+        self.assertGreater(res["2001-2012"]["supporto_soglia_pct"],
+                           res["2013-2024"]["supporto_soglia_pct"])

@@ -506,3 +506,40 @@ def pstr_report(boot: bool = True, verbose: bool = True,
 if __name__ == "__main__":
     pstr_report(boot="--no-boot" not in sys.argv,
                 panel="1990" if "--panel-1990" in sys.argv else "2013")
+
+
+def theta_structural_battery(df: pd.DataFrame, windows=None, B: int = 99,
+                             seed: int = 7) -> dict:
+    """Batteria strutturale della soglia (roadmap v1.2, punto 3).
+
+    Per ciascuna finestra: stima puntuale, bootstrap a cluster sulle regioni
+    (con supporto della soglia instabile a regime anno-base) e misura di
+    TANGENZA della mappa implicita nella banda F in [0,85; 1,10]: se
+    |f(F)| e' molto piccolo l'esistenza dell'attraversamento e' dentro il
+    rumore campionario e la soglia varia con l'offset (docs/13 par. 5.7).
+    """
+    if windows is None:
+        windows = [(2001, 2012), (2013, 2024), (2013, 2018), (2019, 2024)]
+    out = {}
+    F_grid, err_band = np.linspace(0.4, 3.5, 621), []
+    for lo, hi in windows:
+        d = df[(df["anno"] >= lo) & (df["anno"] <= hi)].reset_index(drop=True)
+        if len(d) < 500:
+            continue
+        f = fit_pstr(d)
+        base = dict(f)
+        base["dummy_share"] = np.zeros(len(f["beta"]) - 5)
+        _, m = implied_map(base)
+        band = m[(F_grid >= 0.85) & (F_grid <= 1.10)]
+        boot = bootstrap_theta(d, B=B, seed=seed)
+        out[f"{lo}-{hi}"] = {
+            "n": int(len(d)),
+            "theta": float(f["theta"]),
+            "theta_q05": boot["theta_q05"],
+            "theta_q95": boot["theta_q95"],
+            "supporto_soglia_pct": round(100.0 * boot["n_bootstrap_con_soglia"]
+                                         / max(boot["B"], 1), 1),
+            "map_abs_max_f_0.85_1.10": float(np.abs(band).max()),
+            "radici_base": [(float(a), b) for a, b in equilibrium_points(base)],
+        }
+    return out

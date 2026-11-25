@@ -123,6 +123,19 @@ Nota su Hansen J: **ESEGUITO con il secondo strumento t−20** (§5.5): J=0,23 (
 
 **La conseguenza epistemica.** Il claim "il segno positivo di γ̂ è robusto a IV e LOCO" delle versioni ≤ v1.1.2 **non è più sostenuto**: sotto strumentazione corretta γ̂_IV ≈ −0,05. Lettura più parsimoniosa: il γ̂>0 dell'OLS è eterogeneità regionale persistente correlata al livello di DR, non un effetto causale della DR sul ΔF. La sintassi della batteria resta: γ̂ OLS > 0 sempre, ma **il segno non è identificato in modo robusto**; Hansen J non respinge (congruenza t−15/t−20) senza per questo convalidare la validità dell'esclusione (v. lettura pre-registrata sopra). I risultati demografici (Leslie, Lotka, LTC) non sono toccati: γ̂ non entra in nessuna di quelle catene.
 
+### 5.7 Batteria strutturale della soglia per era (v1.2 — ESEGUITA)
+
+`theta_structural_battery` (`src/pstr_trap.py`): per ciascuna finestra, bootstrap a cluster (B=99, griglia coarse), supporto della soglia instabile a regime anno-base e **misura di tangenza** della mappa implicita (max |ΔF| in F ∈ [0,85; 1,10] — se è piccola, l'esistenza dell'attraversamento è dentro il rumore campionario):
+
+| Finestra | θ̂ | θ q05–q95 (boot) | Supporto soglia | max\|f\| in [0,85–1,10] | Struttura a regime base |
+|---|---|---|---|---|---|
+| 2001-2012 | 1,10 (bordo) | 1,15–1,65 | **70,7%** | **0,052** | **tre radici**: stabile **1,30**, instabile **2,02**, stabile 2,88 |
+| 2013-2024 | 1,70 | 1,60–1,755 | **12,1%** | **0,0045** | nessuna instabile; stabile 1,41 |
+| 2013-2018 | 1,70 | 1,535–1,75 | 14,1% | 0,011 | nessuna |
+| 2019-2024 | 1,72 | 1,15–2,00 | 18,2% | 0,007 | stabile 1,22 |
+
+**Letture.** (1) **Nell'era corrente la soglia di non ritorno è un oggetto fragile**: la mappa è quasi tangente a zero nel regime basso (max |f| ≈ 0,005, ~10× più vicina allo zero dell'era precedente) e il supporto bootstrap dipende fortemente dal campione e dalla finestra — 66% sul campione headline 2013-2023, 12-18% sul panel esteso. L'esistenza dell'attraversamento si smarrisce per spostamenti di offset dell'ordine di 0,004: **la soglia va citata come compatibile/illustrativa, non come costante identificata** (in coerenza con la formulazione già adottata). (2) **θ̂ invece è stabile nell'era corrente** (1,70, banda bootstrap 1,54–1,75): è la trasduzione in soglia di non ritorno a essere fragile, non la transizione. (3) **L'era 2001-2012 ha una struttura specchiata a tre radici** (attrattore basso 1,30, instabile 2,02, attrattore alto 2,88, supporto 70,7%): coerente con la transizione post-comunista in cui il panel era dominato da regioni ad alta fecondità in discesa — un'altra geografia della stessa meccanica, e la ragione per cui la costanza tra ere è RIGETTATA (docs/15).
+
 ### 5.6 IV per ere sulla finestra estesa 1990-2024 (eseguito)
 
 La costanza dei parametri tra ere è già RIGETTATA (docs/15): fare IV pooled su 30 anni mischia regimi strutturali diversi (contesto economico/sociale cambiato). L'IV per era sul panel esteso (prepare_panel su `eurostat_panel_1990.csv` con strumenti corretti) separa le letture:
