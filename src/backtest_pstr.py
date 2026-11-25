@@ -102,10 +102,10 @@ def predict_path_m1(params: dict, F0: float, exog: pd.DataFrame) -> np.ndarray:
     return np.array(out)
 
 
-def exog_by_region(df: pd.DataFrame) -> dict:
-    """Controlli realizzati per anno di test (media per anno su tutte le
-    regioni sono per-regione: qui la matrice per ciascuna regione)."""
-    sub = df[(df["anno"] >= TEST_START) & (df["anno"] <= TEST_END)]
+def exog_by_region(df: pd.DataFrame, test_start: int = TEST_START,
+                   test_end: int = TEST_END) -> dict:
+    """Controlli realizzati per anno di test (per-regione)."""
+    sub = df[(df["anno"] >= test_start) & (df["anno"] <= test_end)]
     exog = {}
     for geo, g in sub.groupby("geo"):
         g = g.sort_values("anno")
@@ -171,13 +171,23 @@ def crps_from_ensemble(sims: np.ndarray, obs: np.ndarray) -> float:
     return float(crps)
 
 
-def backtest_report(boot_B: int = 20, seed: int = 7, verbose: bool = True) -> dict:
+def backtest_report(train_end: int = TRAIN_END, test_start: int = TEST_START,
+                    test_end: int = TEST_END, boot_B: int = 20,
+                    seed: int = 7, verbose: bool = True,
+                    train_start: int = 2001) -> dict:
+    """Backtest fixed-origin condizionato. Con i default replica il disegno
+    cross-era della v1.1.x (train 2001-2012, test 2013-2024). Con
+    train_end=2019, test_start=2020 esegue il disegno WITHIN-ERA della
+    roadmap v1.2: stima e proiezione interamente dentro il regime
+    post-2013 (il test vale solo se la costanza dei parametri e' rigettata,
+    docs/15: il backtest cross-era mischiava i regimi)."""
     frame = prepare_panel_long = load_estimation_frame()
-    train = frame[frame["anno"] <= TRAIN_END].reset_index(drop=True)
-    F0 = first_F_by_region(frame, TRAIN_END)
-    obs = observed_F_by_region(frame[(frame["anno"] >= TEST_START)
-                                     & (frame["anno"] <= TEST_END)])
-    exog = exog_by_region(frame)
+    train = frame[(frame["anno"] >= train_start)
+                  & (frame["anno"] <= train_end)].reset_index(drop=True)
+    F0 = first_F_by_region(frame, train_end)
+    obs = observed_F_by_region(frame[(frame["anno"] >= test_start)
+                                     & (frame["anno"] <= test_end)])
+    exog = exog_by_region(frame, test_start, test_end)
 
     m2 = fit_pstr(train)
     m1 = fit_m1(train)
@@ -199,7 +209,8 @@ def backtest_report(boot_B: int = 20, seed: int = 7, verbose: bool = True) -> di
     e2 = paired_errors(pred_m2, obs)
 
     res = {
-        "disegno": {"train": "2001-2012", "test": f"{TEST_START}-{TEST_END}",
+        "disegno": {"train": f"{train_start}-{train_end}",
+                    "test": f"{test_start}-{test_end}",
                     "condizionato": "dlog(PIL) e DR realizzati per regione"},
         "rmse": {
             "M0_statico": float(np.sqrt((e0["err"] ** 2).mean())),
@@ -334,4 +345,9 @@ def expanding_window_h1(frame: pd.DataFrame) -> dict:
 
 
 if __name__ == "__main__":
-    backtest_report(boot_B=20)
+    if "--within-era" in sys.argv:
+        # roadmap v1.2: stima e test interamente nel regime post-2013
+        backtest_report(train_start=2013, train_end=2019, test_start=2020,
+                        test_end=2024, boot_B=20)
+    else:
+        backtest_report(boot_B=20)
