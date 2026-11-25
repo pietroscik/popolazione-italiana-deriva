@@ -1,5 +1,5 @@
 {
-  "generato": "2026-11-25T17:10:50.355161+00:00",
+  "generato": "2026-11-25T18:00:24.419805+00:00",
   "versione_codice": "1.1.3",
   "nota": "Ogni numero del repo deriva da questi file: per riproducibilita' completa rigenerare con src/download_istat.py e src/download_eurostat.py e confrontare gli SHA-256 (le fonti ufficiali possono revisionare i microdati tra un vintage e il successivo)",
   "fonti": [
@@ -113,6 +113,48 @@
       "sha256": "5ab28461ec6afcf9ae307e63ae3787fd327a248bb82c2ef73ee08ea1c54b8b0b",
       "dimensione_bytes": 5314946,
       "data_estrazione": "2026-11-22T21:47:40+00:00",
+      "versione_codice": "1.1.3"
+    },
+    {
+      "provider": "ISTAT",
+      "dataset": "POSAS",
+      "url": "https://demo.istat.it/data/posas/POSAS_2023_it_Ripartizioni.zip",
+      "vintage": "2023",
+      "contenuto": "migrazione osservata per eta' (v1.2)",
+      "acquisizione": "src/migration_observed.py",
+      "parsing": "src/migration_observed.py",
+      "file": "data/raw/POSAS_2023_it_Ripartizioni.csv",
+      "sha256": "5bdc421277a44d0ce32b7c7ac64bd6128b0240e77f82ec8d6d8e9b4dd4b79909",
+      "dimensione_bytes": 43719,
+      "data_estrazione": "2026-11-25T17:57:36.008338+00:00",
+      "versione_codice": "1.1.3"
+    },
+    {
+      "provider": "ISTAT",
+      "dataset": "POSAS",
+      "url": "https://demo.istat.it/data/posas/POSAS_2024_it_Ripartizioni.zip",
+      "vintage": "2024",
+      "contenuto": "migrazione osservata per eta' (v1.2)",
+      "acquisizione": "src/migration_observed.py",
+      "parsing": "src/migration_observed.py",
+      "file": "data/raw/POSAS_2024_it_Ripartizioni.csv",
+      "sha256": "0d0bea600f351e4702c03b3939c76e166f3fc3b9947312b99d5dba6d0d937d7e",
+      "dimensione_bytes": 43804,
+      "data_estrazione": "2026-11-25T17:57:36.154338+00:00",
+      "versione_codice": "1.1.3"
+    },
+    {
+      "provider": "ISTAT",
+      "dataset": "POSAS",
+      "url": "https://demo.istat.it/data/posas/POSAS_2025_it_Ripartizioni.zip",
+      "vintage": "2025",
+      "contenuto": "migrazione osservata per eta' (v1.2)",
+      "acquisizione": "src/migration_observed.py",
+      "parsing": "src/migration_observed.py",
+      "file": "data/raw/POSAS_2025_it_Ripartizioni.csv",
+      "sha256": "7e327a41d2bc84d3838aa78e40f63637d50fe314830738c39444466f738388db",
+      "dimensione_bytes": 43870,
+      "data_estrazione": "2026-11-25T17:57:42.101338+00:00",
       "versione_codice": "1.1.3"
     },
     {
