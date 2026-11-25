@@ -122,3 +122,18 @@ Nota su Hansen J: **ESEGUITO con il secondo strumento t−20** (§5.5): J=0,23 (
 | **IV t−15 + t−20** | 1,68 | **−0,045** | F congiunto 2.537 | **Hansen J=0,23 (df=1, p=0,63)** n=1.895 |
 
 **La conseguenza epistemica.** Il claim "il segno positivo di γ̂ è robusto a IV e LOCO" delle versioni ≤ v1.1.2 **non è più sostenuto**: sotto strumentazione corretta γ̂_IV ≈ −0,05. Lettura più parsimoniosa: il γ̂>0 dell'OLS è eterogeneità regionale persistente correlata al livello di DR, non un effetto causale della DR sul ΔF. La sintassi della batteria resta: γ̂ OLS > 0 sempre, ma **il segno non è identificato in modo robusto**; Hansen J non respinge (congruenza t−15/t−20) senza per questo convalidare la validità dell'esclusione (v. lettura pre-registrata sopra). I risultati demografici (Leslie, Lotka, LTC) non sono toccati: γ̂ non entra in nessuna di quelle catene.
+
+### 5.6 IV per ere sulla finestra estesa 1990-2024 (eseguito)
+
+La costanza dei parametri tra ere è già RIGETTATA (docs/15): fare IV pooled su 30 anni mischia regimi strutturali diversi (contesto economico/sociale cambiato). L'IV per era sul panel esteso (prepare_panel su `eurostat_panel_1990.csv` con strumenti corretti) separa le letture:
+
+| Era | n (OLS) | θ̂_OLS | γ̂_OLS | γ̂_IV t−15 | γ̂_IV t−15+t−20 | Hansen J | p |
+|---|---|---|---|---|---|---|---|
+| 1991-2000 | 0 | — | — | — | — | — | PIL regionale Eurostat parte dal 2000: era non stimabile |
+| **2001-2012** | 2.217 | 1,10 | +0,038 | +0,032 | **+0,084** (n=509) | 2,63 | 0,10 |
+| **2013-2024** | 3.102 | 1,70 | +0,011 | −0,018 | **−0,016** (n=2.499) | 1,39 | 0,24 |
+| Pooled 1991-2024 | 5.319 | 1,10 | +0,022 | +0,004 | −0,003 | 2,41 | 0,12 |
+
+Sotto-periodi (IV a due strumenti, J mai respinto): 2007-2012 **+0,084**, 2013-2018 **−0,072**, 2019-2024 **+0,034** — attorno a zero con segni alternati.
+
+**Lettura.** (1) L'associazione positiva DR→ΔF è un fenomeno **dell'era 2001-2012**, dove sopravvive alla strumentazione corretta (γ̂_IV +0,03/+0,08, dotata di strumenti forti). (2) **Nell'era corrente (post-2013) l'associazione svanisce**: γ̂ ≈ 0 (OLS +0,011, IV −0,016/−0,018), con sotto-periodi che oscillano ±0,07 — nessun effetto robusto della DR sul ΔF. (3) Il pooled positivo della v1.1.x era quindi il prodotto di **due difetti sovrapposti**: strumento mappato a t−30 e media su ere con regimi diversi. L'intuizione è coerente con la costanza dei parametri RIGETTATA (docs/15): il contesto economico/sociale è cambiato e la relazione DR-ΔF non è costante nella struttura né nel segno. **Conclusione per la narrativa: γ̂ non è identificato in modo robusto nell'era corrente; l'associazione positiva è specifica dell'era 2001-2012 e va citata solo come tale.** Nota: il campione del panel esteso differisce da quello headline (copertura NUTS diversa: n 3.102 vs 2.366 su 2013+); il confronto tra ere è internamente coerente (stessa pipeline), il confronto puntuale con la batteria headline non va fatto cifra-per-cifra.
