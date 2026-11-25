@@ -14,6 +14,7 @@ from pstr_trap import (  # noqa: E402
     _G,
     fit_pstr,
     fit_pstr_iv,
+    fit_pstr_iv2,
     loco_by_country,
     prepare_panel,
 )
@@ -63,6 +64,93 @@ class TestIV(unittest.TestCase):
         self.assertGreaterEqual(res["n_propri"], 1)
         self.assertLessEqual(res["theta_min"], res["theta_max"])
         self.assertLessEqual(res["gamma_DR_min"], res["gamma_DR_max"])
+
+
+
+
+def panel_due_strumenti(gamma_dr=0.08, n_regioni=300, n_anni=11,
+                       seed=17, rompi_t20=False):
+    """DGP con DR endogena e due strumenti validi con pendenza regionale
+    regione x tempo (identificazione forte sia nel primo stadio sia per
+    la distinzione fra i due strumenti). Con rompi_t20=True il t-20 e'
+    contaminato direttamente dall'errore corrente: J deve respingere.
+    Nota: il DGP e' volutamente 'sporco' (dr_lag vs dr_t disallineati,
+    u_i persistente): recupera il comportamento del test J, non la
+    precisione puntuale di gamma (gia' coperta dal test monovariato)."""
+    rng = np.random.default_rng(seed)
+    rows = []
+    for i in range(n_regioni):
+        prefisso = f"{chr(65 + (i // 20) % 26)}X"
+        u = rng.standard_normal() * 0.02
+        z15_0 = 0.30 + 0.002 * rng.standard_normal()
+        z20_0 = 0.295 + 0.002 * rng.standard_normal()
+        slope15 = 0.003 + 0.003 * rng.random()
+        slope20 = 0.0025 + 0.003 * rng.random()
+        F = max(0.8, 1.5 + u + 0.1 * rng.standard_normal())
+        gdp = 25_000.0
+        for t in range(n_anni):
+            z15 = z15_0 + slope15 * t
+            z20 = z20_0 + slope20 * t
+            if rompi_t20:
+                z20 = z20 + u + 0.001 * rng.standard_normal()   # contagio
+            dr = z15 + u + 0.003 * rng.standard_normal()
+            eps = 0.006 * rng.standard_normal()
+            rows.append({"geo": f"{prefisso}{i % 20:02d}", "anno": 2013 + t,
+                         "tfr": F, "gdp_pc": gdp, "dr": dr,
+                         "dr_t15": z15, "dr_t20": z20})
+            gdp *= np.exp(0.02 + 0.02 * rng.standard_normal())
+            F = F + (-0.06 + 0.04 * F - 0.05 * F * _G(F, 4.0, 1.66)) \
+                + gamma_dr * dr + u + eps
+    return pd.DataFrame(rows)
+
+
+class TestLagStrumenti(unittest.TestCase):
+    def test_dr_t15_e_dr_t20_risalgono_a_15_e_20_anni_prima(self):
+        """Regressione del bug double-shift: la vecchia add_dr_t15 fondava
+        df(anno-15) con hist(storia+15), producendo di fatto DR(t-30)
+        etichettata come t-15 (759/759 righe del panel v1.1.x). La
+        strumentazione corretta deve mappare anno-15 e anno-20."""
+        raw = Path("/workspace/github__pietroscik__popolazione-italiana-deriva"
+                   "/data/processed/dr_storico_nuts2.csv")
+        panel = Path("/workspace/github__pietroscik__popolazione-italiana-deriva"
+                     "/data/processed/eurostat_panel.csv")
+        if not (raw.exists() and panel.exists()):
+            self.skipTest("panel Eurostat non presente")
+        hist = pd.read_csv(raw)
+        df = pd.read_csv(panel)
+        n15 = n20 = 0
+        for _, r in df.dropna(subset=["dr_t15"]).head(500).iterrows():
+            h = hist[(hist.geo == r["geo"]) & (hist.anno == int(r["anno"]) - 15)]
+            if len(h):
+                n15 += 1
+                self.assertAlmostEqual(float(h.iloc[0]["dr_hist"]),
+                                       float(r["dr_t15"]), delta=1e-9)
+        for _, r in df.dropna(subset=["dr_t20"]).head(500).iterrows():
+            h = hist[(hist.geo == r["geo"]) & (hist.anno == int(r["anno"]) - 20)]
+            if len(h):
+                n20 += 1
+                self.assertAlmostEqual(float(h.iloc[0]["dr_hist"]),
+                                       float(r["dr_t20"]), delta=1e-9)
+        # copertura verificabile su almeno 100 righe per strumento
+        self.assertGreaterEqual(n15, 100)
+        self.assertGreaterEqual(n20, 100)
+
+
+class TestIV2HansenJ(unittest.TestCase):
+    def test_due_strumenti_validi_hansen_j_non_respinge(self):
+        df = prepare_panel(panel_due_strumenti())
+        df = df.dropna(subset=["dr_t15", "dr_t20"]).reset_index(drop=True)
+        iv2 = fit_pstr_iv2(df)
+        # primi stadi forti (F congiunto) e strumenti congruenti: J passa
+        self.assertGreater(iv2["first_stage_F"], 10.0)
+        self.assertGreater(iv2["hansen_J_p"], 0.05)
+    def test_strumento_incoerente_hansen_j_respinge(self):
+        df = prepare_panel(panel_due_strumenti(rompi_t20=True, seed=5))
+        df = df.dropna(subset=["dr_t15", "dr_t20"]).reset_index(drop=True)
+        iv2 = fit_pstr_iv2(df)
+        # il t-20 contaminato dall'eterogeneita' corrente e' incongruente
+        # col t-15: il J (df=1) deve respingere la validita' congiunta
+        self.assertLess(iv2["hansen_J_p"], 0.10)
 
 
 if __name__ == "__main__":

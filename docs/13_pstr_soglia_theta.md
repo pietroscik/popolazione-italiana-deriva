@@ -64,7 +64,7 @@ A regime base **senza DR** (modello headline), **la soglia di non ritorno è ~0,
 
 **γ̂ = +0,081: positivo, non negativo come previsto dalla teoria.** Letture non escludentisi:
 
-1. **Endogeneità meccanica del DR — testata con strumento t-15 (F=340, γ̂_IV=+0,129)**: il segno resta positivo con la strumentazione, MA la validità dello strumento stesso è condizionata (v. §5 punto 4): sotto norme persistenti la DR a t-15 proxya il regime storico di fecondità.
+1. **Endogeneità meccanica del DR — strumentata a t−15 e t−20, con un bug storico corretto (v. §5.5)**: lo strumento etichettato "t-15" nelle versioni ≤ v1.1.2 era in realtà DR a **t−30** (double-shift nella merge, 759/759 righe matchano esattamente DR(anno−30), 0/759 DR(anno−15)). Con lo strumento **correttamente** a t−15: F=4.089, **γ̂_IV = −0,055**; con t−15+t−20 congiunti: **γ̂_IV = −0,045**, Hansen J=0,23 (df=1, p=0,63) non respinge. **Il segno positivo di γ OLS NON sopravvive alla strumentazione corretta**: la lettura più parsimoniosa è eterogeneità regionale persistente nel pooled, non un effetto causale della DR. La validità dello strumento resta comunque condizionata (v. §5 punto 4).
 2. **Confondente da country-level welfare** — Nord Europa: DR alto E welfare family-friendly (pensioni sustentabili, asili): nel pooled il segno di γ e' contaminato da questa correlazione territoriale. Il test LOCO per paese (docs/06) e' la robustezza diretta.
 3. La teoria prevede il segno negativo sul ΔDR oltre la soglia fiscale DR0 — non sul livello: la forma `γ·max(0, DR-DR0)` con DR0 stimato resta da provare (prossimo passo naturale).
 
@@ -78,19 +78,20 @@ A regime base **senza DR** (modello headline), **la soglia di non ritorno è ~0,
 | Con DR | 1,70 | +0,077 | specificazione estesa |
 | **CRE/Mundlak** (medie regionali) | **1,72** | **+0,483** | eterogeneità regionale permanente correlata assorbita (coeff. media-F +0,24): θ̂ stabile, γ sale — coerente con la diagnosi di eterogeneità correlata (§6) |
 | Kinked max(0, DR−DR₀) | 1,72 | +0,060 (DR₀→bordo) | §5.4: nessun kink |
-| IV t-15 (sotto-campione) | 1,94 | +0,129 | strumento forte (F=340) ma validità condizionata (§5.4) |
+| IV t−15 (corretto, post-bug) | 1,40 | **−0,055** | §5.5: lo strumento era t−30 nelle versioni ≤v1.1.2; F=4.089, n=1.971 (copertura ~80%, non più 25,7%: la vecchia bassa copertura era artefatto del t−30 che batteva il pavimento 1990 della storia) |
+| **IV t−15 + t−20** (2 strumenti) | 1,68 | **−0,045** | F congiunto 2.537; Hansen J=0,23, df=1, **p=0,63** non respinge la congruenza; n=1.895 |
 | Finestra 2013-2024 | 1,70 | +0,077 | estensione forwards |
 
-**Conclusione della batteria**: θ̂ è **stabile in [1,66–1,72]** su tutte le specificazioni campionali (l'IV sul sotto-campione meno coperto sale a 1,94), γ̂ > 0 sempre. **La soglia di non ritorno F ≈ 0,91 non va presentata come costante strutturale consolidata**: è identificata nell'era 2013-2023, con supporto bootstrap al 66%, e i suoi valori dipendono dal regime (anno base vs anno medio, §3). Formulazione corretta: *evidenza compatibile con una soglia di non ritorno ~0,9 nell'era post-2013, con supporto moderato — non una legge strutturale*. La stabilità tra ere è RIGETTATA (docs/15).
+**Conclusione della batteria**: θ̂ è **stabile in [1,66–1,72]** nelle specificazioni OLS/CRE/kinked; l'IV a strumento singolo t−15 (corretto) scende a 1,40 e l'IV a due strumenti torna a 1,68 — la soglia dell'IV e il quadro di riferimento restano da 1,40 a 1,72. **Il segno di γ̂ è positivo in OLS/CRE ma NEGATIVO sotto strumentazione corretta**: non è identificato in modo robusto. **La soglia di non ritorno F ≈ 0,91 non va presentata come costante strutturale consolidata**:è identificata nell'era 2013-2023, con supporto bootstrap al 66%, e i suoi valori dipendono dal regime (anno base vs anno medio, §3). Formulazione corretta: *evidenza compatibile con una soglia di non ritorno ~0,9 nell'era post-2013, con supporto moderato — non una legge strutturale*. La stabilità tra ere è RIGETTATA (docs/15).
 
 ## 6. Limiti dichiarati (aggiornati post-audit)
 
-- ~~Endogeneità della DR~~ **chiuso con l'IV t-15** (§5): strumento forte (F=340), segno confermato e rinforzato. La strumentazione della fertilità stessa (F_lag) resta invece aperta: punto seguente.
+- **Endogeneità della DR (RIAPERTO, v. §5.5)**: lo strumento "t-15" delle versioni ≤v1.1.2 era in realtà t−30 (double-shift). Con gli strumenti correttamente lagati γ̂_IV ≡ −0,05/−0,045: **il segno positivo è un artefatto della correlazione pooled, non un effetto causale**. L'ipotesi del freno della DR non è così nemmeno nel segno stimato dall'IV — resta aperta ogni lettura. La strumentazione della fertilità stessa (F_lag) resta aperta.
 - **Bias da panel dinamico (correlato, non FE-Nickell)**: nel pooled il canale rilevante è l'eterogeneità regionale permanente correlata con F_lag, non la versione FE del problema (precisazione dall'audit: il Nickell riguardava il caso FE). Lo stimatore OLS concentrato ne soffre su T corto (11 anni); il test unitario su processo sintetico mostra il recupero di `a` entro ±0,04. Correttivo naturale: Mundlak (medie regionali dei regressori come controlli, rispetta la scelta identificativa sui livelli) o GMM system con strumenti collassati — prossimo passo.
-- ~~LOCO per paese~~ **chiuso** (§5): γ sempre positivo su 33 esclusioni.
+- ~~LOCO per paese~~ **chiuso** (§5): γ sempre positivo su 33 esclusioni (OLS pooled: misura il segno della correlazione, non un effetto causale — v. §5.5).
 - ~~Bootstrap B=40~~ **chiuso**: B=399, soglia in 256/399 repliche (64%).
 - **Identificazione del regime basso**: la finestra 2013-2023 non contiene transizioni complete sotto F≈1; il controesempio storico (Germania Est anni '90: TFR 0,77 → 1,4+) è fuori campione. L'estensione del panel a 1990+ è l'upgrade con maggior valore identificativo.
-- **IV sotto-campione**: la merge t-15 copre il 25,7% del panel (i codici NUTS-2 di molti paesi sono cambiati tra 1998-2008 e oggi); DE/FR/ES/IT sono ben coperti, ma la selezione geografica va pesata nella lettura di γ̂_IV.
+- **IV sotto-campione (OBSOLETO, v. §5.5)**: il vincolo di copertura al 25,7% era un artefatto del t−30 che batteva il pavimento 1990 della storia DR; con la mappatura corretta t−15 copre ~80% del panel (n=1.971, 220 regioni) e t−15+t−20 n=1.895.
 - Identificazione limitata dal raggio osservato (min TFR 0,84): il regime F<1 non è attraversato da nessuna coorte ampia di regioni.
 
 ### 5.4 Test discriminante: forma kinked γ·max(0, DR−DR₀) — ESEGUITO
@@ -102,6 +103,37 @@ La teoria prevede che il freno fiscale si accenda **solo oltre una soglia DR₀*
 | Lineare γ·DR (headline) | SSR 7,2339 | γ̂ = +0,0767 |
 | Kinked γ·max(0, DR−DR₀) | SSR 7,2335 | **DR̂₀ = limite inferiore della griglia** (0,20; estesa a [0,05; 0,45] → DR̂₀ = 0,06), **γ̂_kinked ≈ γ̂_lineare** |
 
-**Lettura (pre-registrata prima dell'esecuzione)**: il minimo spinge DR₀ al pavimento e il SSR non migliora → la forma kinked non compra nulla: **l'effetto della DR è di livello, non il freno fiscale a soglia della teoria**. La lettura compatibile è il rebound ad alto sviluppo / esaurimento del rinvio, non il meccanismo di crowding-out fiscale kinked. Il segno resta robusto a IV e LOCO, ma la sua interpretazione causale resta aperta (§5, punto 4).
+**Lettura (pre-registrata prima dell'esecuzione)**: il minimo spinge DR₀ al pavimento e il SSR non migliora → la forma kinked non compra nulla: **l'effetto della DR è di livello, non il freno fiscale a soglia della teoria**. La lettura compatibile è il rebound ad alto sviluppo / esaurimento del rinvio, non il meccanismo di crowding-out fiscale kinked. Il segno è positivo in OLS e LOCO ma NON negli strumenti correttamente lagati (§5.5): la sua interpretazione causale resta aperta.
 
-Nota su Hansen J: con un solo strumento (t-15) il test di over-identificazione non è calcolabile — la promessa del design (docs/06 appendice B) è ritirata; un secondo strumento (t-20, DR a 20 anni) è pianificato per rendere J testabile.
+Nota su Hansen J: **ESEGUITO con il secondo strumento t−20** (§5.5): J=0,23 (df=1, p=0,63) non respinge la congruenza degli strumenti. Lettura pre-registrata: il J non convalida gli strumenti singolarmente — se t−15 e t−20 violano l'esclusione nello stesso verso (norme familiari regionali persistenti), il J non li respinge; un rifiuto sarebbe invece informativo. La promessa del design (docs/06 appendice B) non è quindi più ritirata ma resta condizionata.
+
+### 5.5 Bug dello strumento "t−15" (era DR a t−30) e risultati corretti (v1.2)
+
+**Il bug.** `add_dr_t15` (versioni ≤ v1.1.2) fondava due chiavi sfasate in versi opposti: `df.anno_strumento = anno − 15` e `hist.anno_strumento = storia + 15`. Il match `storia + 15 = anno − 15` produceva **DR(t−30)** etichettata come t−15. Verifica post-correzione sulle 759 righe strumentate del panel v1.1.x: **759/759 matchano esattamente DR(anno−30), 0/759 DR(anno−15)**. La bassa copertura storica (25,7%) non era un limite dei dati: era l'artefatto del t−30 che batteva il pavimento 1990 della storia DR.
+
+**Le correzioni.** `add_dr_instruments(lags=(15, 20))` (`src/download_eurostat.py`) mappa anno−15 e anno−20 direttamente; test di regressione `test_dr_t15_e_dr_t20_risalgono_a_15_e_20_anni_prima`; il panel rigenerato copre ~80% per t−15 (n=1.971, 220 regioni) e n=1.895 con entrambi.
+
+**I risultati corretti (real data):**
+
+| Strumentazione | θ̂ | γ̂_IV | Primo stadio | Note |
+|---|---|---|---|---|
+| Vecchia (=[v1.1.x], era t−30) | 1,94 | +0,129 | F=340 | sotto-campione 759 righe, claim ritirato |
+| **IV t−15 (corretto)** | 1,40 | **−0,055** | F=4.089 | n=1.971 |
+| **IV t−15 + t−20** | 1,68 | **−0,045** | F congiunto 2.537 | **Hansen J=0,23 (df=1, p=0,63)** n=1.895 |
+
+**La conseguenza epistemica.** Il claim "il segno positivo di γ̂ è robusto a IV e LOCO" delle versioni ≤ v1.1.2 **non è più sostenuto**: sotto strumentazione corretta γ̂_IV ≈ −0,05. Lettura più parsimoniosa: il γ̂>0 dell'OLS è eterogeneità regionale persistente correlata al livello di DR, non un effetto causale della DR sul ΔF. La sintassi della batteria resta: γ̂ OLS > 0 sempre, ma **il segno non è identificato in modo robusto**; Hansen J non respinge (congruenza t−15/t−20) senza per questo convalidare la validità dell'esclusione (v. lettura pre-registrata sopra). I risultati demografici (Leslie, Lotka, LTC) non sono toccati: γ̂ non entra in nessuna di quelle catene.
+
+### 5.6 IV per ere sulla finestra estesa 1990-2024 (eseguito)
+
+La costanza dei parametri tra ere è già RIGETTATA (docs/15): fare IV pooled su 30 anni mischia regimi strutturali diversi (contesto economico/sociale cambiato). L'IV per era sul panel esteso (prepare_panel su `eurostat_panel_1990.csv` con strumenti corretti) separa le letture:
+
+| Era | n (OLS) | θ̂_OLS | γ̂_OLS | γ̂_IV t−15 | γ̂_IV t−15+t−20 | Hansen J | p |
+|---|---|---|---|---|---|---|---|
+| 1991-2000 | 0 | — | — | — | — | — | PIL regionale Eurostat parte dal 2000: era non stimabile |
+| **2001-2012** | 2.217 | 1,10 | +0,038 | +0,032 | **+0,084** (n=509) | 2,63 | 0,10 |
+| **2013-2024** | 3.102 | 1,70 | +0,011 | −0,018 | **−0,016** (n=2.499) | 1,39 | 0,24 |
+| Pooled 1991-2024 | 5.319 | 1,10 | +0,022 | +0,004 | −0,003 | 2,41 | 0,12 |
+
+Sotto-periodi (IV a due strumenti, J mai respinto): 2007-2012 **+0,084**, 2013-2018 **−0,072**, 2019-2024 **+0,034** — attorno a zero con segni alternati.
+
+**Lettura.** (1) L'associazione positiva DR→ΔF è un fenomeno **dell'era 2001-2012**, dove sopravvive alla strumentazione corretta (γ̂_IV +0,03/+0,08, dotata di strumenti forti). (2) **Nell'era corrente (post-2013) l'associazione svanisce**: γ̂ ≈ 0 (OLS +0,011, IV −0,016/−0,018), con sotto-periodi che oscillano ±0,07 — nessun effetto robusto della DR sul ΔF. (3) Il pooled positivo della v1.1.x era quindi il prodotto di **due difetti sovrapposti**: strumento mappato a t−30 e media su ere con regimi diversi. L'intuizione è coerente con la costanza dei parametri RIGETTATA (docs/15): il contesto economico/sociale è cambiato e la relazione DR-ΔF non è costante nella struttura né nel segno. **Conclusione per la narrativa: γ̂ non è identificato in modo robusto nell'era corrente; l'associazione positiva è specifica dell'era 2001-2012 e va citata solo come tale.** Nota: il campione del panel esteso differisce da quello headline (copertura NUTS diversa: n 3.102 vs 2.366 su 2013+); il confronto tra ere è internamente coerente (stessa pipeline), il confronto puntuale con la batteria headline non va fatto cifra-per-cifra.
