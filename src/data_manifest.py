@@ -77,6 +77,27 @@ SOURCES = {
         "acquisizione": "src/download_eurostat.py",
         "parsing": "src/download_eurostat.py",
     },
+    "POSAS_2023_it_Ripartizioni.csv": {
+        "provider": "ISTAT", "dataset": "POSAS",
+        "url": "https://demo.istat.it/data/posas/POSAS_2023_it_Ripartizioni.zip",
+        "vintage": "2023", "contenuto": "migrazione osservata per eta' (v1.2)",
+        "acquisizione": "src/migration_observed.py",
+        "parsing": "src/migration_observed.py",
+    },
+    "POSAS_2024_it_Ripartizioni.csv": {
+        "provider": "ISTAT", "dataset": "POSAS",
+        "url": "https://demo.istat.it/data/posas/POSAS_2024_it_Ripartizioni.zip",
+        "vintage": "2024", "contenuto": "migrazione osservata per eta' (v1.2)",
+        "acquisizione": "src/migration_observed.py",
+        "parsing": "src/migration_observed.py",
+    },
+    "POSAS_2025_it_Ripartizioni.csv": {
+        "provider": "ISTAT", "dataset": "POSAS",
+        "url": "https://demo.istat.it/data/posas/POSAS_2025_it_Ripartizioni.zip",
+        "vintage": "2025", "contenuto": "migrazione osservata per eta' (v1.2)",
+        "acquisizione": "src/migration_observed.py",
+        "parsing": "src/migration_observed.py",
+    },
     "eurostat/tfr_nuts2_storico.json": {
         "provider": "Eurostat", "dataset": "demo_r_find2",
         "url": f"{EUROSTAT_BASE}/demo_r_find2?indic_de=TOTFERRT",
