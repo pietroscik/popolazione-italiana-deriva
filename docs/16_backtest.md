@@ -56,6 +56,20 @@ Modelli (protocollo §2): M0 statico (F = F_2012), M1 lineare dinamico (caso k�
 4. **Il triggering empirico resta**: M1 > M0 al fisso-12-passi (t=4,70) conferma che c'è segnale dinamico reale nel panel (i livelli non sono sufficienti); è la trasduzione in mappa non-lineare a non generalizzare tra ere.
 5. **Coverage 15,7%**: l'incertezza da solo-bootstrap-parametrico è un limite inferiore; per il protocollo pieno servono i blocchi sui residui (block bootstrap) e B=1000.
 
+## 3-bis. Backtest WITHIN-ERA (v1.2 — ESEGUITO)
+
+`backtest_report(train_start=2013, train_end=2019, test_start=2020, test_end=2024)`: stima e proiezione interamente dentro il regime post-2013. È il test che il §3 lettura 2 indicava come naturale: se il fallimento cross-era era instabilità dei parametri (e non assenza di mappa), *dentro* il regime corrente la PSTR deve recuperare valore.
+
+| Metrica | M0 statico | M1 lineare | M2 PSTR |
+|---|---|---|---|
+| RMSE (test 2020-2024) | 0,1451 | **0,1152** | 0,1222 |
+| DM vs M0 | — | t=8,19 (p<0,001) | **t=+6,49 (p<0,001)** |
+| Clark-West M2 vs M1 | — | — | **t=−3,12 (p=0,002): M1 resta migliore** |
+
+Stratificazione per regime (RMSE): nella **banda trappola (F<1,35, 54 regioni) M2 è il migliore** (0,0805 vs 0,0837 M0, 0,0846 M1); nelle bande transizione e alta vince M1.
+
+**Letture.** (1) **Il fallimento cross-era era instabilità dei parametri, non assenza di mappa**: within-era la PSTR batte il benchmark statico in modo netto (DM +6,49, opposto al −3,36 del disegno cross-era) — la condizione di promozione *verso M0* è superata dentro il regime. (2) **M1 resta comunque superiore (CW)**: il termine non-lineare F·G non ripaga globalmente la sua complessità within-era. (3) **Il valore del termine non-lineare è concentrato nella banda di trappola** (RMSE minimo di M2 nell'F<1,35): coerente con la teoria — la non-linearità serve dove la trappola opera, non nel cuore del regime alto. La formulazione corretta resta: la PSTR è strutturale, con un vantaggio previsivo locale nel regime basso; il complessivo h=1 expanding rimane del random walk (non toccato da questo test, che opera su H=5 fissato).
+
 ## 4. Conseguenze per il paper
 
 - L'abstract va aggiornato dal promesso "will assess" al risultato: *out-of-sample, the PSTR does not beat linear or static benchmarks (DM and Clark-West); its contribution is structural, not predictive* — un referee apprezza molto di più un risultato negativo dichiarato e spiegato che una promessa.

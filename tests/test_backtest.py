@@ -98,3 +98,37 @@ class TestRicorsioneM2(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestWithinEra(unittest.TestCase):
+    """Roadmap v1.2: backtest interamente dentro il regime post-2013."""
+
+    def test_finestre_parametrizzate(self):
+        from backtest_pstr import exog_by_region
+        rows = []
+        for geo in ("AX01", "BX01"):
+            for anno in range(2018, 2024):
+                rows.append({"geo": geo, "anno": anno,
+                             "d_log_gdp": 0.01, "dr_lag": 0.3})
+        df = pd.DataFrame(rows)
+        ex = exog_by_region(df, 2020, 2022)
+        for geo, g in ex.items():
+            self.assertEqual(sorted(g["anno"]), [2020, 2021, 2022])
+
+    def test_within_era_m2_batte_lo_statico(self):
+        """Su dati reali (se presenti): train 2013-2019, test 2020-2024.
+        Nel regime corrente il PSTR batte il benchmark statico (DM t>0);
+        la dinamica lineare resta superiore al termine non-lineare (CW<0).
+        Regressione del risultato documentato in docs/16 par. 6."""
+        panel = Path("/workspace/github__pietroscik__popolazione-italiana-deriva"
+                     "/data/processed/eurostat_panel_1990.csv")
+        if not panel.exists():
+            self.skipTest("panel Eurostat esteso non presente")
+        from backtest_pstr import backtest_report
+        rep = backtest_report(train_start=2013, train_end=2019,
+                             test_start=2020, test_end=2024, boot_B=0,
+                             verbose=False)
+        self.assertEqual(rep["disegno"]["train"], "2013-2019")
+        self.assertGreater(rep["dm_m2_vs_m0"]["dm_t"], 0.0)
+        self.assertGreater(rep["dm_m1_vs_m0"]["dm_t"], 0.0)
+        self.assertLess(rep["clark_west_m2_vs_m1"]["cw_t"], 0.0)
