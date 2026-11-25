@@ -27,6 +27,7 @@ verso il basso) se f_hat'(F*) > 0.
 """
 
 import json
+import math
 import sys
 from pathlib import Path
 
@@ -182,6 +183,79 @@ def fit_pstr_iv(df: pd.DataFrame, theta_grid=THETA_GRID,
     return best
 
 
+def fit_pstr_iv2(df: pd.DataFrame, theta_grid=THETA_GRID,
+                k_grid=K_GRID) -> dict:
+    """2SLS a DUE strumenti: dr_t15 e dr_t20 (roadmap v1.2, punto 1).
+
+    Con due strumenti e un solo regressore endogeno il modello e'
+    sovraidentificato di 1: l'ipotesi di validita' conjunta degli strumenti
+    diventa testabile con la statistica J di Hansen (robusta all'
+    eteroschedasticita', df=1, p-value via erfc — niente scipy).
+
+    ATTENZIONE (lettura pre-registrata): il test J non convalida lo
+    strumento t-15 da solo — testa la congruenza reciproca di t-15 e t-20.\n    Se entrambi violano l'esclusione nello stesso verso (norme familiari
+    regionali persistenti che correlano DR storica e errori del TFR di
+    oggi), il J NON li respinge: la causalita' di gamma resta aperta in
+    ogni caso (v. docs/13 par. 5.1). Un rifiuto, invece, sarebbe informativo:
+    almeno uno dei due strumento non e' congruente con l'altro.
+
+    Primo stadio congiunto per l'esclusione di ENTRAMBI gli strumenti
+    (F parziale congiunto), secondo stadio 2SLS standard.
+    """
+    y = df["d_tfr"].values
+    dr = df["dr_lag"].values
+    z15 = df["dr_t15"].values
+    z20 = df["dr_t20"].values
+    best = None
+    n = len(df)
+    for theta in theta_grid:
+        for k in k_grid:
+            X, _ = _design(df, k, theta)
+            exog = np.delete(X, 4, axis=1)
+            Z = np.column_stack([exog, z15, z20])
+            # primo stadio congiunto
+            pi, *_ = np.linalg.lstsq(Z, dr, rcond=None)
+            dr_hat = Z @ pi
+            resid1 = dr - dr_hat
+            ssr_f = float(resid1 @ resid1)
+            beta_r, *_ = np.linalg.lstsq(exog, dr, rcond=None)
+            resid_r = dr - exog @ beta_r
+            ssr_r = float(resid_r @ resid_r)
+            q = Z.shape[1]
+            if ssr_f <= 0 or n - q <= 0:
+                continue
+            # F parziale congiunto (2 restrizioni)
+            F1 = ((ssr_r - ssr_f) / 2.0) / (ssr_f / (n - q))
+            # secondo stadio
+            X_hat = X.copy()
+            X_hat[:, 4] = dr_hat
+            beta_iv, *_ = np.linalg.lstsq(X_hat, y, rcond=None)
+            resid = y - X @ beta_iv
+            ssr = float(resid @ resid)
+            if best is None or ssr < best["ssr"]:
+                # Hansen J robusto: g_i = z_i * u_i su TUTTI gli strumenti
+                g = Z * resid[:, None]          # (n, q)
+                gbar = g.mean(axis=0)
+                S = (g.T @ g) / n                # (q, q)
+                try:
+                    S_inv = np.linalg.pinv(S)
+                except np.linalg.LinAlgError:
+                    continue
+                J = float(n * gbar @ S_inv @ gbar)
+                # p-value chi2 con 1 g.d.l.: sf(x) = erfc(sqrt(x/2))
+                p_J = math.erfc(math.sqrt(max(J, 0.0) / 2.0))
+                best = {"ssr": ssr, "k": float(k), "theta": float(theta),
+                        "beta": beta_iv, "first_stage_F": float(F1),
+                        "hansen_J": J, "hansen_J_df": 1,
+                        "hansen_J_p": float(p_J)}
+    best["control_means"] = {c: float(df[c].mean()) for c in CONTROLS}
+    X_opt, _ = _design(df, best["k"], best["theta"])
+    best["dummy_share"] = X_opt[:, 5:].mean(axis=0)
+    best["n_obs"] = int(len(df))
+    best["n_regioni"] = int(df["geo"].nunique())
+    return best
+
+
 def loco_by_country(df: pd.DataFrame, theta_grid=THETA_GRID,
                     k_grid=K_GRID) -> dict:
     """Robustezza LOCO (leave-one-country-out) per la stima pooled.
@@ -281,6 +355,20 @@ def theta_stability_battery(df: pd.DataFrame) -> dict:
             f5 = fit_pstr_iv(div)
             res["iv_t15"] = {"theta": f5["theta"],
                              "gamma_iv": float(f5["beta"][4])}
+    # 5-bis. IV a due strumenti t-15 + t-20 (Hansen J testabile, v1.2)
+    if {"dr_t15", "dr_t20"}.issubset(df.columns):
+        div2 = df.dropna(subset=["dr_t15", "dr_t20"])
+        div2 = div2.dropna(subset=["d_tfr", "F_lag", "d_log_gdp",
+                                   "dr_lag"]).reset_index(drop=True)
+        if len(div2) > 500:
+            f5b = fit_pstr_iv2(div2)
+            res["iv_t15_t20"] = {
+                "theta": f5b["theta"],
+                "gamma_iv": float(f5b["beta"][4]),
+                "first_stage_F": f5b["first_stage_F"],
+                "hansen_J": f5b["hansen_J"],
+                "hansen_J_p": f5b["hansen_J_p"],
+                "n_obs": f5b["n_obs"]}
     # 6. finestra estesa 2013-2024 (panel lungo)
     ext = df[df["anno"] >= 2013]
     if len(ext) > 1500:

@@ -85,7 +85,7 @@ def build_panel(raw_dir: Path | None = None,
     df = df.drop(columns=[c for c in ("pop", "pop_15_64", "pop_65piu")
                           if c in df.columns and c not in ("dr",)], errors="ignore")
     df = df.sort_values(["geo", "anno"]).reset_index(drop=True)
-    df = add_dr_t15(df, raw, out)
+    df = add_dr_instruments(df, lags=(15, 20), raw_dir=raw, out_dir=out)
     df = df.sort_values(["geo", "anno"]).reset_index(drop=True)
     df.to_csv(out / "eurostat_panel.csv", index=False)
     return df
@@ -156,22 +156,43 @@ def build_dr_history(raw_dir: Path | None = None,
     return hist
 
 
-def add_dr_t15(df: pd.DataFrame, raw_dir: Path | None = None,
-               out_dir: Path | None = None) -> pd.DataFrame:
-    """Strumento per la DR endogena: DR regionale osservata 15 anni prima.
+def add_dr_instruments(df: pd.DataFrame, lags: tuple = (15, 20),
+                       raw_dir: Path | None = None,
+                       out_dir: Path | None = None) -> pd.DataFrame:
+    """Strumenti per la DR endogena: DR regionale osservata N anni prima.
 
     La DR di oggi e' costruita dalle nascite di 15-65 anni orsono, quindi e'
     meccanicamente correlata con la fertilita' storica della regione e con gli
-    errori dell'equazione del TFR. La DR a t-15 e' predeterminata rispetto
-    agli shock recenti del TFR (protocollo docs/06, appendice B)."""
+    errori dell'equazione del TFR. La DR a t-N e' predeterminata rispetto
+    agli shock recenti del TFR (protocollo docs/06, appendice B). Due
+    strumenti (t-15 e t-20) rendono testabile l'ipotesi di sovra-
+    identificazione (Hansen J, df=1): ritirata da docs/13 par. 5.1 quando
+    l'assetto era just-identified, ora eseguibile.ATTENZIONE: piu' il
+    ritardo e' lungo, piu' la plausibilita' dell'esclusione dipende dalla
+    persistenza delle norme familiari regionali (v. lettura condizionata in
+    docs/13).
+    """
     hist = build_dr_history(raw_dir, out_dir)
-    hist = hist.rename(columns={"anno": "anno_strumento", "dr_hist": "dr_t15"})
-    hist["anno_strumento"] = hist["anno_strumento"] + 15
     df = df.copy()
-    df["anno_strumento"] = df["anno"] - 15
-    df = df.merge(hist[["geo", "anno_strumento", "dr_t15"]],
-                  on=["geo", "anno_strumento"], how="left")
+    zframes = []
+    for lag in lags:
+        col = f"dr_t{lag}"
+        h = hist.rename(columns={"anno": "anno_strumento",
+                                 "dr_hist": col})
+        h["anno_strumento"] = h["anno_strumento"] + lag
+        zframes.append(h[["geo", "anno_strumento", col]])
+    df["anno_strumento"] = df["anno"]
+    for h in zframes:
+        df = df.merge(h, left_on=["geo", "anno_strumento"],
+                      right_on=["geo", "anno_strumento"], how="left")
     return df.drop(columns=["anno_strumento"])
+
+
+def add_dr_t15(df: pd.DataFrame, raw_dir: Path | None = None,
+               out_dir: Path | None = None) -> pd.DataFrame:
+    """Compatibilita': strumento singolo DR a t-15 (v. add_dr_instruments)."""
+    return add_dr_instruments(df, lags=(15,), raw_dir=raw_dir,
+                              out_dir=out_dir)
 
 
 def _json_to_tidy_geo_time(path: Path, value_name: str) -> pd.DataFrame:
@@ -237,7 +258,7 @@ def build_panel_long(raw_dir: Path | None = None,
     df = df.merge(hist, on=["geo", "anno"], how="left")
     df = df[df["geo"].str.len() == 4]
     df = df.sort_values(["geo", "anno"]).reset_index(drop=True)
-    df = add_dr_t15(df, raw, out)
+    df = add_dr_instruments(df, lags=(15, 20), raw_dir=raw, out_dir=out)
     df = df.sort_values(["geo", "anno"]).reset_index(drop=True)
     df.to_csv(out / "eurostat_panel_1990.csv", index=False)
     return df
